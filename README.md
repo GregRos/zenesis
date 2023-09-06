@@ -1,6 +1,6 @@
-`zodiverse` builds on `zod` to create **a framework for generating type definitions**.
+`zodenesis` builds on `zod`, allowing you to generate carefully designed, fully documented type definitions using all modern TypeScript constructs.
 
-* Generate carefully designed, fully documented type definitions using all modern TypeScript constructs:
+
   * Type parameters!
   * Mapped types!
   * Conditional types!

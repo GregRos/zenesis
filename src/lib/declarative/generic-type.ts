@@ -1,11 +1,11 @@
-import { ZodiTypeVar, ZodiTypeVars } from "./type-var";
+import { ZsTypeVar, ZsTypeVars } from "./type-var";
 import { ParseInput, ParseReturnType, ZodTypeAny, ZodTypeDef } from "zod";
 import { SchemaSubtypeOf } from "../utils";
-import { ZodiMonoType } from "../mono-type";
-import { ZodiDeclaredObjectLike, ZodiDeclaredShaped } from "./general";
+import { ZsMonoType } from "../mono-type";
+import { ZsObjectLike, ZsDeclaredShape } from "./general";
 
-export type AllSubtypeOf<Vars extends ZodiTypeVars> = {
-    [K in keyof Vars as Vars[K] extends ZodiTypeVar<any, any>
+export type AllSubtypeOf<Vars extends ZsTypeVars> = {
+    [K in keyof Vars as Vars[K] extends ZsTypeVar<any, any>
         ? Vars[K]["_default"] extends null
             ? K
             : never
@@ -14,73 +14,74 @@ export type AllSubtypeOf<Vars extends ZodiTypeVars> = {
     [K in keyof Vars]?: SchemaSubtypeOf<Vars[K]>;
 };
 
-export interface ZodiGenericTypeDef<
-    TypeVars extends ZodiTypeVars,
+export interface ZsGenericTypeDef<
+    TypeVars extends ZsTypeVars,
     Instance extends ZodTypeAny
 > {
     instance: Instance;
     typeVars: TypeVars;
 }
 
-export class ZodiGenericType<
-    TypeVars extends ZodiTypeVars,
+export class ZsGeneric<
+    TypeVars extends ZsTypeVars,
     Instance extends ZodTypeAny
 > {
-    constructor(private _def: ZodiGenericTypeDef<TypeVars, Instance>) {}
+    constructor(private _def: ZsGenericTypeDef<TypeVars, Instance>) {}
 
     instantiate<TypeArgs extends AllSubtypeOf<TypeVars>>(
         ...typeArgs: TypeArgs
     ) {
-        return new ZodiGenericInstance({
+        return new ZsInstantiation({
             ...this._def,
             typeArgs: typeArgs as any,
-            typeName: "ZodiGenericInstance",
+            typeName: "ZsInstantiation",
             instance: this._def.instance,
             type: this
         });
     }
 
-    typeVars<TypeVars extends ZodiTypeVars>(
+    typeVars<TypeVars extends ZsTypeVars>(
         ...tVars: TypeVars
-    ): ZodiGenericType<TypeVars, Instance> {
-        return new ZodiGenericType({
+    ): ZsGeneric<TypeVars, Instance> {
+        return new ZsGeneric({
             ...this._def,
             typeVars: tVars
         });
     }
 
     static create<Instance extends ZodTypeAny>(instance: Instance) {
-        return new ZodiGenericType<[], Instance>({
+        return new ZsGeneric<[], Instance>({
             instance,
             typeVars: []
         });
     }
 }
 
-export class ZodiGenericInstance<
-    Instance extends ZodTypeAny
-> extends ZodiMonoType<Instance["_type"], ZodiGenericInstanceDef<Instance>> {
+export class ZsInstantiation<Instance extends ZodTypeAny> extends ZsMonoType<
+    Instance["_type"],
+    ZsInstantiationDef<Instance>
+> {
     _instance!: Instance;
 
-    get declaration(): Instance extends ZodiDeclaredShaped
+    get declaration(): Instance extends ZsDeclaredShape
         ? Instance["declaration"]
         : undefined {
-        if (this._instance instanceof ZodiDeclaredObjectLike) {
+        if (this._instance instanceof ZsObjectLike) {
             return this._instance.shape;
         }
         return undefined as any;
     }
 
-    get shape(): Instance extends ZodiDeclaredShaped
+    get shape(): Instance extends ZsDeclaredShape
         ? Instance["shape"]
         : undefined {
-        if (this._instance instanceof ZodiDeclaredObjectLike) {
+        if (this._instance instanceof ZsObjectLike) {
             return this._instance.shape;
         }
         return undefined as any;
     }
 
-    constructor(def: ZodiGenericInstanceDef<Instance>) {
+    constructor(def: ZsInstantiationDef<Instance>) {
         super(def);
     }
 
@@ -89,12 +90,12 @@ export class ZodiGenericInstance<
     }
 }
 
-export interface ZodiGenericInstanceDef<Instance extends ZodTypeAny>
+export interface ZsInstantiationDef<Instance extends ZodTypeAny>
     extends ZodTypeDef {
-    typeName: "ZodiGenericInstance";
-    type: ZodiGenericType<ZodiTypeVars, Instance>;
+    typeName: "ZsInstantiation";
+    type: ZsGeneric<ZsTypeVars, Instance>;
     typeArgs: [ZodTypeAny, ...ZodTypeAny[]] | [];
     instance: Instance;
 }
 
-export const genericType = ZodiGenericType.create;
+export const genericType = ZsGeneric.create;

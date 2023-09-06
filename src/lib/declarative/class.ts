@@ -1,9 +1,5 @@
 import { objectUtil, z, ZodRawShape, ZodTypeDef } from "zod";
-import {
-    ZodiDeclaredObjectLike,
-    ZodiDeclaredShaped,
-    ZodiShaped
-} from "./general";
+import { ZsObjectLike, ZsDeclaredShape, ZsShaped } from "./general";
 import { $typeVar } from "../declarative/type-var";
 
 export type combineClassShape<
@@ -12,30 +8,28 @@ export type combineClassShape<
     OwnShape extends ZodRawShape
 > = InheritedShape & RequiresShape & OwnShape;
 
-export interface ZodiClassDef<
+export interface ZsClassDef<
     InheritedShape extends ZodRawShape,
     RequiresShape extends ZodRawShape,
     OwnShape extends ZodRawShape
 > extends ZodTypeDef {
     name: string;
-    typeName: "ZodiClass";
+    typeName: "ZsClass";
     inheritedShape: () => InheritedShape;
     requiredShape: () => RequiresShape;
     ownShape: () => OwnShape;
-    parent: ZodiDeclaredShaped<ZodRawShape, "class"> | null;
-    implements: ZodiDeclaredShaped[];
+    parent: ZsDeclaredShape<ZodRawShape, "class"> | null;
+    implements: ZsDeclaredShape[];
     abstract: boolean;
 }
 
-export const zodiObjectType = z.object({});
-
-export class ZodiClass<
+export class ZsClass<
     InheritedShape extends ZodRawShape,
     RequiresShape extends ZodRawShape,
     OwnShape extends ZodRawShape
-> extends ZodiDeclaredObjectLike<
+> extends ZsObjectLike<
     combineClassShape<InheritedShape, RequiresShape, OwnShape>,
-    ZodiClassDef<InheritedShape, RequiresShape, OwnShape>
+    ZsClassDef<InheritedShape, RequiresShape, OwnShape>
 > {
     readonly declaration = "class";
 
@@ -48,9 +42,9 @@ export class ZodiClass<
     }
 
     implements<InterfaceShape extends ZodRawShape>(
-        iface: ZodiDeclaredShaped<InterfaceShape>
-    ): ZodiClass<InheritedShape, InterfaceShape & RequiresShape, OwnShape> {
-        return new ZodiClass<
+        iface: ZsDeclaredShape<InterfaceShape>
+    ): ZsClass<InheritedShape, InterfaceShape & RequiresShape, OwnShape> {
+        return new ZsClass<
             InheritedShape,
             InterfaceShape & RequiresShape,
             OwnShape
@@ -63,9 +57,9 @@ export class ZodiClass<
     }
 
     setParent<ParentShape2 extends ZodRawShape>(
-        parent: ZodiDeclaredShaped<ParentShape2, "class">
+        parent: ZsDeclaredShape<ParentShape2, "class">
     ) {
-        return new ZodiClass<ParentShape2, RequiresShape, OwnShape>({
+        return new ZsClass<ParentShape2, RequiresShape, OwnShape>({
             ...this._def,
             inheritedShape: () => parent.shape as ParentShape2,
             parent
@@ -73,7 +67,7 @@ export class ZodiClass<
     }
 
     extend<Shape2 extends ZodRawShape>(other: Shape2) {
-        return new ZodiClass({
+        return new ZsClass({
             ...this._def,
             ownShape: () => ({
                 ...this._def.ownShape(),
@@ -82,8 +76,8 @@ export class ZodiClass<
         });
     }
 
-    merge<Shape2 extends ZodRawShape>(other: ZodiShaped<Shape2>) {
-        return new ZodiClass({
+    merge<Shape2 extends ZodRawShape>(other: ZsShaped<Shape2>) {
+        return new ZsClass({
             ...this._def,
             ownShape: () => ({
                 ...this._def.ownShape(),
@@ -93,20 +87,20 @@ export class ZodiClass<
     }
 
     abstract(yes = true) {
-        return new ZodiClass<InheritedShape, RequiresShape, OwnShape>({
+        return new ZsClass<InheritedShape, RequiresShape, OwnShape>({
             ...this._def,
             abstract: yes
         });
     }
 
-    constructor(def: ZodiClassDef<InheritedShape, RequiresShape, OwnShape>) {
+    constructor(def: ZsClassDef<InheritedShape, RequiresShape, OwnShape>) {
         super(def);
     }
 
     static create(name: string) {
-        return new ZodiClass({
+        return new ZsClass({
             name,
-            typeName: "ZodiClass",
+            typeName: "ZsClass",
             inheritedShape: () => ({}),
             requiredShape: () => ({}),
             ownShape: () => ({}),
@@ -117,7 +111,7 @@ export class ZodiClass<
     }
 }
 
-export const $class = ZodiClass.create;
+export const $class = ZsClass.create;
 
 const b = $class("Example1")
     .extend({

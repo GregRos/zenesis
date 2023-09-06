@@ -1,13 +1,13 @@
 export {
     AllSubtypeOf,
-    ZodiGenericInstance,
-    ZodiGenericType,
-    ZodiGenericInstanceDef,
+    ZsInstantiation,
+    ZsGeneric,
+    ZsInstantiationDef,
     genericType,
-    ZodiGenericTypeDef
+    ZsGenericTypeDef
 } from "../declarative/generic-type";
 
 export {
-    ZvGenericFunctionDef,
-    ZodiGenericFunction
+    ZsGenericFunctionDef,
+    ZsGenericFunction
 } from "../declarative/generic-function";

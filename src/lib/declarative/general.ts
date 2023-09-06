@@ -9,38 +9,38 @@ import {
     ZodTypeAny,
     ZodTypeDef
 } from "zod";
-import { ZodiMonoType } from "../mono-type";
-import { ZodiTypeVars } from "./type-var";
-import { ZodiGenericType } from "./generic-type";
+import { ZsMonoType } from "../mono-type";
+import { ZsTypeVars } from "./type-var";
+import { ZsGeneric } from "./generic-type";
 
 export type DeclaredTypeKind = "class" | "interface" | "typeAlias" | "typeVar";
 export type DeclaredObjectKind = Exclude<DeclaredTypeKind, "typeAlias">;
-export type ZodiDeclaredDef = ZodTypeDef & { name: string };
+export type ZsDeclaredDef = ZodTypeDef & { name: string };
 
-export abstract class ZodiDeclaredMonoType<
+export abstract class ZsDeclaredType<
     Monotype,
-    Def extends ZodiDeclaredDef
-> extends ZodiMonoType<Monotype, Def> {
+    Def extends ZsDeclaredDef
+> extends ZsMonoType<Monotype, Def> {
     get name() {
         return this._def.name;
     }
 
     abstract readonly declaration: DeclaredTypeKind;
 
-    typeVars<TypeVars extends ZodiTypeVars>(
+    typeVars<TypeVars extends ZsTypeVars>(
         ...typeVars: TypeVars
-    ): ZodiGenericType<TypeVars, this> {
-        return new ZodiGenericType({
+    ): ZsGeneric<TypeVars, this> {
+        return new ZsGeneric({
             typeVars,
             instance: this
         });
     }
 }
 
-export abstract class ZodiDeclaredObjectLike<
+export abstract class ZsObjectLike<
     Shape extends ZodRawShape,
-    Def extends ZodiDeclaredDef = ZodiDeclaredDef
-> extends ZodiDeclaredMonoType<objectOutputType<Shape, ZodTypeAny>, Def> {
+    Def extends ZsDeclaredDef = ZsDeclaredDef
+> extends ZsDeclaredType<objectOutputType<Shape, ZodTypeAny>, Def> {
     private _object: ZodLazy<ZodObject<Shape, "strip">>;
 
     abstract get shape(): Shape;
@@ -57,11 +57,11 @@ export abstract class ZodiDeclaredObjectLike<
     }
 }
 
-export type ZodiShaped<Shape extends ZodRawShape> = {
+export type ZsShaped<Shape extends ZodRawShape> = {
     readonly shape: Shape;
 };
 
-export type ZodiDeclaredShaped<
+export type ZsDeclaredShape<
     Shape extends ZodRawShape = ZodRawShape,
     Kind extends DeclaredObjectKind = DeclaredObjectKind
 > = { readonly declaration: Kind; readonly shape: Shape };

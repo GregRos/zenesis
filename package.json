@@ -14,8 +14,9 @@
         "zod-to-ts"
     ],
     "scripts": {
-        "build": "node_modules/.bin/tsc -b tsconfig.all.json",
-        "build+clean": "run-s clean build",
+        "build": "tsc -b tsconfig.all.json",
+        "clean": "shx rm -rf dist",
+        "rebuild": "run-s clean build",
         "prettier:fix": "prettier -w src/**/*.ts",
         "prettier": "prettier --check 'src/**/*.ts'",
         "eslint": "eslint 'src/**/*.ts'",

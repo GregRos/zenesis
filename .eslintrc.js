@@ -3,7 +3,8 @@ module.exports = {
     root: true,
     extends: ["@gregros/eslint-config"],
     rules: {
-        "no-duplicate-imports": "off"
+        "no-duplicate-imports": "off",
+        "@typescript-eslint/ban-types": "off"
     },
     parserOptions: {
         project: [

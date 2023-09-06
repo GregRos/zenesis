@@ -1,19 +1,17 @@
 import { ZodType, ZodTypeDef } from "zod";
 
-export type ZodiMonoType<Monotype, Def extends ZodTypeDef> = ZodType<
+export type ZsMonoType<Monotype, Def extends ZodTypeDef> = ZodType<
     Monotype,
     Def
 >;
 
-export const ZodiMonoType = function ZodiMonoType<
-    Monotype,
-    Def extends ZodTypeDef
->(this: ZodiMonoType<Monotype, Def>, def: Def): ZodiMonoType<Monotype, Def> {
+export const ZsMonoType = function ZsMonoType<Monotype, Def extends ZodTypeDef>(
+    this: ZsMonoType<Monotype, Def>,
+    def: Def
+): ZsMonoType<Monotype, Def> {
     return this;
 } as any as {
-    new <Monotype, Def extends ZodTypeDef>(
-        def: Def
-    ): ZodiMonoType<Monotype, Def>;
+    new <Monotype, Def extends ZodTypeDef>(def: Def): ZsMonoType<Monotype, Def>;
 };
 
-ZodiMonoType.prototype = ZodType.prototype;
+ZsMonoType.prototype = ZodType.prototype;

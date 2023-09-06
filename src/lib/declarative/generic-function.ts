@@ -10,20 +10,20 @@ import {
     ZodTypeAny,
     ZodTypeDef
 } from "zod";
-import { ZodiTypeVars } from "./type-var";
-import { ZodiMonoType } from "../mono-type";
+import { ZsTypeVars } from "./type-var";
+import { ZsMonoType } from "../mono-type";
 
-export class ZodiGenericFunction<
+export class ZsGenericFunction<
     Args extends ZodTuple<any, any> = ZodTuple<[], null>,
     Returns extends ZodTypeAny = ZodTypeAny,
-    TypeVars extends ZodiTypeVars = []
-> extends ZodiMonoType<
+    TypeVars extends ZsTypeVars = []
+> extends ZsMonoType<
     OuterTypeOfFunction<Args, Returns>,
-    ZvGenericFunctionDef<Args, Returns, TypeVars>
+    ZsGenericFunctionDef<Args, Returns, TypeVars>
 > {
     private _fun: ZodFunction<Args, Returns>;
 
-    constructor(def: ZvGenericFunctionDef<Args, Returns, TypeVars>) {
+    constructor(def: ZsGenericFunctionDef<Args, Returns, TypeVars>) {
         super(def);
         this._fun = new ZodFunction({
             ...def,
@@ -33,17 +33,17 @@ export class ZodiGenericFunction<
 
     returns<NewReturnType extends ZodTypeAny>(
         returnType: NewReturnType
-    ): ZodiGenericFunction<Args, NewReturnType, TypeVars> {
-        return new ZodiGenericFunction({
+    ): ZsGenericFunction<Args, NewReturnType, TypeVars> {
+        return new ZsGenericFunction({
             ...this._def,
             returns: returnType
         });
     }
 
-    typeVars<TypeVars extends ZodiTypeVars>(
+    typeVars<TypeVars extends ZsTypeVars>(
         ...tVars: TypeVars
-    ): ZodiGenericFunction<Args, Returns, TypeVars> {
-        return new ZodiGenericFunction({
+    ): ZsGenericFunction<Args, Returns, TypeVars> {
+        return new ZsGenericFunction({
             ...this._def,
             typeVars: tVars
         });
@@ -73,12 +73,12 @@ export class ZodiGenericFunction<
 
     args<Args2 extends [ZodTypeAny, ...ZodTypeAny[]] | []>(
         ...args: Args2
-    ): ZodiGenericFunction<
+    ): ZsGenericFunction<
         ZodTuple<Args2, Args["_def"]["rest"]>,
         Returns,
         TypeVars
     > {
-        return new ZodiGenericFunction({
+        return new ZsGenericFunction({
             ...this._def,
             args: z.tuple(args, this._def.args._def.rest)
         });
@@ -86,8 +86,8 @@ export class ZodiGenericFunction<
 
     restArgs<Rest extends ZodTypeAny>(
         rest: Rest
-    ): ZodiGenericFunction<ZodTuple<Args["items"], Rest>, Returns, TypeVars> {
-        return new ZodiGenericFunction({
+    ): ZsGenericFunction<ZodTuple<Args["items"], Rest>, Returns, TypeVars> {
+        return new ZsGenericFunction({
             ...this._def,
             args: this._def.args.rest(rest)
         });
@@ -100,13 +100,13 @@ export class ZodiGenericFunction<
     }
 }
 
-export interface ZvGenericFunctionDef<
+export interface ZsGenericFunctionDef<
     Args extends ZodTuple<any, any>,
     Returns extends ZodTypeAny,
-    TypeVars extends ZodiTypeVars
+    TypeVars extends ZsTypeVars
 > extends ZodTypeDef {
     args: Args;
     returns: Returns;
-    typeName: "ZvGenericFunction";
+    typeName: "ZsGenericFunction";
     typeVars: TypeVars;
 }

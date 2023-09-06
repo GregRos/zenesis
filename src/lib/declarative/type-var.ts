@@ -7,33 +7,34 @@ import {
     ZodTypeAny
 } from "zod";
 import { SchemaSubtypeOf } from "../utils";
-import { ZodiDeclaredDef, ZodiDeclaredMonoType } from "./general";
+import { ZsDeclaredDef, ZsDeclaredType } from "./general";
 
-export type ZodiTypeVarVariance = "" | "in" | "out" | "inout";
+export type ZsTypeVarVariance = "" | "in" | "out" | "inout";
 
-export interface ZodiTypeVarDef<
+export interface ZsTypeVarDef<
     Constraint extends ZodTypeAny,
     Default extends SchemaSubtypeOf<Constraint> | null,
     Name extends string
-> extends ZodiDeclaredDef {
+> extends ZsDeclaredDef {
+    typeName: "ZsTypeVar";
     name: Name;
     constraint: Constraint;
     default: Default;
     const: boolean;
-    variance: ZodiTypeVarVariance;
+    variance: ZsTypeVarVariance;
 }
 
-export class ZodiTypeVar<
+export class ZsTypeVar<
     Constraint extends ZodTypeAny = ZodAny,
     Default extends SchemaSubtypeOf<Constraint> | null = null,
     Name extends string = string
-> extends ZodiDeclaredMonoType<
+> extends ZsDeclaredType<
     TypeOf<Constraint>,
-    ZodiTypeVarDef<Constraint, Default, Name>
+    ZsTypeVarDef<Constraint, Default, Name>
 > {
     readonly declaration = "typeVar";
     _default!: Default;
-    constructor(def: ZodiTypeVarDef<Constraint, Default, Name>) {
+    constructor(def: ZsTypeVarDef<Constraint, Default, Name>) {
         super(def);
     }
 
@@ -46,8 +47,8 @@ export class ZodiTypeVar<
             Default extends SchemaSubtypeOf<NewConstraint> | null
                 ? ZodTypeAny
                 : never
-    >(constraint: NewConstraint): ZodiTypeVar<NewConstraint, Default, Name> {
-        return new ZodiTypeVar({
+    >(constraint: NewConstraint): ZsTypeVar<NewConstraint, Default, Name> {
+        return new ZsTypeVar({
             ...this._def,
             constraint
         });
@@ -55,25 +56,25 @@ export class ZodiTypeVar<
 
     defaults<NewDefault extends SchemaSubtypeOf<Constraint> | null>(
         value: NewDefault
-    ): ZodiTypeVar<Constraint, NewDefault, Name>;
+    ): ZsTypeVar<Constraint, NewDefault, Name>;
     defaults(value: any) {
-        return new ZodiTypeVar({
+        return new ZsTypeVar({
             ...this._def,
             default: value ?? null
         });
     }
 
-    const(yes: boolean = true): ZodiTypeVar<Constraint, Default, Name> {
-        return new ZodiTypeVar({
+    const(yes: boolean = true): ZsTypeVar<Constraint, Default, Name> {
+        return new ZsTypeVar({
             ...this._def,
             const: yes
         });
     }
 
     variance(
-        variance: ZodiTypeVarVariance = ""
-    ): ZodiTypeVar<Constraint, Default, Name> {
-        return new ZodiTypeVar({
+        variance: ZsTypeVarVariance = ""
+    ): ZsTypeVar<Constraint, Default, Name> {
+        return new ZsTypeVar({
             ...this._def,
             variance
         });
@@ -81,8 +82,9 @@ export class ZodiTypeVar<
 
     static create<Name extends string>(
         name: Name
-    ): ZodiTypeVar<ZodAny, null, Name> {
-        return new ZodiTypeVar({
+    ): ZsTypeVar<ZodAny, null, Name> {
+        return new ZsTypeVar({
+            typeName: "ZsTypeVar",
             name,
             constraint: z.any(),
             const: false,
@@ -92,10 +94,10 @@ export class ZodiTypeVar<
     }
 }
 
-export type ZodiTypeVarAny = ZodiTypeVar<
+export type ZsTypeVarAny = ZsTypeVar<
     ZodTypeAny,
     SchemaSubtypeOf<ZodTypeAny> | null
 >;
-export type ZodiTypeVars = [ZodiTypeVarAny, ...ZodiTypeVarAny[]] | [];
+export type ZsTypeVars = [ZsTypeVarAny, ...ZsTypeVarAny[]] | [];
 
-export const $typeVar = ZodiTypeVar.create;
+export const $typeVar = ZsTypeVar.create;

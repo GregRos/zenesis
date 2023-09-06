@@ -1,27 +1,23 @@
 import { ZodRawShape, ZodTypeDef } from "zod";
-import {
-    ZodiDeclaredObjectLike,
-    ZodiDeclaredShaped,
-    ZodiShaped
-} from "./general";
+import { ZsObjectLike, ZsDeclaredShape, ZsShaped } from "./general";
 
-export interface ZodiInterfaceDef<
+export interface ZsInterfaceDef<
     InheritedShape extends ZodRawShape,
     OwnShape extends ZodRawShape
 > extends ZodTypeDef {
     name: string;
-    typeName: "ZodiInterface";
+    typeName: "ZsInterface";
     ownShape: () => OwnShape;
     inheritedShape: () => InheritedShape;
-    extends: ZodiDeclaredShaped[];
+    extends: ZsDeclaredShape[];
 }
 
-export class ZodiInterface<
+export class ZsInterface<
     InheritedShape extends ZodRawShape,
     OwnShape extends ZodRawShape
-> extends ZodiDeclaredObjectLike<
+> extends ZsObjectLike<
     OwnShape & InheritedShape,
-    ZodiInterfaceDef<InheritedShape, OwnShape>
+    ZsInterfaceDef<InheritedShape, OwnShape>
 > {
     readonly declaration = "interface";
 
@@ -32,14 +28,14 @@ export class ZodiInterface<
         };
     }
 
-    constructor(def: ZodiInterfaceDef<InheritedShape, OwnShape>) {
+    constructor(def: ZsInterfaceDef<InheritedShape, OwnShape>) {
         super(def);
     }
 
     parent<Shape1 extends ZodRawShape>(
-        other: ZodiDeclaredShaped<Shape1>
-    ): ZodiInterface<Shape1 & InheritedShape, OwnShape> {
-        return new ZodiInterface({
+        other: ZsDeclaredShape<Shape1>
+    ): ZsInterface<Shape1 & InheritedShape, OwnShape> {
+        return new ZsInterface({
             ...this._def,
             inheritedShape: () => ({
                 ...this._def.inheritedShape(),
@@ -50,7 +46,7 @@ export class ZodiInterface<
     }
 
     extend<Shape2 extends ZodRawShape>(other: Shape2) {
-        return new ZodiInterface({
+        return new ZsInterface({
             ...this._def,
             ownShape: () => ({
                 ...this._def.ownShape(),
@@ -59,8 +55,8 @@ export class ZodiInterface<
         });
     }
 
-    merge<Shape2 extends ZodRawShape>(other: ZodiShaped<Shape2>) {
-        return new ZodiInterface({
+    merge<Shape2 extends ZodRawShape>(other: ZsShaped<Shape2>) {
+        return new ZsInterface({
             ...this._def,
             ownShape: () => ({
                 ...this._def.ownShape(),
@@ -69,10 +65,10 @@ export class ZodiInterface<
         });
     }
 
-    static create(name: string): ZodiInterface<object, object> {
-        return new ZodiInterface({
+    static create(name: string): ZsInterface<{}, {}> {
+        return new ZsInterface({
             name,
-            typeName: "ZodiInterface",
+            typeName: "ZsInterface",
             ownShape: () => ({}),
             inheritedShape: () => ({}),
             extends: []
@@ -80,4 +76,4 @@ export class ZodiInterface<
     }
 }
 
-export const $interface = ZodiInterface.create;
+export const $interface = ZsInterface.create;
