@@ -1,17 +1,20 @@
-import { ZodType, ZodTypeDef } from "zod";
+import {
+    ParseInput,
+    ParseReturnType,
+    undefined,
+    ZodType,
+    ZodTypeDef
+} from "zod";
 
-export type ZsMonoType<Monotype, Def extends ZodTypeDef> = ZodType<
+export type ZsMonoLike<Type> = ZodType<Type, ZodTypeDef, Type>;
+
+export abstract class ZsMonoType<
     Monotype,
-    Def
->;
+    Def extends ZodTypeDef
+> extends ZodType<Monotype, Def> {
+    abstract readonly actsLike: ZsMonoLike<Monotype>;
 
-export const ZsMonoType = function ZsMonoType<Monotype, Def extends ZodTypeDef>(
-    this: ZsMonoType<Monotype, Def>,
-    def: Def
-): ZsMonoType<Monotype, Def> {
-    return this;
-} as any as {
-    new <Monotype, Def extends ZodTypeDef>(def: Def): ZsMonoType<Monotype, Def>;
-};
-
-ZsMonoType.prototype = ZodType.prototype;
+    _parse(input: ParseInput): ParseReturnType<Monotype> {
+        return this.actsLike._parse(input);
+    }
+}

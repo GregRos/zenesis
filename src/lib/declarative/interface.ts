@@ -1,5 +1,6 @@
-import { ZodRawShape, ZodTypeDef } from "zod";
-import { ZsObjectLike, ZsDeclaredShape, ZsShaped } from "./general";
+import { objectOutputType, z, ZodRawShape, ZodTypeAny, ZodTypeDef } from "zod";
+import { ZsDeclaredShape, ZsShaped, ZsDeclaredType } from "./general";
+import { ZsMonoLike } from "../mono-type";
 
 export interface ZsInterfaceDef<
     InheritedShape extends ZodRawShape,
@@ -15,21 +16,20 @@ export interface ZsInterfaceDef<
 export class ZsInterface<
     InheritedShape extends ZodRawShape,
     OwnShape extends ZodRawShape
-> extends ZsObjectLike<
-    OwnShape & InheritedShape,
+> extends ZsDeclaredType<
+    objectOutputType<OwnShape & InheritedShape, ZodTypeAny>,
     ZsInterfaceDef<InheritedShape, OwnShape>
 > {
     readonly declaration = "interface";
 
+    readonly actsLike = z.lazy(() => z.object(this.shape)) as ZsMonoLike<
+        objectOutputType<OwnShape & InheritedShape, ZodTypeAny>
+    >;
     get shape() {
         return {
             ...this._def.inheritedShape(),
             ...this._def.ownShape()
         };
-    }
-
-    constructor(def: ZsInterfaceDef<InheritedShape, OwnShape>) {
-        super(def);
     }
 
     parent<Shape1 extends ZodRawShape>(

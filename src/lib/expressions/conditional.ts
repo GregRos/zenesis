@@ -1,15 +1,16 @@
 import { SubtypeClause } from "./clause";
-import { ZodTypeAny, ZodTypeDef } from "zod";
+import { ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
+import { ConditionCases } from "./cases";
 
-export class ConditionCases<
-    True extends ZodTypeAny = ZodTypeAny,
-    False extends ZodTypeAny = ZodTypeAny
+export class ZsConditional<
+    Clause extends SubtypeClause,
+    Cases extends ConditionCases
+> extends ZsMonoType<
+    getConditionalOf<Clause, Cases>,
+    ZsConditionalDef<Clause, Cases>
 > {
-    constructor(
-        readonly _true: True,
-        readonly _false: False
-    ) {}
+    readonly actsLike = this._def.cases._true.or(this._def.cases._false);
 }
 
 export interface ZsConditionalDef<
@@ -27,11 +28,3 @@ export type getConditionalOf<
 > = [TClause["subtype"]] extends [TClause["supertype"]]
     ? TCases["_true"]
     : TCases["_false"];
-
-export class ZsConditional<
-    Clause extends SubtypeClause,
-    Cases extends ConditionCases
-> extends ZsMonoType<
-    getConditionalOf<Clause, Cases>,
-    ZsConditionalDef<Clause, Cases>
-> {}

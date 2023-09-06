@@ -1,6 +1,7 @@
 import {
     ParseInput,
     ParseReturnType,
+    z,
     ZodType,
     ZodTypeAny,
     ZodTypeDef
@@ -12,17 +13,22 @@ export interface ZsKeyOfDef<Container extends ZodTypeAny> extends ZodTypeDef {
     what: Container;
 }
 
+export const PropertyKey = z.string().or(z.number()).or(z.symbol());
+
 export class ZsKeyOf<Container extends ZodTypeAny> extends ZsMonoType<
     keyof Container["_type"],
     ZsKeyOfDef<Container>
 > {
-    _parse(input: ParseInput): ParseReturnType<keyof Container["_type"]> {
-        return this._def.what._parse(input);
-    }
+    readonly actsLike = PropertyKey;
 
     get of() {
         return this._def.what;
     }
 
-    readonly declaration = "keyof";
+    static create<Container extends ZodTypeAny>(what: Container) {
+        return new ZsKeyOf<Container>({
+            typeName: "ZsKeyOf",
+            what
+        });
+    }
 }

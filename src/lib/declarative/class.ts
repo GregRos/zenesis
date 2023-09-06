@@ -1,6 +1,14 @@
-import { objectUtil, z, ZodRawShape, ZodTypeDef } from "zod";
-import { ZsObjectLike, ZsDeclaredShape, ZsShaped } from "./general";
+import {
+    objectOutputType,
+    objectUtil,
+    z,
+    ZodRawShape,
+    ZodTypeAny,
+    ZodTypeDef
+} from "zod";
+import { ZsDeclaredShape, ZsShaped, ZsDeclaredType } from "./general";
 import { $typeVar } from "../declarative/type-var";
+import { ZsMonoLike } from "../mono-type";
 
 export type combineClassShape<
     InheritedShape extends ZodRawShape,
@@ -27,12 +35,20 @@ export class ZsClass<
     InheritedShape extends ZodRawShape,
     RequiresShape extends ZodRawShape,
     OwnShape extends ZodRawShape
-> extends ZsObjectLike<
-    combineClassShape<InheritedShape, RequiresShape, OwnShape>,
+> extends ZsDeclaredType<
+    objectOutputType<
+        combineClassShape<InheritedShape, RequiresShape, OwnShape>,
+        ZodTypeAny
+    >,
     ZsClassDef<InheritedShape, RequiresShape, OwnShape>
 > {
     readonly declaration = "class";
-
+    readonly actsLike = z.lazy(() => z.object(this.shape)) as ZsMonoLike<
+        objectOutputType<
+            combineClassShape<InheritedShape, RequiresShape, OwnShape>,
+            ZodTypeAny
+        >
+    >;
     get shape() {
         return {
             ...this._def.inheritedShape(),
@@ -91,10 +107,6 @@ export class ZsClass<
             ...this._def,
             abstract: yes
         });
-    }
-
-    constructor(def: ZsClassDef<InheritedShape, RequiresShape, OwnShape>) {
-        super(def);
     }
 
     static create(name: string) {

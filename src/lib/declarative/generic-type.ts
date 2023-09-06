@@ -2,7 +2,7 @@ import { ZsTypeVar, ZsTypeVars } from "./type-var";
 import { ParseInput, ParseReturnType, ZodTypeAny, ZodTypeDef } from "zod";
 import { SchemaSubtypeOf } from "../utils";
 import { ZsMonoType } from "../mono-type";
-import { ZsObjectLike, ZsDeclaredShape } from "./general";
+import { ZsDeclaredShape } from "./general";
 
 export type AllSubtypeOf<Vars extends ZsTypeVars> = {
     [K in keyof Vars as Vars[K] extends ZsTypeVar<any, any>
@@ -66,8 +66,8 @@ export class ZsInstantiation<Instance extends ZodTypeAny> extends ZsMonoType<
     get declaration(): Instance extends ZsDeclaredShape
         ? Instance["declaration"]
         : undefined {
-        if (this._instance instanceof ZsObjectLike) {
-            return this._instance.shape;
+        if ("declaration" in this._instance) {
+            return this._instance.declaration as any;
         }
         return undefined as any;
     }
@@ -75,18 +75,14 @@ export class ZsInstantiation<Instance extends ZodTypeAny> extends ZsMonoType<
     get shape(): Instance extends ZsDeclaredShape
         ? Instance["shape"]
         : undefined {
-        if (this._instance instanceof ZsObjectLike) {
-            return this._instance.shape;
+        if ("shape" in this._instance) {
+            return this._instance.shape as any;
         }
         return undefined as any;
     }
 
-    constructor(def: ZsInstantiationDef<Instance>) {
-        super(def);
-    }
-
-    _parse(input: ParseInput): ParseReturnType<Instance["_input"]> {
-        return this._def.instance._parse(input);
+    get actsLike() {
+        return this._instance;
     }
 }
 

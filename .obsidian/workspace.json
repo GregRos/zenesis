@@ -148,17 +148,17 @@
   },
   "active": "b9f62d27e00c9319",
   "lastOpenFiles": [
-    "src/lib/expressions/conditional.ts~",
-    "dist/lib/expressions/conditional.d.ts",
-    "dist/lib/expressions/conditional.d.ts.map",
-    "dist/lib/expressions/conditional.js",
-    "dist/lib/expressions/conditional.js.map",
-    "src/lib/expressions/conditional.ts",
-    "dist/lib/expressions/clause.d.ts",
-    "dist/lib/expressions/clause.d.ts.map",
-    "dist/lib/expressions/clause.js",
-    "dist/lib/expressions/clause.js.map",
-    "src/lib/expressions/clause.ts",
+    "src/lib/expressions/mapped-type.ts~",
+    "dist/lib/expressions/mapped-type.d.ts",
+    "dist/lib/expressions/mapped-type.d.ts.map",
+    "dist/lib/expressions/mapped-type.js",
+    "dist/lib/expressions/mapped-type.js.map",
+    "src/lib/expressions/mapped-type.ts",
+    "dist/lib/expressions/cases.d.ts",
+    "dist/lib/expressions/cases.d.ts.map",
+    "dist/lib/expressions/cases.js",
+    "dist/lib/expressions/cases.js.map",
+    "src/lib/expressions/cases.ts",
     "LICENSE.md"
   ]
 }

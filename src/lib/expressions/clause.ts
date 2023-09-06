@@ -1,11 +1,9 @@
 import { ZodTypeAny } from "zod";
+import { ZsMonoLike } from "../mono-type";
 
-export class SubtypeClause<
-    Subtype extends ZodTypeAny = ZodTypeAny,
-    Supertype extends ZodTypeAny = ZodTypeAny
-> {
+export class SubtypeClause<Subtype = any, Supertype = any> {
     constructor(
-        readonly subtype: Subtype,
-        readonly supertype: Supertype
+        readonly subtype: ZsMonoLike<Subtype>,
+        readonly supertype: ZsMonoLike<Supertype>
     ) {}
 }

@@ -36,27 +36,6 @@ export abstract class ZsDeclaredType<
         });
     }
 }
-
-export abstract class ZsObjectLike<
-    Shape extends ZodRawShape,
-    Def extends ZsDeclaredDef = ZsDeclaredDef
-> extends ZsDeclaredType<objectOutputType<Shape, ZodTypeAny>, Def> {
-    private _object: ZodLazy<ZodObject<Shape, "strip">>;
-
-    abstract get shape(): Shape;
-
-    constructor(def: Def) {
-        super(def);
-        this._object = z.lazy(() => z.object(this.shape));
-    }
-
-    _parse(
-        input: ParseInput
-    ): ParseReturnType<objectOutputType<Shape, ZodTypeAny>> {
-        return this._object._parse(input);
-    }
-}
-
 export type ZsShaped<Shape extends ZodRawShape> = {
     readonly shape: Shape;
 };

@@ -34,13 +34,8 @@ export class ZsTypeVar<
 > {
     readonly declaration = "typeVar";
     _default!: Default;
-    constructor(def: ZsTypeVarDef<Constraint, Default, Name>) {
-        super(def);
-    }
 
-    _parse(input: ParseInput): ParseReturnType<Constraint> {
-        return this._def.constraint._parse(input);
-    }
+    readonly actsLike = z.lazy(() => this._def.constraint);
 
     extends<
         NewConstraint extends

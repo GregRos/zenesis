@@ -21,15 +21,10 @@ export class ZsGenericFunction<
     OuterTypeOfFunction<Args, Returns>,
     ZsGenericFunctionDef<Args, Returns, TypeVars>
 > {
-    private _fun: ZodFunction<Args, Returns>;
-
-    constructor(def: ZsGenericFunctionDef<Args, Returns, TypeVars>) {
-        super(def);
-        this._fun = new ZodFunction({
-            ...def,
-            typeName: ZodFirstPartyTypeKind.ZodFunction
-        });
-    }
+    readonly actsLike = new ZodFunction({
+        ...this._def,
+        typeName: ZodFirstPartyTypeKind.ZodFunction
+    });
 
     returns<NewReturnType extends ZodTypeAny>(
         returnType: NewReturnType
@@ -54,13 +49,13 @@ export class ZsGenericFunction<
     ): ReturnType<F> extends Returns["_output"]
         ? (...args: Args["_input"]) => ReturnType<F>
         : OuterTypeOfFunction<Args, Returns> {
-        return this._fun.implement(func);
+        return this.actsLike.implement(func);
     }
 
     strictImplement(
         func: InnerTypeOfFunction<Args, Returns>
     ): InnerTypeOfFunction<Args, Returns> {
-        return this._fun.strictImplement(func);
+        return this.actsLike.strictImplement(func);
     }
 
     validate<F extends InnerTypeOfFunction<Args, Returns>>(
@@ -68,7 +63,7 @@ export class ZsGenericFunction<
     ): ReturnType<F> extends Returns["_output"]
         ? (...args: Args["_input"]) => ReturnType<F>
         : OuterTypeOfFunction<Args, Returns> {
-        return this._fun.validate(func);
+        return this.actsLike.validate(func);
     }
 
     args<Args2 extends [ZodTypeAny, ...ZodTypeAny[]] | []>(
@@ -91,12 +86,6 @@ export class ZsGenericFunction<
             ...this._def,
             args: this._def.args.rest(rest)
         });
-    }
-
-    _parse(
-        input: ParseInput
-    ): ParseReturnType<OuterTypeOfFunction<Args, Returns>> {
-        return this._fun._parse(input);
     }
 }
 
