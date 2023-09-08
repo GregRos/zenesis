@@ -40,6 +40,10 @@ export class ZsGeneric<
         });
     }
 
+    typeVar(name: string, declarator: (tVar: ZsTypeVar) => ZsTypeVar) {
+        return declarator(new ZsTypeVar({ name, constraint: this }));
+    }
+
     typeVars<TypeVars extends ZsTypeVars>(
         ...tVars: TypeVars
     ): ZsGeneric<TypeVars, Instance> {

@@ -1,6 +1,6 @@
 import { objectOutputType, z, ZodRawShape, ZodTypeAny, ZodTypeDef } from "zod";
-import { ZsDeclaredShape, ZsShaped, ZsDeclaredType } from "./general";
-import { ZsMonoLike } from "../mono-type";
+import { ZsDeclaredShape, ZsShaped } from "./general";
+import { ZsMonoLike, ZsMonoType } from "../mono-type";
 
 export interface ZsInterfaceDef<
     InheritedShape extends ZodRawShape,
@@ -16,7 +16,7 @@ export interface ZsInterfaceDef<
 export class ZsInterface<
     InheritedShape extends ZodRawShape,
     OwnShape extends ZodRawShape
-> extends ZsDeclaredType<
+> extends ZsMonoType<
     objectOutputType<OwnShape & InheritedShape, ZodTypeAny>,
     ZsInterfaceDef<InheritedShape, OwnShape>
 > {

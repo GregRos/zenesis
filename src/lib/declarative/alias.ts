@@ -8,10 +8,7 @@ export interface ZsTypeAliasDef<Type> extends ZsDeclaredDef {
     definition: ZsMonoType<Type, any>;
 }
 
-export class ZsTypeAlias<Type> extends ZsDeclaredType<
-    Type,
-    ZsTypeAliasDef<Type>
-> {
+export class ZsTypeAlias<Type> extends ZsMonoType<Type, ZsTypeAliasDef<Type>> {
     readonly actsLike = z.lazy(() => this.definition);
 
     get definition() {

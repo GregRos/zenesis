@@ -1,36 +1,22 @@
-import { SubtypeClause } from "./clause";
-import { TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod";
-import { ZsMonoType } from "../mono-type";
+import { RecordType, TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod";
+import { ZsMonoLike, ZsMonoType } from "../mono-type";
+import { ZsTypeVarAny } from "../declarative/type-var";
+import { VsMapVar } from "../declarative/source-var";
 
-export type KeyIn = SubtypeClause<PropertyKey, PropertyKey>;
-
-export type getMappedType<Clause extends KeyIn, Mapping extends ZodTypeAny> = {
-    [K in TypeOf<Clause["supertype"]> as TypeOf<
-        Clause["subtype"]
-    >]: TypeOf<Mapping>;
-};
-
-export interface ZsMappedDef<
-    Clause extends SubtypeClause,
-    Mapping extends ZodTypeAny
-> extends ZodTypeDef {
+export interface ZsMappedDef<In, As extends PropertyKey, Value>
+    extends ZodTypeDef {
     typeName: "ZsMapped";
-    clause: Clause;
-    mapping: Mapping;
+    mapVar: VsMapVar<In, As>;
+    value: ZsMonoLike<Value>;
 }
 
-export class ZsMapped<
-    Clause extends KeyIn,
-    Mapping extends ZodTypeAny
-> extends ZsMonoType<
-    getMappedType<Clause, Mapping>,
-    ZsMappedDef<Clause, Mapping>
+export class ZsMapped<In, As extends PropertyKey, Value> extends ZsMonoType<
+    RecordType<As, Value>,
+    ZsMappedDef<In, As, Value>
 > {
-    readonly actsLike = z.lazy(() => z.record());
+    readonly actsLike = z.record(this._def.mapVar._def.as, this._def.value);
 
-    get of() {
-        return this._def.clause;
-    }
+    var(name: string) {}
 
     static create<Clause extends KeyIn, Mapping extends ZodTypeAny>(
         clause: Clause,

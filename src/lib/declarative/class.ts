@@ -6,9 +6,9 @@ import {
     ZodTypeAny,
     ZodTypeDef
 } from "zod";
-import { ZsDeclaredShape, ZsShaped, ZsDeclaredType } from "./general";
+import { ZsDeclaredShape, ZsShaped } from "./general";
 import { $typeVar } from "../declarative/type-var";
-import { ZsMonoLike } from "../mono-type";
+import { ZsMonoLike, ZsMonoType } from "../mono-type";
 
 export type combineClassShape<
     InheritedShape extends ZodRawShape,
@@ -35,7 +35,7 @@ export class ZsClass<
     InheritedShape extends ZodRawShape,
     RequiresShape extends ZodRawShape,
     OwnShape extends ZodRawShape
-> extends ZsDeclaredType<
+> extends ZsMonoType<
     objectOutputType<
         combineClassShape<InheritedShape, RequiresShape, OwnShape>,
         ZodTypeAny

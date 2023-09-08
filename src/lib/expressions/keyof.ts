@@ -1,4 +1,5 @@
 import {
+    CatchallInput,
     ParseInput,
     ParseReturnType,
     z,
@@ -6,29 +7,29 @@ import {
     ZodTypeAny,
     ZodTypeDef
 } from "zod";
-import { ZsMonoType } from "../mono-type";
+import { ZsMonoLike, ZsMonoType } from "../mono-type";
 
-export interface ZsKeyOfDef<Container extends ZodTypeAny> extends ZodTypeDef {
+export interface ZsKeyOfDef<Of> extends ZodTypeDef {
     typeName: "ZsKeyOf";
-    what: Container;
+    of: ZsMonoLike<Of>;
 }
 
-export const PropertyKey = z.string().or(z.number()).or(z.symbol());
+export const PropertyKey = z.union([z.string(), z.number(), z.symbol()]);
 
-export class ZsKeyOf<Container extends ZodTypeAny> extends ZsMonoType<
-    keyof Container["_type"],
+export class ZsKeyOf<Container> extends ZsMonoType<
+    PropertyKey,
     ZsKeyOfDef<Container>
 > {
     readonly actsLike = PropertyKey;
 
     get of() {
-        return this._def.what;
+        return this._def.of;
     }
 
     static create<Container extends ZodTypeAny>(what: Container) {
         return new ZsKeyOf<Container>({
             typeName: "ZsKeyOf",
-            what
+            of: what
         });
     }
 }

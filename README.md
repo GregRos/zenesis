@@ -19,7 +19,12 @@ npm install zod zodiverse
 
 # How it works
 
-
+```typescript
+const tv = dz.generic("A", "B").where({
+	A: it => it.extends(it.B).defaults(it.B),
+	B: it => it.extends(it.A)
+})
+```
 
 
 
