@@ -6,7 +6,7 @@ import {
     ZodTypeDef
 } from "zod";
 
-export type ZsMonoLike<Type> = ZodType<Type, ZodTypeDef, Type>;
+export type ZsMonoLike<Type> = ZodType<Type, any, Type>;
 
 export abstract class ZsMonoType<
     Monotype,

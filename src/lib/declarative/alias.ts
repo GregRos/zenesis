@@ -1,15 +1,28 @@
-import { ZsDeclaredDef, ZsDeclaredType } from "./general";
-import { ParseInput, ParseReturnType, z, ZodTypeAny } from "zod";
+import { ZsDeclaredDef } from "./general";
+import { TypeOf, ZodTypeAny } from "zod";
 import { ZsMonoType } from "../mono-type";
+import { ZsTypeAliasRef } from "../refs";
 
-export interface ZsTypeAliasDef<Type> extends ZsDeclaredDef {
+export interface ZsTypeAliasDef<Type extends ZodTypeAny> extends ZsDeclaredDef {
     name: string;
     typeName: "ZsTypeAlias";
-    definition: ZsMonoType<Type, any>;
+    definition: Type;
 }
 
-export class ZsTypeAlias<Type> extends ZsMonoType<Type, ZsTypeAliasDef<Type>> {
+export class ZsTypeAlias<Instance extends ZodTypeAny>
+    extends ZsMonoType<Instance, ZsTypeAliasDef<Instance>>
+    implements ZsTypeAliasRef<TypeOf<Instance>>
+{
     readonly actsLike = this._def.definition;
-
     readonly declaration = "typeAlias";
+    static create<Instance extends ZodTypeAny>(
+        name: string,
+        instance: Instance
+    ) {
+        return new ZsTypeAlias<Instance>({
+            typeName: "ZsTypeAlias",
+            name,
+            definition: instance
+        });
+    }
 }

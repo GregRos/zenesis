@@ -1,6 +1,9 @@
 import { objectOutputType, z, ZodRawShape, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsDeclaredShape, ZsShaped } from "./general";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
+import { ZsInterfaceRef } from "../refs";
+import { arraysToOverloads } from "../expressions/overloads";
+import { combineClassShape } from "../utils";
 
 export interface ZsInterfaceDef<
     InheritedShape extends ZodRawShape,
@@ -14,12 +17,16 @@ export interface ZsInterfaceDef<
 }
 
 export class ZsInterface<
-    InheritedShape extends ZodRawShape,
-    OwnShape extends ZodRawShape
-> extends ZsMonoType<
-    objectOutputType<OwnShape & InheritedShape, ZodTypeAny>,
-    ZsInterfaceDef<InheritedShape, OwnShape>
-> {
+        InheritedShape extends ZodRawShape,
+        OwnShape extends ZodRawShape
+    >
+    extends ZsMonoType<
+        objectOutputType<OwnShape & InheritedShape, ZodTypeAny>,
+        ZsInterfaceDef<InheritedShape, OwnShape>
+    >
+    implements
+        ZsInterfaceRef<objectOutputType<OwnShape & InheritedShape, ZodTypeAny>>
+{
     readonly declaration = "interface";
 
     readonly actsLike = z.lazy(() => z.object(this.shape)) as ZsMonoLike<
@@ -75,5 +82,3 @@ export class ZsInterface<
         });
     }
 }
-
-export const $interface = ZsInterface.create;

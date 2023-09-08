@@ -7,14 +7,9 @@ import {
     ZodTypeDef
 } from "zod";
 import { ZsDeclaredShape, ZsShaped } from "./general";
-import { $typeVar } from "../declarative/type-var";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
-
-export type combineClassShape<
-    InheritedShape extends ZodRawShape,
-    RequiresShape extends ZodRawShape,
-    OwnShape extends ZodRawShape
-> = InheritedShape & RequiresShape & OwnShape;
+import { ZsClassRef } from "../refs";
+import { combineClassShape } from "../utils";
 
 export interface ZsClassDef<
     InheritedShape extends ZodRawShape,
@@ -32,16 +27,25 @@ export interface ZsClassDef<
 }
 
 export class ZsClass<
-    InheritedShape extends ZodRawShape,
-    RequiresShape extends ZodRawShape,
-    OwnShape extends ZodRawShape
-> extends ZsMonoType<
-    objectOutputType<
-        combineClassShape<InheritedShape, RequiresShape, OwnShape>,
-        ZodTypeAny
-    >,
-    ZsClassDef<InheritedShape, RequiresShape, OwnShape>
-> {
+        InheritedShape extends ZodRawShape,
+        RequiresShape extends ZodRawShape,
+        OwnShape extends ZodRawShape
+    >
+    extends ZsMonoType<
+        objectOutputType<
+            combineClassShape<InheritedShape, RequiresShape, OwnShape>,
+            ZodTypeAny
+        >,
+        ZsClassDef<InheritedShape, RequiresShape, OwnShape>
+    >
+    implements
+        ZsClassRef<
+            objectOutputType<
+                combineClassShape<InheritedShape, RequiresShape, OwnShape>,
+                ZodTypeAny
+            >
+        >
+{
     readonly declaration = "class";
     readonly actsLike = z.lazy(() => z.object(this.shape)) as ZsMonoLike<
         objectOutputType<

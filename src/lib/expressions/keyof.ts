@@ -9,16 +9,16 @@ import {
 } from "zod";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
 
-export interface ZsKeyOfDef<Of> extends ZodTypeDef {
+export interface ZsKeyOfDef<Of extends ZodTypeAny> extends ZodTypeDef {
     typeName: "ZsKeyOf";
-    of: ZsMonoLike<Of>;
+    of: Of;
 }
 
 export const PropertyKey = z.union([z.string(), z.number(), z.symbol()]);
 
-export class ZsKeyOf<Container> extends ZsMonoType<
+export class ZsKeyOf<Of extends ZodTypeAny> extends ZsMonoType<
     PropertyKey,
-    ZsKeyOfDef<Container>
+    ZsKeyOfDef<Of>
 > {
     readonly actsLike = PropertyKey;
 

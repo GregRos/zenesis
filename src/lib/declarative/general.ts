@@ -10,8 +10,8 @@ import {
     ZodTypeDef
 } from "zod";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
-import { ZsTypeVars } from "./type-var";
-import { ZsGeneric } from "./generic-type";
+import { ZsTypeAlias } from "./alias";
+import { ZsClass } from "./class";
 
 export type DeclaredTypeKind =
     | "class"
