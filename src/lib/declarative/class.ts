@@ -8,13 +8,14 @@ import {
 } from "zod";
 import { ZsDeclaredShape, ZsShaped } from "./general";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
-import { ZsClassRef } from "../refs";
-import { combineClassShape } from "../utils";
+import { ZsShapedClassRef } from "../refs";
+import { combineClassShape, getCombinedType } from "../utils";
+import { arraysToOverloads, ZsShape } from "../expressions/overloads";
 
 export interface ZsClassDef<
-    InheritedShape extends ZodRawShape,
-    RequiresShape extends ZodRawShape,
-    OwnShape extends ZodRawShape
+    InheritedShape extends ZsShape,
+    RequiresShape extends ZsShape,
+    OwnShape extends ZsShape
 > extends ZodTypeDef {
     name: string;
     typeName: "ZsClass";
@@ -27,32 +28,23 @@ export interface ZsClassDef<
 }
 
 export class ZsClass<
-        InheritedShape extends ZodRawShape,
-        RequiresShape extends ZodRawShape,
-        OwnShape extends ZodRawShape
+        OwnShape extends ZsShape,
+        InheritedShape extends ZsShape,
+        RequiresShape extends ZsShape
     >
     extends ZsMonoType<
-        objectOutputType<
-            combineClassShape<InheritedShape, RequiresShape, OwnShape>,
-            ZodTypeAny
-        >,
+        getCombinedType<OwnShape, InheritedShape, RequiresShape>,
         ZsClassDef<InheritedShape, RequiresShape, OwnShape>
     >
     implements
-        ZsClassRef<
-            objectOutputType<
-                combineClassShape<InheritedShape, RequiresShape, OwnShape>,
-                ZodTypeAny
-            >
+        ZsShapedClassRef<
+            combineClassShape<OwnShape, InheritedShape, RequiresShape>
         >
 {
     readonly declaration = "class";
-    readonly actsLike = z.lazy(() => z.object(this.shape)) as ZsMonoLike<
-        objectOutputType<
-            combineClassShape<InheritedShape, RequiresShape, OwnShape>,
-            ZodTypeAny
-        >
-    >;
+    readonly actsLike = z.lazy(() =>
+        z.object(arraysToOverloads(this.shape))
+    ) as any;
     get shape() {
         return {
             ...this._def.inheritedShape(),
@@ -63,11 +55,11 @@ export class ZsClass<
 
     implements<InterfaceShape extends ZodRawShape>(
         iface: ZsDeclaredShape<InterfaceShape>
-    ): ZsClass<InheritedShape, InterfaceShape & RequiresShape, OwnShape> {
+    ): ZsClass<OwnShape, InheritedShape, InterfaceShape & RequiresShape> {
         return new ZsClass<
+            OwnShape,
             InheritedShape,
-            InterfaceShape & RequiresShape,
-            OwnShape
+            InterfaceShape & RequiresShape
         >({
             ...this._def,
             requiredShape: () =>
@@ -79,7 +71,7 @@ export class ZsClass<
     setParent<ParentShape2 extends ZodRawShape>(
         parent: ZsDeclaredShape<ParentShape2, "class">
     ) {
-        return new ZsClass<ParentShape2, RequiresShape, OwnShape>({
+        return new ZsClass<OwnShape, ParentShape2, RequiresShape>({
             ...this._def,
             inheritedShape: () => parent.shape as ParentShape2,
             parent
@@ -107,7 +99,7 @@ export class ZsClass<
     }
 
     abstract(yes = true) {
-        return new ZsClass<InheritedShape, RequiresShape, OwnShape>({
+        return new ZsClass<OwnShape, InheritedShape, RequiresShape>({
             ...this._def,
             abstract: yes
         });

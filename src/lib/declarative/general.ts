@@ -12,6 +12,7 @@ import {
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
 import { ZsTypeAlias } from "./alias";
 import { ZsClass } from "./class";
+import { ZsShape } from "../expressions/overloads";
 
 export type DeclaredTypeKind =
     | "class"
@@ -31,6 +32,6 @@ export type ZsShaped<Shape extends ZodRawShape> = {
 };
 
 export type ZsDeclaredShape<
-    Shape extends ZodRawShape = ZodRawShape,
+    Shape extends ZsShape = ZsShape,
     Kind extends DeclaredObjectKind = DeclaredObjectKind
 > = { readonly declaration: Kind; readonly shape: Shape };
