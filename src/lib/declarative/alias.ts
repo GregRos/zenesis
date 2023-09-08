@@ -9,15 +9,7 @@ export interface ZsTypeAliasDef<Type> extends ZsDeclaredDef {
 }
 
 export class ZsTypeAlias<Type> extends ZsMonoType<Type, ZsTypeAliasDef<Type>> {
-    readonly actsLike = z.lazy(() => this.definition);
-
-    get definition() {
-        return this._def.definition;
-    }
-
-    _parse(input: ParseInput): ParseReturnType<Type> {
-        return this.definition._parse(input);
-    }
+    readonly actsLike = this._def.definition;
 
     readonly declaration = "typeAlias";
 }

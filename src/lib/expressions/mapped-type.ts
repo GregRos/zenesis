@@ -1,7 +1,7 @@
 import { RecordType, TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
 import { ZsTypeVarAny } from "../declarative/type-var";
-import { VsMapVar } from "../declarative/source-var";
+import { VsMapVar } from "../declarative/map-var";
 
 export interface ZsMappedDef<In, As extends PropertyKey, Value>
     extends ZodTypeDef {

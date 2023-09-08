@@ -122,14 +122,3 @@ export class ZsClass<
         });
     }
 }
-
-export const $class = ZsClass.create;
-
-const b = $class("Example1")
-    .extend({
-        a: z.string(),
-        b: z.number()
-    })
-    .typeVars($typeVar("X"))
-    .instantiate(z.string());
-const a = $class("Hello").setParent(b);

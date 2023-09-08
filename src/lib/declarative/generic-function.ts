@@ -1,101 +1,24 @@
-import {
-    InnerTypeOfFunction,
-    OuterTypeOfFunction,
-    ParseInput,
-    ParseReturnType,
-    z,
-    ZodFirstPartyTypeKind,
-    ZodFunction,
-    ZodTuple,
-    ZodTypeAny,
-    ZodTypeDef
-} from "zod";
-import { ZsTypeVars } from "./type-var";
+import { TypeOf, ZodFunction, ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
 
-export class ZsGenericFunction<
-    Args extends ZodTuple<any, any> = ZodTuple<[], null>,
-    Returns extends ZodTypeAny = ZodTypeAny,
-    TypeVars extends ZsTypeVars = []
-> extends ZsMonoType<
-    OuterTypeOfFunction<Args, Returns>,
-    ZsGenericFunctionDef<Args, Returns, TypeVars>
-> {
-    readonly actsLike = new ZodFunction({
-        ...this._def,
-        typeName: ZodFirstPartyTypeKind.ZodFunction
-    });
-
-    returns<NewReturnType extends ZodTypeAny>(
-        returnType: NewReturnType
-    ): ZsGenericFunction<Args, NewReturnType, TypeVars> {
-        return new ZsGenericFunction({
-            ...this._def,
-            returns: returnType
-        });
-    }
-
-    typeVars<TypeVars extends ZsTypeVars>(
-        ...tVars: TypeVars
-    ): ZsGenericFunction<Args, Returns, TypeVars> {
-        return new ZsGenericFunction({
-            ...this._def,
-            typeVars: tVars
-        });
-    }
-
-    implement<F extends InnerTypeOfFunction<Args, Returns>>(
-        func: F
-    ): ReturnType<F> extends Returns["_output"]
-        ? (...args: Args["_input"]) => ReturnType<F>
-        : OuterTypeOfFunction<Args, Returns> {
-        return this.actsLike.implement(func);
-    }
-
-    strictImplement(
-        func: InnerTypeOfFunction<Args, Returns>
-    ): InnerTypeOfFunction<Args, Returns> {
-        return this.actsLike.strictImplement(func);
-    }
-
-    validate<F extends InnerTypeOfFunction<Args, Returns>>(
-        func: F
-    ): ReturnType<F> extends Returns["_output"]
-        ? (...args: Args["_input"]) => ReturnType<F>
-        : OuterTypeOfFunction<Args, Returns> {
-        return this.actsLike.validate(func);
-    }
-
-    args<Args2 extends [ZodTypeAny, ...ZodTypeAny[]] | []>(
-        ...args: Args2
-    ): ZsGenericFunction<
-        ZodTuple<Args2, Args["_def"]["rest"]>,
-        Returns,
-        TypeVars
-    > {
-        return new ZsGenericFunction({
-            ...this._def,
-            args: z.tuple(args, this._def.args._def.rest)
-        });
-    }
-
-    restArgs<Rest extends ZodTypeAny>(
-        rest: Rest
-    ): ZsGenericFunction<ZodTuple<Args["items"], Rest>, Returns, TypeVars> {
-        return new ZsGenericFunction({
-            ...this._def,
-            args: this._def.args.rest(rest)
-        });
-    }
-}
+import { ZsTypeVarsRecord } from "./type-var";
 
 export interface ZsGenericFunctionDef<
-    Args extends ZodTuple<any, any>,
-    Returns extends ZodTypeAny,
-    TypeVars extends ZsTypeVars
+    TypeArgs extends ZsTypeVarsRecord,
+    F extends ZodFunction<any, any>
 > extends ZodTypeDef {
-    args: Args;
-    returns: Returns;
     typeName: "ZsGenericFunction";
-    typeVars: TypeVars;
+    function: F;
+    ordering: (keyof TypeArgs)[];
+    typeArgs: TypeArgs;
+}
+
+export class ZsGenericFunction<
+    TypeArgs extends ZsTypeVarsRecord,
+    Function extends ZodFunction<any, any>
+> extends ZsMonoType<
+    TypeOf<Function>,
+    ZsGenericFunctionDef<TypeArgs, Function>
+> {
+    readonly actsLike = this._def.function;
 }
