@@ -1,9 +1,10 @@
 import { objectOutputType, z, ZodRawShape, ZodTypeAny, ZodTypeDef } from "zod";
-import { ZsDeclaredShape, ZsShaped } from "./general";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
-import { ZsInterfaceRef, ZsShapedRef } from "../refs";
+import { ZsShapedRef, ZsInterfaceRef } from "../refs";
 import { arraysToOverloads, ZsShape } from "../expressions/overloads";
 import { combineClassShape, getCombinedType } from "../utils";
+import { fun } from "../expressions/function";
+import { Generic } from "./generic/generic-type";
 
 export interface ZsInterfaceDef<
     OwnShape extends ZsShape,
@@ -13,7 +14,7 @@ export interface ZsInterfaceDef<
     typeName: "ZsInterface";
     ownShape: () => OwnShape;
     inheritedShape: () => InheritedShape;
-    extends: ZsDeclaredShape[];
+    extends: ZsShapedRef[];
 }
 
 export class ZsInterface<
@@ -28,7 +29,9 @@ export class ZsInterface<
 {
     readonly declaration = "interface";
 
-    readonly actsLike = z.object(arraysToOverloads(this.shape));
+    readonly actsLike = z.object(arraysToOverloads(this.shape)) as ZsMonoLike<
+        getCombinedType<OwnShape, InheritedShape>
+    >;
     get shape() {
         return {
             ...this._def.inheritedShape(),
@@ -85,8 +88,10 @@ const otest = ZsInterface.create("test")
     .extend({
         b: z.string(),
         a: [
-            z.function(z.tuple([z.string()]), z.string()),
-            z.function(z.tuple([z.number()]), z.number())
+            fun(z.string()).returns(z.string()),
+            Generic.create("A").function(vars =>
+                fun(vars.A, z.string()).returns(z.number())
+            )
         ]
     })
-    .parse();
+    .parse(null!);

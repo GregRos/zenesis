@@ -6,9 +6,8 @@ import {
     ZodTypeAny,
     ZodTypeDef
 } from "zod";
-import { ZsDeclaredShape, ZsShaped } from "./general";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
-import { ZsShapedClassRef } from "../refs";
+import { ZsShapedRef, ZsShapedClassRef } from "../refs";
 import { combineClassShape, getCombinedType } from "../utils";
 import { arraysToOverloads, ZsShape } from "../expressions/overloads";
 
@@ -22,8 +21,8 @@ export interface ZsClassDef<
     inheritedShape: () => InheritedShape;
     requiredShape: () => RequiresShape;
     ownShape: () => OwnShape;
-    parent: ZsDeclaredShape<ZodRawShape, "class"> | null;
-    implements: ZsDeclaredShape[];
+    parent: ZsShapedRef<ZodRawShape, "class"> | null;
+    implements: ZsShapedRef[];
     abstract: boolean;
 }
 
@@ -54,7 +53,7 @@ export class ZsClass<
     }
 
     implements<InterfaceShape extends ZodRawShape>(
-        iface: ZsDeclaredShape<InterfaceShape>
+        iface: ZsShapedRef<InterfaceShape>
     ): ZsClass<OwnShape, InheritedShape, InterfaceShape & RequiresShape> {
         return new ZsClass<
             OwnShape,
@@ -69,7 +68,7 @@ export class ZsClass<
     }
 
     setParent<ParentShape2 extends ZodRawShape>(
-        parent: ZsDeclaredShape<ParentShape2, "class">
+        parent: ZsShapedRef<ParentShape2, "class">
     ) {
         return new ZsClass<OwnShape, ParentShape2, RequiresShape>({
             ...this._def,
@@ -88,7 +87,7 @@ export class ZsClass<
         });
     }
 
-    merge<Shape2 extends ZodRawShape>(other: ZsShaped<Shape2>) {
+    merge<Shape2 extends ZodRawShape>(other: ZsShapedRef<Shape2>) {
         return new ZsClass({
             ...this._def,
             ownShape: () => ({

@@ -4,6 +4,7 @@ import { ZsGenericFunction } from "../../expressions/generic-function";
 import { Generic } from "./generic-type";
 import { TypeVarBuilder } from "./type-var-builder";
 import { ZsDeclaredType } from "../../refs";
+import { ZsFunction } from "../../expressions/function";
 
 export class GenericBuilder<
     Names extends string,
@@ -59,7 +60,7 @@ export class GenericBuilder<
         });
     }
 
-    function<Function extends ZodFunction<any, any>>(
+    function<Function extends ZsFunction<any, any>>(
         constructor: (reification: Reification<Names, Vars>) => Function
     ): ZsGenericFunction<Vars, Function> {
         const instance = constructor(this._vars);

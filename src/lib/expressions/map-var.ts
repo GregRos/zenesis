@@ -1,8 +1,7 @@
-import { ZsDeclaredDef } from "../declarative/general";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
-import { TypeOf, ZodTypeAny } from "zod";
+import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod";
 
-export interface VsMapVarDef<In extends ZsMonoLike<any>> extends ZsDeclaredDef {
+export interface VsMapVarDef<In extends ZsMonoLike<any>> extends ZodTypeDef {
     typeName: "VsKeyVar";
     name: string;
     in: In;

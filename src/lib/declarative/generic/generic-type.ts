@@ -1,9 +1,10 @@
 import { ZsTypeVar, ZsTypeVarsRecord } from "./type-var";
-import { ZodTypeAny, ZodTypeDef } from "zod";
+import { z, ZodAny, ZodTypeAny, ZodTypeDef } from "zod";
 import { SchemaSubtypeOf } from "../../utils";
 
 import { ZsInstantiation } from "../../expressions/instantiation";
 import { ZsDeclaredType } from "../../refs";
+import { GenericBuilder } from "./generic-builder";
 
 export interface ZsGenericDef<
     Vars extends ZsTypeVarsRecord,
@@ -40,4 +41,13 @@ export class Generic<
             typeName: "ZsInstantiation"
         });
     }
+
+    static create<Names extends string>(...names: [Names, ...Names[]]) {
+        return new GenericBuilder(
+            names,
+            {} as Record<Names, ZsTypeVar<ZodAny, null>>
+        );
+    }
 }
+
+export const generic = Generic.create;

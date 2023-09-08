@@ -1,9 +1,8 @@
-import { ZsDeclaredDef } from "./general";
-import { TypeOf, ZodTypeAny } from "zod";
+import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
 import { ZsTypeAliasRef } from "../refs";
 
-export interface ZsTypeAliasDef<Type extends ZodTypeAny> extends ZsDeclaredDef {
+export interface ZsTypeAliasDef<Type extends ZodTypeAny> extends ZodTypeDef {
     name: string;
     typeName: "ZsTypeAlias";
     definition: Type;

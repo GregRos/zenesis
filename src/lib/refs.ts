@@ -1,5 +1,4 @@
 import { ZsMonoLike } from "./mono-type";
-import { ZsValue } from "./declarative/value";
 import { ZsShape } from "./expressions/overloads";
 import { getTypeFromShape } from "./utils";
 
@@ -12,9 +11,13 @@ export interface ZsTypedClassRef<Type> extends ZsMonoLike<Type> {
     readonly declaration: "class";
 }
 
-export type ZsShapedRef<Shape extends ZsShape> =
-    | ZsShapedClassRef<Shape>
-    | ZsShapedInterfaceRef<Shape>;
+export type ZsShapedRef<
+    Shape extends ZsShape = ZsShape,
+    Kind extends "class" | "interface" = "class" | "interface"
+> = {
+    readonly shape: Shape;
+    readonly declaration: Kind;
+};
 
 export interface ZsShapedClassRef<Shape extends ZsShape>
     extends ZsMonoLike<getTypeFromShape<Shape>> {

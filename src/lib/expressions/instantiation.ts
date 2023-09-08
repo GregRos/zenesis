@@ -1,7 +1,6 @@
 import { ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
-import { ZsDeclaredShape } from "../declarative/general";
-import { ZsDeclaredType } from "../refs";
+import { ZsShapedRef, ZsDeclaredType } from "../refs";
 
 export interface ZsInstantiationDef<Instance extends ZodTypeAny>
     extends ZodTypeDef {
@@ -13,7 +12,7 @@ export interface ZsInstantiationDef<Instance extends ZodTypeAny>
 export class ZsInstantiation<
     Instance extends ZsDeclaredType<any>
 > extends ZsMonoType<Instance, ZsInstantiationDef<Instance>> {
-    get declaration(): Instance extends ZsDeclaredShape
+    get declaration(): Instance extends ZsShapedRef
         ? Instance["declaration"]
         : undefined {
         if ("declaration" in this.actsLike) {
@@ -22,9 +21,7 @@ export class ZsInstantiation<
         return undefined as any;
     }
 
-    get shape(): Instance extends ZsDeclaredShape
-        ? Instance["shape"]
-        : undefined {
+    get shape(): Instance extends ZsShapedRef ? Instance["shape"] : undefined {
         if ("shape" in this.actsLike) {
             return this.actsLike.shape as any;
         }

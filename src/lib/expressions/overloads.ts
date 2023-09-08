@@ -1,6 +1,10 @@
-import { ZodRawShape, ZodTypeAny, ZodTypeDef } from "zod";
+import { ZodFunction, ZodRawShape, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
-import { getTypeFromShape, RecursiveConjunction } from "../utils";
+import {
+    getTypeFromShape,
+    RecursiveConjunction,
+    ZsFunctionTypeAny
+} from "../utils";
 
 export interface ZsOverloadsDef<
     Overloads extends readonly [ZodTypeAny, ...ZodTypeAny[]]
@@ -40,7 +44,7 @@ export class ZsOverloads<
 }
 
 export type ZsShape = {
-    [key: string]: ZodTypeAny | readonly ZodTypeAny[];
+    [key: string]: ZodTypeAny | readonly ZsFunctionTypeAny[];
 };
 
 export type Overloaded<Input> = Input extends readonly [

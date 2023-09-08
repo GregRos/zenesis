@@ -2,10 +2,11 @@ import { TypeOf, ZodFunction, ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
 
 import { ZsTypeVarsRecord } from "../declarative/generic/type-var";
+import { ZsFunction } from "./function";
 
 export interface ZsGenericFunctionDef<
     TypeArgs extends ZsTypeVarsRecord,
-    F extends ZodFunction<any, any>
+    F extends ZsFunction<any, any>
 > extends ZodTypeDef {
     typeName: "ZsGenericFunction";
     function: F;
@@ -15,7 +16,7 @@ export interface ZsGenericFunctionDef<
 
 export class ZsGenericFunction<
     TypeArgs extends ZsTypeVarsRecord,
-    Function extends ZodFunction<any, any>
+    Function extends ZsFunction<any, any>
 > extends ZsMonoType<
     TypeOf<Function>,
     ZsGenericFunctionDef<TypeArgs, Function>
