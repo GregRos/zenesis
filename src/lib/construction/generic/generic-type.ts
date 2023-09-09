@@ -1,9 +1,9 @@
 import { ZsTypeVar, ZsTypeVarsRecord } from "./type-var";
 import { z, ZodAny, ZodTypeAny, ZodTypeDef } from "zod";
-import { SchemaSubtypeOf } from "../../utils";
+import { SchemaSubtypeOf } from "../utils";
 
-import { ZsInstantiation } from "../../expressions/instantiation";
-import { ZsDeclaredType } from "../../refs";
+import { ZsInstantiation } from "../expressions/instantiation";
+import { ZsDeclaredType } from "../refs";
 import { GenericBuilder } from "./generic-builder";
 
 export interface ZsGenericDef<
@@ -11,15 +11,15 @@ export interface ZsGenericDef<
     Instance extends ZodTypeAny
 > extends ZodTypeDef {
     vars: Vars;
-    instance: Instance;
+    instance: () => Instance;
     ordering: (keyof Vars)[];
 }
 
 export interface ZsGenericRef<Schema extends ZodTypeAny> {}
 
-export class Generic<
+export class ZsGenericType<
     Vars extends ZsTypeVarsRecord = ZsTypeVarsRecord,
-    Instance extends ZsDeclaredType<any> = ZsDeclaredType<any>
+    Instance extends ZsDeclaredType = ZsDeclaredType
 > {
     constructor(readonly _def: ZsGenericDef<Vars, Instance>) {}
 
@@ -50,4 +50,4 @@ export class Generic<
     }
 }
 
-export const generic = Generic.create;
+export const generic = ZsGenericType.create;

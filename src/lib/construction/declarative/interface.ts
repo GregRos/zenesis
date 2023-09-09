@@ -1,16 +1,22 @@
 import { objectOutputType, z, ZodRawShape, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
-import { ZsShapedRef, ZsInterfaceRef } from "../refs";
-import { arraysToOverloads, ZsShape } from "../expressions/overloads";
+import { ZsShapedRef, ZsTypedInterfaceRef } from "../refs";
+import {
+    arraysToOverloads,
+    unpackMemberSchemas,
+    ZsShape
+} from "../expressions/overloads";
 import { combineClassShape, getCombinedType } from "../utils";
 import { fun } from "../expressions/function";
-import { Generic } from "./generic/generic-type";
+import { ZsGenericType } from "../generic/generic-type";
+import { ZsMember } from "./member";
 
 export interface ZsInterfaceDef<
-    OwnShape extends ZsShape,
-    InheritedShape extends ZsShape
+    Name extends string,
+    OwnShape extends ZsShape<"public">,
+    InheritedShape extends ZsShape<"public">
 > extends ZodTypeDef {
-    name: string;
+    name: Name;
     typeName: "ZsInterface";
     ownShape: () => OwnShape;
     inheritedShape: () => InheritedShape;
@@ -18,20 +24,24 @@ export interface ZsInterfaceDef<
 }
 
 export class ZsInterface<
-        const OwnShape extends ZsShape,
-        const InheritedShape extends ZsShape
+        Name extends string,
+        OwnShape extends ZsShape<"public">,
+        InheritedShape extends ZsShape<"public">
     >
     extends ZsMonoType<
         getCombinedType<OwnShape, InheritedShape>,
-        ZsInterfaceDef<OwnShape, InheritedShape>
+        ZsInterfaceDef<Name, OwnShape, InheritedShape>
     >
-    implements ZsInterfaceRef<getCombinedType<OwnShape, InheritedShape>>
+    implements
+        ZsTypedInterfaceRef<Name, getCombinedType<OwnShape, InheritedShape>>
 {
     readonly declaration = "interface";
+    readonly name = this._def.name;
 
-    readonly actsLike = z.object(arraysToOverloads(this.shape)) as ZsMonoLike<
-        getCombinedType<OwnShape, InheritedShape>
-    >;
+    readonly actsLike = z.lazy(() =>
+        z.object(unpackMemberSchemas(this.shape))
+    ) as ZsMonoLike<getCombinedType<OwnShape, InheritedShape>>;
+
     get shape() {
         return {
             ...this._def.inheritedShape(),
@@ -39,9 +49,7 @@ export class ZsInterface<
         };
     }
 
-    parent<const Shape1 extends ZsShape>(
-        other: ZsShapedRef<Shape1>
-    ): ZsInterface<OwnShape, Shape1 & InheritedShape> {
+    parent<const Shape1 extends ZsShape>(other: ZsShapedRef<Shape1>) {
         return new ZsInterface({
             ...this._def,
             inheritedShape: () => ({
@@ -52,7 +60,7 @@ export class ZsInterface<
         });
     }
 
-    extend<const Shape2 extends ZsShape>(other: Shape2) {
+    body<const Shape2 extends ZsShape<"public">>(other: Shape2) {
         return new ZsInterface({
             ...this._def,
             ownShape: () =>
@@ -63,17 +71,7 @@ export class ZsInterface<
         });
     }
 
-    merge<const Shape2 extends ZsShape>(other: ZsShapedRef<Shape2>) {
-        return new ZsInterface({
-            ...this._def,
-            ownShape: () => ({
-                ...this._def.ownShape(),
-                ...other.shape
-            })
-        });
-    }
-
-    static create(name: string): ZsInterface<{}, {}> {
+    static create<Name extends string>(name: Name) {
         return new ZsInterface({
             name,
             typeName: "ZsInterface",
@@ -83,15 +81,3 @@ export class ZsInterface<
         });
     }
 }
-
-const otest = ZsInterface.create("test")
-    .extend({
-        b: z.string(),
-        a: [
-            fun(z.string()).returns(z.string()),
-            Generic.create("A").function(vars =>
-                fun(vars.A, z.string()).returns(z.number())
-            )
-        ]
-    })
-    .parse(null!);

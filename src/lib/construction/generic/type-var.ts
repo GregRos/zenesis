@@ -1,6 +1,6 @@
 import { z, ZodTypeAny, ZodTypeDef } from "zod";
-import { SchemaSubtypeOf } from "../../utils";
-import { ZsMonoLike, ZsMonoType } from "../../mono-type";
+import { SchemaSubtypeOf } from "../utils";
+import { ZsMonoLike, ZsMonoType } from "../mono-type";
 
 export interface ZsTypeVarRef<Extends> extends ZsMonoLike<Extends> {
     readonly declaration: "typeVar";

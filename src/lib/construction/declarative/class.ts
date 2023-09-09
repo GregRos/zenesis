@@ -7,43 +7,51 @@ import {
     ZodTypeDef
 } from "zod";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
-import { ZsShapedRef, ZsShapedClassRef } from "../refs";
+import { ZsShapedRef, ZsShapedClassRef, ZsTypedClassRef } from "../refs";
 import { combineClassShape, getCombinedType } from "../utils";
-import { arraysToOverloads, ZsShape } from "../expressions/overloads";
+import { unpackMemberSchemas, ZsShape } from "../expressions/overloads";
 
 export interface ZsClassDef<
+    Name extends string,
     InheritedShape extends ZsShape,
     RequiresShape extends ZsShape,
-    OwnShape extends ZsShape
+    OwnShape extends ZsShape,
+    StaticShape extends ZsShape
 > extends ZodTypeDef {
-    name: string;
+    name: Name;
     typeName: "ZsClass";
     inheritedShape: () => InheritedShape;
     requiredShape: () => RequiresShape;
     ownShape: () => OwnShape;
-    parent: ZsShapedRef<ZodRawShape, "class"> | null;
+    staticShape: () => StaticShape;
+    parent: ZsShapedRef<ZsShape, "class"> | null;
     implements: ZsShapedRef[];
     abstract: boolean;
 }
 
 export class ZsClass<
+        Name extends string,
         OwnShape extends ZsShape,
         InheritedShape extends ZsShape,
-        RequiresShape extends ZsShape
+        RequiresShape extends ZsShape,
+        StaticShape extends ZsShape
     >
     extends ZsMonoType<
         getCombinedType<OwnShape, InheritedShape, RequiresShape>,
-        ZsClassDef<InheritedShape, RequiresShape, OwnShape>
+        ZsClassDef<Name, InheritedShape, RequiresShape, OwnShape, StaticShape>
     >
     implements
         ZsShapedClassRef<
             combineClassShape<OwnShape, InheritedShape, RequiresShape>
+        >,
+        ZsTypedClassRef<
+            Name,
+            getCombinedType<OwnShape, InheritedShape, RequiresShape>
         >
 {
+    readonly name = this._def.name;
     readonly declaration = "class";
-    readonly actsLike = z.lazy(() =>
-        z.object(arraysToOverloads(this.shape))
-    ) as any;
+    readonly actsLike = z.lazy(() => z.object(unpackMemberSchemas(this.shape)));
     get shape() {
         return {
             ...this._def.inheritedShape(),
@@ -54,30 +62,28 @@ export class ZsClass<
 
     implements<InterfaceShape extends ZodRawShape>(
         iface: ZsShapedRef<InterfaceShape>
-    ): ZsClass<OwnShape, InheritedShape, InterfaceShape & RequiresShape> {
-        return new ZsClass<
-            OwnShape,
-            InheritedShape,
-            InterfaceShape & RequiresShape
-        >({
+    ) {
+        return new ZsClass({
             ...this._def,
-            requiredShape: () =>
-                objectUtil.mergeShapes(this._def.requiredShape(), iface.shape),
+            requiredShape: () => ({
+                ...this._def.requiredShape(),
+                ...iface.shape
+            }),
             implements: [...this._def.implements, iface]
         });
     }
 
-    setParent<ParentShape2 extends ZodRawShape>(
+    setParent<ParentShape2 extends ZsShape>(
         parent: ZsShapedRef<ParentShape2, "class">
     ) {
-        return new ZsClass<OwnShape, ParentShape2, RequiresShape>({
+        return new ZsClass({
             ...this._def,
             inheritedShape: () => parent.shape as ParentShape2,
             parent
         });
     }
 
-    extend<Shape2 extends ZodRawShape>(other: Shape2) {
+    instance<Shape2 extends ZodRawShape>(other: Shape2) {
         return new ZsClass({
             ...this._def,
             ownShape: () => ({
@@ -87,30 +93,31 @@ export class ZsClass<
         });
     }
 
-    merge<Shape2 extends ZodRawShape>(other: ZsShapedRef<Shape2>) {
+    static<Shape2 extends ZsShape>(other: Shape2) {
         return new ZsClass({
             ...this._def,
-            ownShape: () => ({
-                ...this._def.ownShape(),
-                ...other.shape
+            staticShape: () => ({
+                ...this._def.staticShape(),
+                ...other
             })
         });
     }
 
     abstract(yes = true) {
-        return new ZsClass<OwnShape, InheritedShape, RequiresShape>({
+        return new ZsClass({
             ...this._def,
             abstract: yes
         });
     }
 
-    static create(name: string) {
+    static create<Name extends string>(name: Name) {
         return new ZsClass({
             name,
             typeName: "ZsClass",
             inheritedShape: () => ({}),
             requiredShape: () => ({}),
             ownShape: () => ({}),
+            staticShape: () => ({}),
             parent: null,
             implements: [],
             abstract: false

@@ -1,10 +1,10 @@
 import { Reification, ZsTypeVar, ZsTypeVarsRecord } from "./type-var";
 import { ZodAny, ZodFunction, ZodTypeAny } from "zod";
-import { ZsGenericFunction } from "../../expressions/generic-function";
-import { Generic } from "./generic-type";
+import { ZsGenericFunction } from "../expressions/generic-function";
+import { ZsGenericType } from "./generic-type";
 import { TypeVarBuilder } from "./type-var-builder";
-import { ZsDeclaredType } from "../../refs";
-import { ZsFunction } from "../../expressions/function";
+import { ZsDeclaredType } from "../refs";
+import { ZsFunction } from "../expressions/function";
 
 export class GenericBuilder<
     Names extends string,
@@ -49,12 +49,11 @@ export class GenericBuilder<
         }) as any;
     }
 
-    declare<Instance extends ZsDeclaredType<any>>(
+    declare<Instance extends ZsDeclaredType>(
         constructor: (reification: Reification<Names, Vars>) => Instance
-    ): Generic<Vars, Instance> {
-        const instance = constructor(this._vars);
-        return new Generic<Vars, Instance>({
-            instance: instance,
+    ): ZsGenericType<Vars, Instance> {
+        return new ZsGenericType<Vars, Instance>({
+            instance: () => constructor(this._vars),
             ordering: this._names,
             vars: this._vars
         });

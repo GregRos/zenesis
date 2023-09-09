@@ -13,7 +13,7 @@ export interface ZsMappedDef<
     value: Mapping;
 }
 
-export class ZsMappedType<
+export class ZsMapped<
         In extends ZodTypeAny,
         As extends ZsMonoLike<PropertyKey>,
         Mapping extends ZodTypeAny
@@ -27,21 +27,17 @@ export class ZsMappedType<
     key<As extends ZsMonoLike<PropertyKey>>(
         mapping: (var_: VsMapVar<In>) => As
     ) {
-        return new ZsMappedType<In, As, Mapping>({
-            typeName: "ZsMapped",
-            var: this._def.var,
-            key: mapping(this._def.var),
-            value: this._def.value
+        return new ZsMapped<In, As, Mapping>({
+            ...this._def,
+            key: mapping(this._def.var)
         });
     }
 
     value<Mapping extends ZodTypeAny>(
         mapping: (var_: VsMapVar<In>) => Mapping
     ) {
-        return new ZsMappedType<In, As, Mapping>({
-            typeName: "ZsMapped",
-            var: this._def.var,
-            key: this._def.key,
+        return new ZsMapped<In, As, Mapping>({
+            ...this._def,
             value: mapping(this._def.var)
         });
     }
@@ -53,7 +49,7 @@ export class ZsMappedType<
         ? ZsMappedBuilderValue<In, In>
         : ZsMappedBuilderKey<In> {
         const var_ = VsMapVar.create(name, in_);
-        return new ZsMappedType<In, In, In>({
+        return new ZsMapped<In, In, In>({
             typeName: "ZsMapped",
             var: var_,
             key: var_ as any,
@@ -70,7 +66,7 @@ export interface ZsMappedBuilderValue<
 > extends ZsMappedBuilderKey<In> {
     value<Mapping extends ZodTypeAny>(
         mapping: (var_: VsMapVar<In>) => Mapping
-    ): ZsMappedType<In, As, Mapping>;
+    ): ZsMapped<In, As, Mapping>;
 }
 
 export interface ZsMappedBuilderKey<In extends ZodTypeAny> {

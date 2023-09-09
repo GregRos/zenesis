@@ -1,22 +1,23 @@
-import { TypeOf, ZodTypeAny } from "zod";
-import { ZsMonoLike } from "../mono-type";
+import { ZodTypeAny } from "zod";
+import { ZsValueRef } from "../refs";
 
-export interface ZsValueDef<Annotation extends ZodTypeAny> {
-    name: string;
-    kind: "const" | "let" | "var" | "function";
+export interface ZsValueDef<
+    Name extends string,
+    Annotation extends ZodTypeAny
+> {
+    name: Name;
+    style: "const" | "let" | "var" | "function";
     annotation: Annotation;
     describe: string;
 }
 
-export interface ZsValueRef<Annotation extends ZodTypeAny> {
-    readonly declaration: "value";
-    readonly annotation: Annotation;
-}
-
-export class ZsValue<Annotation extends ZodTypeAny>
-    implements ZsValueRef<Annotation>
+export class ZsValue<
+    Name extends string,
+    Annotation extends ZodTypeAny = ZodTypeAny
+> implements ZsValueRef<Name, Annotation>
 {
+    readonly name = this._def.name;
     readonly declaration = "value";
     readonly annotation = this._def.annotation;
-    constructor(readonly _def: ZsValueDef<Annotation>) {}
+    constructor(readonly _def: ZsValueDef<Name, Annotation>) {}
 }

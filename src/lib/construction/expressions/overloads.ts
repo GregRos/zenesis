@@ -1,10 +1,12 @@
 import { ZodFunction, ZodRawShape, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
 import {
+    Access,
     getTypeFromShape,
     RecursiveConjunction,
     ZsFunctionTypeAny
 } from "../utils";
+import { ZsMember, ZsMemberAny } from "../declarative/member";
 
 export interface ZsOverloadsDef<
     Overloads extends readonly [ZodTypeAny, ...ZodTypeAny[]]
@@ -43,26 +45,35 @@ export class ZsOverloads<
     }
 }
 
-export type ZsShape = {
-    [key: string]: ZodTypeAny | readonly ZsFunctionTypeAny[];
+export type ZsShape<A extends Access = any> = {
+    [key: string]: ZodTypeAny | ZsMemberAny<A>;
 };
 
-export type Overloaded<Input> = Input extends readonly [
-    ZodTypeAny,
-    ...ZodTypeAny[]
-]
-    ? ZsOverloads<Input>
-    : Input extends ZodTypeAny
-    ? Input
-    : never;
-
-export type ArrayMembersToOverloads<Shape extends ZsShape> = {
-    [Key in keyof Shape]: Overloaded<Shape[Key]>;
+export type UnpackMemberSchemas<Shape extends ZsShape> = {
+    [Key in keyof Shape]: Shape[Key] extends ZodTypeAny
+        ? Shape[Key]
+        : Shape[Key] extends ZsMemberAny
+        ? Shape[Key]["actsLike"]
+        : never;
 };
+
+export function unpackMemberSchemas<Shape extends ZsShape>(
+    shape: Shape
+): UnpackMemberSchemas<Shape> {
+    const newShape = {} as any;
+    for (const [key, value] of Object.entries(shape)) {
+        if (value instanceof ZsMember) {
+            newShape[key] = value.actsLike;
+        } else {
+            newShape[key] = value;
+        }
+    }
+    return newShape;
+}
 
 export function arraysToOverloads<const Shape extends ZsShape>(
     shape: Shape
-): ArrayMembersToOverloads<Shape> {
+): UnpackMemberSchemas<Shape> {
     const newShape = {} as any;
     for (const [key, value] of Object.entries(shape)) {
         if (Array.isArray(value)) {

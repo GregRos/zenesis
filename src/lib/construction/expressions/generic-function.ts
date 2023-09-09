@@ -1,7 +1,7 @@
 import { TypeOf, ZodFunction, ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
 
-import { ZsTypeVarsRecord } from "../declarative/generic/type-var";
+import { ZsTypeVarsRecord } from "../generic/type-var";
 import { ZsFunction } from "./function";
 
 export interface ZsGenericFunctionDef<

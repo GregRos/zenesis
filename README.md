@@ -1,4 +1,75 @@
-`zodenesis` builds on `zod`, allowing you to generate carefully designed, fully documented type definitions using all modern TypeScript constructs.
+`zenesis` lets you generate type definitions dynamically.
+
+```typescript
+import {zs} from "zenesis"
+const u = zs.universe()
+const file = universe.file("my-store", () => {
+
+	yield supervisor
+	const blah = zs.typeAliases({
+		Employee: {
+			name: zs.string(),
+			hire: zs.method(z.lazy(blah.Employee))
+		}
+	})
+
+	const employee = zs.typeAlias("Employee", zs.lazy(() => zs.object({
+		name: zs.string(),
+		age: zs.number(),
+		supervisor: employee.or(zs.null())
+	})))
+	const otherThing =
+})
+```
+
+
+f
+
+
+
+`zenesis` 
+
+a library for generating type definitions *combinatorically*, resembling actual TypeScript code instead of some strange API, and providing as-you-type. You also get a **partial validation schema** in the process.
+
+`zenesis` builds on `zod`, extending its schema system with entities represneting:
+
+* Classes, class fields, overloads
+* Interfaces, type aliases
+* Conditional types
+* Operators like `keyof` and `typeof`
+* Type parameters, generic types
+* Generic functions
+* Modules, files
+* Folders
+* Imports and exports
+
+
+
+The purpose of `zenesis` is to al
+
+Some of these entities exist in three 
+
+You can see these entities as existing in three dimensions at once:
+
+1. The Zod dimension involving self-validating runtime schemas.
+2. The TypeScript dimension, where we try to associate these schemas with types via `zod` operators such as `TypeOf`.
+3. The generated code dimension, 
+
+
+
+
+
+5. The Zod dimension, where schemas perform 
+
+
+`zenesis` builds on `zod` by adding par
+
+`zenesis` uses `zod` schemas primarily for type generation, rather than validating anything, though you still
+
+`zenesis` is built on `zod`,
+
+
+`zenesis` builds on `zod`, allowing you to generate carefully designed, fully documented type definitions using all modern TypeScript constructs.
 
 
   * Type parameters!

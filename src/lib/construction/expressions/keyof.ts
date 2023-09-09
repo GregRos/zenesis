@@ -16,7 +16,7 @@ export interface ZsKeyOfDef<Of extends ZodTypeAny> extends ZodTypeDef {
 
 export const PropertyKey = z.union([z.string(), z.number(), z.symbol()]);
 
-export class ZsKeyOf<Of extends ZodTypeAny> extends ZsMonoType<
+export class ZsKeyof<Of extends ZodTypeAny> extends ZsMonoType<
     PropertyKey,
     ZsKeyOfDef<Of>
 > {
@@ -27,7 +27,7 @@ export class ZsKeyOf<Of extends ZodTypeAny> extends ZsMonoType<
     }
 
     static create<Container extends ZodTypeAny>(what: Container) {
-        return new ZsKeyOf<Container>({
+        return new ZsKeyof<Container>({
             typeName: "ZsKeyOf",
             of: what
         });

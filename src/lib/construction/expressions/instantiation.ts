@@ -6,11 +6,11 @@ export interface ZsInstantiationDef<Instance extends ZodTypeAny>
     extends ZodTypeDef {
     typeName: "ZsInstantiation";
     typeArgs: [ZodTypeAny, ...ZodTypeAny[]] | [];
-    instance: Instance;
+    instance: () => Instance;
 }
 
 export class ZsInstantiation<
-    Instance extends ZsDeclaredType<any>
+    Instance extends ZsDeclaredType
 > extends ZsMonoType<Instance, ZsInstantiationDef<Instance>> {
     get declaration(): Instance extends ZsShapedRef
         ? Instance["declaration"]
@@ -29,6 +29,6 @@ export class ZsInstantiation<
     }
 
     get actsLike() {
-        return this._def.instance;
+        return this._def.instance();
     }
 }

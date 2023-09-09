@@ -1,5 +1,5 @@
 import { ZodTypeAny } from "zod";
-import { SchemaSubtypeOf } from "../../utils";
+import { SchemaSubtypeOf } from "../utils";
 import { ZsTypeVar, ZsTypeVarVariance } from "./type-var";
 
 export class TypeVarBuilder<

@@ -1,5 +1,5 @@
 import { objectOutputType, TypeOf, ZodRawShape, ZodTypeAny } from "zod";
-import { ArrayMembersToOverloads, ZsShape } from "./expressions/overloads";
+import { UnpackMemberSchemas, ZsShape } from "./expressions/overloads";
 import { baseObjectOutputType } from "zod/lib/types";
 
 export type SchemaSubtypeOf<Sub extends ZodTypeAny> = ZodTypeAny & {
@@ -29,7 +29,7 @@ export type combineClassShape<
 > = InheritedShape & RequiredShape & OwnShape;
 
 export type getTypeFromShape<Shape extends ZsShape> = baseObjectOutputType<
-    ArrayMembersToOverloads<Shape>
+    UnpackMemberSchemas<Shape>
 >;
 
 export type getCombinedType<
@@ -39,3 +39,5 @@ export type getCombinedType<
 > = getTypeFromShape<
     combineClassShape<OwnShape, InheritedShape, RequiredShape>
 >;
+
+export type Access = "public" | "protected" | "private";

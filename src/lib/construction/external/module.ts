@@ -1,15 +1,16 @@
-import { ZodType } from "zod";
-import { Generic } from "../declarative/generic/generic-type";
+import { ZodType, ZodTypeAny } from "zod";
+import { ZsGenericType } from "../generic/generic-type";
 import { ImportBuilder, ZsImportedGeneric, ZsImportedType } from "./import";
+import { ZsDeclaredType } from "../refs";
 
 export class ZsExporter {
     import(name: string): ImportBuilder {
         return {
-            as: <As>(as: As): any => {
-                if (as instanceof ZodType) {
-                    return ZsImportedType.create(this, name, as);
-                } else if (as instanceof Generic) {
-                    return ZsImportedGeneric.create(this, name, as);
+            typed: <As extends ZsGenericType | ZodTypeAny>(typed: As): any => {
+                if (typed instanceof ZodType) {
+                    return ZsImportedType.create(this, name, () => typed);
+                } else if (typed instanceof ZsGenericType) {
+                    return ZsImportedGeneric.create(this, name, () => typed);
                 } else {
                     throw new Error("Invalid import type");
                 }
