@@ -2,11 +2,13 @@ import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod";
 import { Access, ZsFunctionTypeAny } from "../utils";
 import { ZsOverloads } from "../expressions/overloads";
 import { ZsMonoType } from "../mono-type";
+import { ZsNodeKind } from "../kinds";
 
 export type MemberStyle = "field" | "method";
 
 export interface ZsMemberDef<Annotation extends ZodTypeAny, A extends Access>
     extends ZodTypeDef {
+    nodeName: ZsNodeKind.ZsMember;
     annotation: Annotation;
     readonly: boolean;
     optional: boolean;
@@ -35,6 +37,7 @@ export class ZsMember<Annotation extends ZodTypeAny, A extends Access> {
         annotation: Annotation
     ) {
         return new ZsMember({
+            nodeName: ZsNodeKind.ZsMember,
             annotation,
             readonly: false,
             optional: false,

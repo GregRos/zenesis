@@ -8,7 +8,7 @@ import { ZsKeyof } from "./expressions/keyof";
 import { ZsTypeof } from "./expressions/typeof";
 import { ZsMapped } from "./expressions/mapped";
 import { ZsMember } from "./declarative/member";
-import { ZsObject } from "./expressions/object";
+import { ZsObjectExpr } from "./expressions/object";
 
 export const zs = {
     generic: ZsGenericType.create,
@@ -22,5 +22,5 @@ export const zs = {
     mapped: ZsMapped.create,
     method: ZsMember.method,
     field: ZsMember.field,
-    obj: ZsObject.create
+    obj: ZsObjectExpr.create
 };

@@ -5,6 +5,7 @@ import { ZsGenericType } from "./generic-type";
 import { TypeVarBuilder } from "./type-var-builder";
 import { ZsDeclaredType } from "../refs";
 import { ZsFunction } from "../expressions/function";
+import { ZsTypeKind } from "../kinds";
 
 export class GenericBuilder<
     Names extends string,
@@ -64,7 +65,7 @@ export class GenericBuilder<
     ): ZsGenericFunction<Vars, Function> {
         const instance = constructor(this._vars);
         return new ZsGenericFunction({
-            typeName: "ZsGenericFunction",
+            typeName: ZsTypeKind.ZsGenericFunction,
             function: instance,
             ordering: this._names,
             typeArgs: this._vars

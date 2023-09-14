@@ -1,5 +1,6 @@
 import { z, ZodType, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
+import { ZsTypeKind } from "../kinds";
 
 export class ZsConditional<What, Extends, Then, Otherwise> extends ZsMonoType<
     Then | Otherwise,
@@ -36,7 +37,7 @@ export class ZsConditional<What, Extends, Then, Otherwise> extends ZsMonoType<
         what: What
     ): ZsConditionalExtends<What> {
         return new ZsConditional({
-            typeName: "ZsConditional",
+            typeName: ZsTypeKind.ZsConditional,
             when: what,
             extends: z.never(),
             then: z.never(),
@@ -47,7 +48,7 @@ export class ZsConditional<What, Extends, Then, Otherwise> extends ZsMonoType<
 
 export interface ZsConditionalDef<What, Extends, IfTrue, IfFalse>
     extends ZodTypeDef {
-    typeName: "ZsConditional";
+    typeName: ZsTypeKind.ZsConditional;
     when: ZsMonoLike<What>;
     extends: ZsMonoLike<Extends>;
     then: ZsMonoLike<IfTrue>;

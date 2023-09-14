@@ -1,17 +1,13 @@
-import { ZodFunction, ZodRawShape, ZodTypeAny, ZodTypeDef } from "zod";
+import { ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
-import {
-    Access,
-    getTypeFromShape,
-    RecursiveConjunction,
-    ZsFunctionTypeAny
-} from "../utils";
+import { Access, RecursiveConjunction } from "../utils";
 import { ZsMember, ZsMemberAny } from "../declarative/member";
+import { ZsTypeKind } from "../kinds";
 
 export interface ZsOverloadsDef<
     Overloads extends readonly [ZodTypeAny, ...ZodTypeAny[]]
 > extends ZodTypeDef {
-    typeName: "ZsOverloads";
+    typeName: ZsTypeKind.ZsOverloads;
     overloads: Overloads;
 }
 
@@ -30,7 +26,7 @@ export class ZsOverloads<
 
     add<NewOverload extends ZodTypeAny>(overload: NewOverload) {
         return new ZsOverloads<[...Overloads, NewOverload]>({
-            typeName: "ZsOverloads",
+            typeName: ZsTypeKind.ZsOverloads,
             overloads: [...this._def.overloads, overload]
         });
     }
@@ -39,7 +35,7 @@ export class ZsOverloads<
         overloads: Overloads
     ) {
         return new ZsOverloads<Overloads>({
-            typeName: "ZsOverloads",
+            typeName: ZsTypeKind.ZsOverloads,
             overloads
         });
     }

@@ -5,6 +5,7 @@ import { SchemaSubtypeOf } from "../utils";
 import { ZsInstantiation } from "../expressions/instantiation";
 import { ZsDeclaredType } from "../refs";
 import { GenericBuilder } from "./generic-builder";
+import { ZsTypeKind } from "../kinds";
 
 export interface ZsGenericDef<
     Vars extends ZsTypeVarsRecord,
@@ -14,8 +15,6 @@ export interface ZsGenericDef<
     instance: () => Instance;
     ordering: (keyof Vars)[];
 }
-
-export interface ZsGenericRef<Schema extends ZodTypeAny> {}
 
 export class ZsGenericType<
     Vars extends ZsTypeVarsRecord = ZsTypeVarsRecord,
@@ -38,7 +37,7 @@ export class ZsGenericType<
         return new ZsInstantiation({
             typeArgs: typeArgs as any,
             instance: this._def.instance,
-            typeName: "ZsInstantiation"
+            typeName: ZsTypeKind.ZsInstantiation
         });
     }
 
@@ -49,5 +48,3 @@ export class ZsGenericType<
         );
     }
 }
-
-export const generic = ZsGenericType.create;

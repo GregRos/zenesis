@@ -17,3 +17,6 @@ coverage
 .idea/
 .git/
 .eslintrc.js
+.obsidian/
+.vscode/
+*.svg
