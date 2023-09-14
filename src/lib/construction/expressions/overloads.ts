@@ -32,7 +32,7 @@ export class ZsOverloads<
     }
 
     static create<Overloads extends [ZodTypeAny, ...ZodTypeAny[]]>(
-        overloads: Overloads
+        ...overloads: Overloads
     ) {
         return new ZsOverloads<Overloads>({
             typeName: ZsTypeKind.ZsOverloads,

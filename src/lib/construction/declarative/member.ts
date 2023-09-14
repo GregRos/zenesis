@@ -3,6 +3,7 @@ import { Access, ZsFunctionTypeAny } from "../utils";
 import { ZsOverloads } from "../expressions/overloads";
 import { ZsMonoType } from "../mono-type";
 import { ZsNodeKind } from "../kinds";
+import { ZsClassMethod } from "./method";
 
 export type MemberStyle = "field" | "method";
 
@@ -43,6 +44,13 @@ export class ZsMember<Annotation extends ZodTypeAny, A extends Access> {
             optional: false,
             access: "public",
             style
+        });
+    }
+
+    access<V extends Access>(access: V) {
+        return new ZsClassMethod({
+            ...this._def,
+            access: access
         });
     }
 

@@ -13,14 +13,9 @@ import { ZsObjectExpr } from "./expressions/object";
 export const zs = {
     generic: ZsGenericType.create,
     fun: ZsFunction.create,
-    class: ZsClass.create,
-    iface: ZsInterface.create,
-    alias: ZsTypeAlias.create,
     when: ZsConditional.create,
     keyof: ZsKeyof.create,
     typeof: ZsTypeof.create,
     mapped: ZsMapped.create,
-    method: ZsMember.method,
-    field: ZsMember.field,
     obj: ZsObjectExpr.create
 };

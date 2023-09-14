@@ -74,26 +74,6 @@ export class ZsClass<
         });
     }
 
-    setParent<ParentShape2 extends ZsShape>(
-        parent: ZsShapedRef<ParentShape2, "class">
-    ) {
-        return new ZsClass({
-            ...this._def,
-            inheritedShape: () => parent.shape as ParentShape2,
-            parent
-        });
-    }
-
-    instance<Shape2 extends ZodRawShape>(other: Shape2) {
-        return new ZsClass({
-            ...this._def,
-            ownShape: () => ({
-                ...this._def.ownShape(),
-                ...other
-            })
-        });
-    }
-
     static<Shape2 extends ZsShape>(other: Shape2) {
         return new ZsClass({
             ...this._def,
