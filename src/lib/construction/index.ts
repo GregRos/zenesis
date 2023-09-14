@@ -9,18 +9,20 @@ import { ZsTypeof } from "./expressions/typeof";
 import { ZsMapped } from "./expressions/mapped";
 import { ZsMember } from "./declarative/member";
 import { ZsObject } from "./expressions/object";
+import { ZsUniverse } from "../containers/universe";
+import { z } from "zod";
 
-export const zs = {
+const fullZs = {
     generic: ZsGenericType.create,
     fun: ZsFunction.create,
-    class: ZsClass.create,
-    iface: ZsInterface.create,
-    alias: ZsTypeAlias.create,
     when: ZsConditional.create,
     keyof: ZsKeyof.create,
-    typeof: ZsTypeof.create,
     mapped: ZsMapped.create,
     method: ZsMember.method,
     field: ZsMember.field,
-    obj: ZsObject.create
+    obj: ZsObject.create,
+    universe: ZsUniverse.create,
+    ...z
 };
+
+export const zs = fullZs as Omit<typeof fullZs, "function">;

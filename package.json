@@ -1,11 +1,11 @@
 {
-    "name": "zod-inscribe",
+    "name": "zenesis",
     "version": "0.1.0",
-    "description": "Turns zod schemas into code.",
+    "description": "The best type generation library in the world.",
     "main": "dist/lib/index.js",
     "repository": {
         "type": "git",
-        "url": "https://www.github.com/GregRos/zod-inscribe"
+        "url": "https://www.github.com/GregRos/zenesis"
     },
     "author": "GregRos",
     "license": "MIT",
@@ -27,6 +27,8 @@
     },
     "dependencies": {
         "base64-js": "^1.5.1",
+        "itertools-ts": "^1.23.0",
+        "lazies": "^0.2.0",
         "parjs": "^0.16.1",
         "ts-node": "^10.9.1",
         "zod": "^3.21.4"

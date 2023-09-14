@@ -52,6 +52,7 @@ export class ZsClass<
     readonly name = this._def.name;
     readonly declaration = "class";
     readonly actsLike = z.lazy(() => z.object(unpackMemberSchemas(this.shape)));
+
     get shape() {
         return {
             ...this._def.inheritedShape(),
@@ -110,7 +111,7 @@ export class ZsClass<
         });
     }
 
-    static create<Name extends string>(name: Name) {
+    static create<Name extends string>(name: Name): ZsEmptyClass<Name> {
         return new ZsClass({
             name,
             typeName: "ZsClass",
@@ -124,3 +125,5 @@ export class ZsClass<
         });
     }
 }
+
+export type ZsEmptyClass<Name extends string> = ZsClass<Name, {}, {}, {}, {}>;

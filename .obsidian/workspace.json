@@ -18,8 +18,21 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "47bbe10b68dc8769",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -128,6 +141,16 @@
                 "file": "README.md"
               }
             }
+          },
+          {
+            "id": "396cb3a4ce2f8364",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency"
+              }
+            }
           }
         ]
       }
@@ -146,19 +169,28 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "b9f62d27e00c9319",
+  "active": "47bbe10b68dc8769",
   "lastOpenFiles": [
-    "src/lib/construction/expressions/typeof.ts~",
-    "src/lib/construction/expressions/instantiation.ts~",
-    "src/lib/construction/external/module.ts~",
-    "src/lib/construction/external/import.ts~",
-    "src/lib/construction/generic/generic-type.ts~",
-    "src/lib/construction/refs.ts~",
     "src/lib/containers/container.ts~",
-    "src/lib/containers/file.ts~",
-    "src/lib/containers/universe.ts~",
-    "src/lib/construction/declarative/class.ts~",
-    "src/lib/construction/declarative/alias.ts~",
+    "node_modules/seqs/package.json",
+    "src/lib/containers/collect-exports.ts~",
+    "node_modules/seqs/jest.config.mjs",
+    "node_modules/seqs/README.md",
+    "node_modules/seqs/dist/lib/seq/wrapper.js",
+    "node_modules/seqs/dist/lib/seq/wrapper.js.map",
+    "node_modules/seqs/dist/lib/seq/wrapper.d.ts.map",
+    "node_modules/seqs/dist/lib/seq/wrapper.d.ts",
+    "node_modules/seqs/dist/lib/seq/types.d.ts.map",
+    "node_modules/seqs/dist/lib/seq/types.js.map",
+    "node_modules/seqs/dist/lib/seq/types.js",
+    "node_modules/itertools-ts/README.md",
+    "Zenesis Schema (1).svg",
+    "Pasted image 20230909160621.png",
+    "Zenesis Schema.svg",
+    "README.md",
+    "Zenesis Schema.png",
+    "Zenesis Schema (1).png",
+    "Untitled.canvas",
     "node_modules/ts-node/README.md",
     "node_modules/ts-node/dist-raw/README.md",
     "node_modules/ts-node/dist-raw/NODE-LICENSE.md",

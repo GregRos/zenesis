@@ -11,7 +11,7 @@ export type getDeclarationType<Ref> = Ref extends {
 
 export type ZsExportable<Name extends string> =
     | ZsDeclaredType<Name>
-    | ZsValueRef<Name>;
+    | ZsValueRef<never>;
 
 export type ZsDeclaredType<Name extends string = string, Monotype = any> =
     | ZsTypedClassRef<Name, Monotype>

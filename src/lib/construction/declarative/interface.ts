@@ -71,7 +71,7 @@ export class ZsInterface<
         });
     }
 
-    static create<Name extends string>(name: Name) {
+    static create<Name extends string>(name: Name): ZsEmptyInterface<Name> {
         return new ZsInterface({
             name,
             typeName: "ZsInterface",
@@ -81,3 +81,5 @@ export class ZsInterface<
         });
     }
 }
+
+export type ZsEmptyInterface<Name extends string> = ZsInterface<Name, {}, {}>;
