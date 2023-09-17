@@ -1,5 +1,5 @@
 import { Reification, ZsTypeVar, ZsTypeVarsRecord } from "./type-var";
-import { ZodAny, ZodFunction, ZodTypeAny } from "zod";
+import { ZodAny, ZodTypeAny } from "zod";
 import { ZsGenericFunction } from "../expressions/generic-function";
 import { ZsGenericType } from "./generic-type";
 import { TypeVarBuilder } from "./type-var-builder";

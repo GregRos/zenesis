@@ -1,4 +1,4 @@
-import { undefined, z, ZodAny, ZodTypeAny } from "zod";
+import { z, ZodAny, ZodTypeAny } from "zod";
 import { ZsValueRef } from "../refs";
 import { ZsNodeKind } from "../kinds";
 

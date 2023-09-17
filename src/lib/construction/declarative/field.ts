@@ -1,27 +1,32 @@
 import { ZsNodeKind } from "../kinds";
-import { ZsFunction } from "../expressions/function";
 import { Access } from "../utils";
-import { ZsOverloads } from "../expressions/overloads";
 import { ZodTypeAny } from "zod";
+import { ZsNamedDecl } from "../refs";
 
-export interface ZsClassFieldDef<
-    Name extends string,
-    A extends Access,
-    Type extends ZodTypeAny
-> {
+export interface ZsClassFieldDef<Name extends string, Type extends ZodTypeAny> {
     kind: ZsNodeKind.ZsField;
-    access: A;
+    access: Access;
     readonly: boolean;
     name: Name;
     type: Type;
 }
 
 export class ZsClassField<
-    Name extends string,
-    Type extends ZodTypeAny,
-    A extends Access
-> {
-    constructor(readonly _def: ZsClassFieldDef<Name, A, Type>) {}
+    Name extends string = string,
+    Type extends ZodTypeAny = ZodTypeAny
+> implements ZsNamedDecl<Name>
+{
+    constructor(readonly _def: ZsClassFieldDef<Name, Type>) {}
+
+    get name() {
+        return this._def.name;
+    }
+
+    get schema() {
+        return this._def.type;
+    }
+
+    readonly declaration = "field";
 
     static create<Name extends string, Type extends ZodTypeAny>(
         name: Name,

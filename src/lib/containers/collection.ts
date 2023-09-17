@@ -1,71 +1,62 @@
-import { ZsExportable } from "../construction/refs";
-import { ExportsRecord, ZsExportsIterable } from "./types";
-import { Lazy, lazy, seq, Seq } from "lazies";
-import { z, ZodLazy, ZodTypeAny } from "zod";
+import { ZsNamedDecl, ZsTypedDecl } from "../construction/refs";
+import { ExportsRecord } from "./types";
+import { seq, Seq } from "lazies";
 
-export class ExportsCollection<Exports extends ZsExportable<any>> {
-    private _pulled: Seq<Exports>;
-    private _record = {} as ExportsRecord<Exports>;
+export class DeclCollection<Decl extends ZsTypedDecl> {
+    protected _pulled: Seq<Decl>;
 
-    constructor(private _exports: ZsExportsIterable<Exports>) {
-        this._pulled = seq(_exports).pull();
+    constructor(exports: Iterable<Decl>) {
+        this._pulled = seq(exports).pull();
     }
 
-    private _find<K extends Exports["name"]>(
+    allOfType<T extends Decl["declaration"]>(
+        type: T
+    ): (Decl & { declaration: T })[] {
+        return this._pulled
+            .filter(item => item.declaration === type)
+            .toArray() as any;
+    }
+}
+
+export class NamedDeclCollection<
+    Decl extends ZsNamedDecl
+> extends DeclCollection<Decl> {
+    private _record = {} as Record<Decl["name"], Decl>;
+
+    private _byName<K extends Decl["name"]>(
         name: K
-    ): (Exports & { name: K }) | undefined {
-        if (name in this._record) {
-            return this._record[name];
+    ): (Decl & { name: K }) | undefined {
+        if (name in this._record[name]) {
+            return this._record[name] as any;
         }
         for (const item of this._pulled) {
             (this._record as any)[item.name] = item;
             if (item.name === name) {
-                return item;
+                return item as any;
             }
         }
         return undefined;
     }
 
-    private _mustFind<K extends Exports["name"]>(
+    private _mustByName<T extends Decl["declaration"], K extends Decl["name"]>(
+        type: T,
         name: K
-    ): Exports & { name: K } {
-        const result = this._find(name);
+    ): Decl & { declaration: T; name: K } {
+        const result = this._byName(type, name);
         if (!result) {
             throw new Error(`Could not find export ${name}`);
         }
-        return result;
+        return result as any;
     }
 
-    type<K extends Exports["name"]>(
-        name: K
-    ): ZodLazy<Exports & { name: K } & ZodTypeAny> {
-        return z.lazy(() => {
-            const result = this._mustFind(name);
-            if (result.declaration === "value") {
-                throw new Error(`Export ${name} is a value`);
-            }
-            return result as any;
-        });
-    }
-
-    value<K extends Exports["name"]>(name: K): Lazy<Exports & { name: K }> {
-        return lazy(() => {
-            const result = this._mustFind(name);
-            if (result.declaration !== "value") {
-                throw new Error(`Export ${name} is not a value`);
-            }
-            return result as any;
-        });
-    }
-
-    get types(): ExportsRecord<Exports> {
+    createProxy(type: Decl["declaration"]): ExportsRecord<Decl> {
         return new Proxy(this._record, {
             get: (target, prop) => {
                 if (typeof prop === "string") {
-                    return this.type(prop);
+                    return this._mustByName(type, prop);
                 }
                 return Reflect.get(target, prop);
             }
-        });
+        }) as any;
     }
 }

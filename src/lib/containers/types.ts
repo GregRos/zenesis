@@ -1,10 +1,10 @@
-import { ZsExportable } from "../construction/refs";
+import { ZsNamedDecl } from "../construction/refs";
 
-export type getExportName<Export extends ZsExportable<string>> = Export["name"];
+export type getExportName<Export extends ZsNamedDecl> = Export["name"];
 
-export interface ZsExportsIterable<Exports extends ZsExportable<string>>
+export interface ZsExportsIterable<Exports extends ZsNamedDecl>
     extends Iterable<Exports> {}
 
-export type ExportsRecord<Exports extends ZsExportable<string>> = {
+export type ExportsRecord<Exports extends ZsNamedDecl> = {
     [Export in Exports as getExportName<Export>]: Export;
 };

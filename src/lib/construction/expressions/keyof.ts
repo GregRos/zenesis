@@ -1,13 +1,5 @@
-import {
-    CatchallInput,
-    ParseInput,
-    ParseReturnType,
-    z,
-    ZodType,
-    ZodTypeAny,
-    ZodTypeDef
-} from "zod";
-import { ZsMonoLike, ZsMonoType } from "../mono-type";
+import { z, ZodTypeAny, ZodTypeDef } from "zod";
+import { ZsMonoType } from "../mono-type";
 import { ZsTypeKind } from "../kinds";
 
 export interface ZsKeyofDef<Of extends ZodTypeAny> extends ZodTypeDef {

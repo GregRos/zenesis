@@ -1,5 +1,5 @@
 import { ZsTypeVar, ZsTypeVarsRecord } from "./type-var";
-import { z, ZodAny, ZodTypeAny, ZodTypeDef } from "zod";
+import { ZodAny, ZodTypeAny, ZodTypeDef } from "zod";
 import { SchemaSubtypeOf } from "../utils";
 
 import { ZsInstantiation } from "../expressions/instantiation";

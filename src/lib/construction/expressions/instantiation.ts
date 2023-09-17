@@ -1,6 +1,6 @@
 import { ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
-import { ZsShapedRef, ZsDeclaredType } from "../refs";
+import { ZsDeclaredType, ZsShapedRef } from "../refs";
 import { ZsTypeKind } from "../kinds";
 
 export interface ZsInstantiationDef<Instance extends ZodTypeAny>

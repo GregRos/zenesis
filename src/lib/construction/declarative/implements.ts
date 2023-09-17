@@ -1,17 +1,42 @@
 import { ZsNodeKind } from "../kinds";
-import { ZsShapedInterfaceRef } from "../refs";
+import { ZsTypedDecl } from "../refs";
+import { ZsInstantiation } from "../expressions/instantiation";
+import { ZsInterface } from "./interface";
 
-export interface ZsImplementsDef<Interface extends ZsShapedInterfaceRef<any>> {
+export type ZsImplementable = ZsInterface | ZsInstantiation<ZsInterface>;
+
+export function isImplementable(x: any): x is ZsImplementable {
+    return (
+        x instanceof ZsInterface ||
+        (x instanceof ZsInstantiation &&
+            x._def.instance() instanceof ZsInterface)
+    );
+}
+
+export interface ZsImplementsDef<Interface extends ZsImplementable> {
     declName: ZsNodeKind.ZsImplements;
     interface: Interface;
 }
 
-export class ZsImplements<Interface extends ZsShapedInterfaceRef<any>> {
+export class ZsImplements<Interface extends ZsImplementable = ZsImplementable>
+    implements ZsTypedDecl<"implements">
+{
+    readonly declaration = "implements";
+
     constructor(readonly _def: ZsImplementsDef<Interface>) {}
 
-    static create<Interface extends ZsShapedInterfaceRef<any>>(
-        _def: ZsImplementsDef<Interface>
-    ) {
-        return new ZsImplements(_def);
+    get schema() {
+        return this._def.interface;
+    }
+
+    get shape(): Interface["shape"] {
+        return this._def.interface.shape;
+    }
+
+    static create<Interface extends ZsImplementable>(iface: Interface) {
+        return new ZsImplements({
+            declName: ZsNodeKind.ZsImplements,
+            interface: iface
+        });
     }
 }

@@ -1,4 +1,4 @@
-import { z, ZodType, ZodTypeAny, ZodTypeDef } from "zod";
+import { z, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
 import { ZsTypeKind } from "../kinds";
 

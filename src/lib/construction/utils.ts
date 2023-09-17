@@ -1,4 +1,4 @@
-import { objectOutputType, TypeOf, ZodRawShape, ZodTypeAny } from "zod";
+import { TypeOf, ZodTypeAny } from "zod";
 import { UnpackMemberSchemas, ZsShape } from "./expressions/overloads";
 import { baseObjectOutputType } from "zod/lib/types";
 

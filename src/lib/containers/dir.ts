@@ -11,7 +11,7 @@ export class ZsDir {
     file<Exports extends ZsExportable<any>>(
         name: string,
         exports: () => ZsExportsIterable<Exports>
-    ): ExportsRecord<Exports> {
+    ): ExportsRecord<"export", Exports> {
         return this._world.file(`${this.name}/${name}`, exports);
     }
 

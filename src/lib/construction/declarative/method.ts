@@ -2,7 +2,7 @@ import { ZsNodeKind } from "../kinds";
 import { ZsFunction } from "../expressions/function";
 import { Access } from "../utils";
 import { ZsOverloads } from "../expressions/overloads";
-import { ZsClassField } from "./field";
+import { ZsNamedDecl, ZsTypedDecl } from "../refs";
 
 export interface ZsDeclMethodDef<
     Name extends string,
@@ -16,10 +16,22 @@ export interface ZsDeclMethodDef<
 }
 
 export class ZsClassMethod<
-    Name extends string,
-    Functions extends ZsOverloads<any>,
-    A extends Access
-> {
+        Name extends string = string,
+        Functions extends ZsOverloads<any> = ZsOverloads<any>,
+        A extends Access = "public"
+    >
+    implements ZsTypedDecl<"method">, ZsNamedDecl<Name>
+{
+    readonly declaration = "method";
+
+    get name() {
+        return this._def.name;
+    }
+
+    get schema() {
+        return this._def.type;
+    }
+
     constructor(readonly _def: ZsDeclMethodDef<Name, A, Functions>) {}
 
     static create<
