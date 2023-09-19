@@ -8,7 +8,7 @@ import { ZsKeyof } from "./expressions/keyof";
 import { ZsTypeof } from "./expressions/typeof";
 import { ZsMapped } from "./expressions/mapped";
 import { ZsMember } from "./declarative/member";
-import { ZsObject } from "./expressions/object";
+import { ZsObjectExpr } from "./expressions/object";
 import { ZsUniverse } from "../containers/universe";
 import { z } from "zod";
 
@@ -20,7 +20,7 @@ const fullZs = {
     mapped: ZsMapped.create,
     method: ZsMember.method,
     field: ZsMember.field,
-    obj: ZsObject.create,
+    obj: ZsObjectExpr.create,
     universe: ZsUniverse.create,
     ...z
 };

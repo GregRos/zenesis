@@ -1,11 +1,12 @@
 import { TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
 import { ZsTypeAliasRef } from "../refs";
+import { ZsTypeKind } from "../kind";
 
 export interface ZsTypeAliasDef<Name extends string, Type extends ZodTypeAny>
     extends ZodTypeDef {
     name: Name;
-    typeName: "ZsTypeAlias";
+    typeName: ZsTypeKind.TypeAlias;
     definition: Type;
 }
 
@@ -19,7 +20,7 @@ export class ZsTypeAlias<Name extends string, Instance extends ZodTypeAny>
 
     static create<Name extends string>(name: Name) {
         return new ZsTypeAlias({
-            typeName: "ZsTypeAlias",
+            typeName: ZsTypeKind.TypeAlias,
             name,
             definition: z.undefined()
         }) as ZsTypeAliasBuilder<Name>;

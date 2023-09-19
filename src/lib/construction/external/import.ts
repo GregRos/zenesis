@@ -2,7 +2,8 @@ import { ZsMonoType } from "../mono-type";
 import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsGenericType } from "../generic/generic-type";
 import { ZsExporter } from "./module";
-import { getDeclarationType, ZsDeclaredType } from "../refs";
+import { getDeclarationType } from "../refs";
+import { ZsNodeKind, ZsTypeKind } from "../kind";
 
 export interface ZsSharedImportDef<Typed> {
     module: ZsExporter;
@@ -13,7 +14,7 @@ export interface ZsSharedImportDef<Typed> {
 export interface ZsImportDef<Typed extends ZodTypeAny>
     extends ZsSharedImportDef<Typed>,
         ZodTypeDef {
-    typeName: "ZsImportedType";
+    typeName: ZsTypeKind.ImportedType;
     module: ZsExporter;
     name: string;
     typed: () => Typed;
@@ -21,7 +22,7 @@ export interface ZsImportDef<Typed extends ZodTypeAny>
 
 export interface ZsGenericImportDef<G extends ZsGenericType>
     extends ZsSharedImportDef<G> {
-    typeName: "ZsImportedGeneric";
+    typeName: ZsNodeKind.ImportedGeneric;
 }
 
 export interface ImportBuilder {
@@ -52,7 +53,7 @@ export class ZsImportedGeneric<G extends ZsGenericType> {
         typed: () => G
     ) {
         return new ZsImportedGeneric<G>({
-            typeName: "ZsImportedGeneric",
+            typeName: ZsNodeKind.ImportedGeneric,
             module,
             name,
             typed: typed
@@ -79,7 +80,7 @@ export class ZsImportedType<As extends ZodTypeAny> extends ZsMonoType<
         typed: () => Typed
     ) {
         return new ZsImportedType<Typed>({
-            typeName: "ZsImportedType",
+            typeName: ZsTypeKind.ImportedType,
             module,
             name,
             typed: typed

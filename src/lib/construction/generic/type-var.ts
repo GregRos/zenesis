@@ -1,6 +1,7 @@
 import { z, ZodTypeAny, ZodTypeDef } from "zod";
 import { SchemaSubtypeOf } from "../utils";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
+import { ZsTypeKind } from "../kind";
 
 export interface ZsTypeVarRef<Extends> extends ZsMonoLike<Extends> {
     readonly declaration: "typeVar";
@@ -18,7 +19,7 @@ export class ZsTypeVar<
 
     static create(name: string) {
         return new ZsTypeVar({
-            typeName: "ZsTypeVar",
+            typeName: ZsTypeKind.TypeVar,
             name,
             extends: z.any(),
             default: null,
@@ -46,7 +47,7 @@ export interface ZsTypeVarDef<
     Extends extends ZodTypeAny = any,
     Default extends SchemaSubtypeOf<Extends> | null = any
 > extends ZodTypeDef {
-    readonly typeName: "ZsTypeVar";
+    readonly typeName: ZsTypeKind.TypeVar;
     readonly name: string;
     readonly extends: Extends;
     readonly default: Default;

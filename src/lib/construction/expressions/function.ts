@@ -10,12 +10,13 @@ import {
 } from "zod";
 import { ZsMonoType } from "../mono-type";
 import { InnerTypeOfFunction } from "zod/lib/types";
+import { ZsTypeKind } from "../kind";
 
 export interface ZsFunctionDef<
     Tuple extends AnyZodTuple,
     Return extends ZodTypeAny
 > extends ZodTypeDef {
-    typeName: "ZsFunction";
+    typeName: ZsTypeKind.Function;
     args: Tuple;
     returns: Return;
 }
@@ -41,7 +42,7 @@ export class ZsFunction<
     > {
         const args = z.tuple(params);
         return new ZsFunction({
-            typeName: "ZsFunction",
+            typeName: ZsTypeKind.Function,
             args: this._rest ? args.rest(this._rest) : args,
             returns: this._def.returns
         });
@@ -54,7 +55,7 @@ export class ZsFunction<
         Return
     > {
         return new ZsFunction({
-            typeName: "ZsFunction",
+            typeName: ZsTypeKind.Function,
             args: this._def.args.rest(rest),
             returns: this._def.returns
         });
@@ -64,7 +65,7 @@ export class ZsFunction<
         returns: Return2
     ): ZsFunction<Tuple, Return2> {
         return new ZsFunction({
-            typeName: "ZsFunction",
+            typeName: ZsTypeKind.Function,
             args: this._def.args,
             returns
         });
@@ -74,7 +75,7 @@ export class ZsFunction<
         ...args: Args
     ): ZsRestBuilder<ZodTuple<Args, null>> {
         return new ZsFunction({
-            typeName: "ZsFunction",
+            typeName: ZsTypeKind.Function,
             args: z.tuple(args),
             returns: z.unknown()
         });

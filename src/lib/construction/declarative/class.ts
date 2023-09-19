@@ -10,6 +10,7 @@ import { ZsMonoLike, ZsMonoType } from "../mono-type";
 import { ZsShapedRef, ZsShapedClassRef, ZsTypedClassRef } from "../refs";
 import { combineClassShape, getCombinedType } from "../utils";
 import { unpackMemberSchemas, ZsShape } from "../expressions/overloads";
+import { ZsTypeKind } from "../kind";
 
 export interface ZsClassDef<
     Name extends string,
@@ -19,7 +20,7 @@ export interface ZsClassDef<
     StaticShape extends ZsShape
 > extends ZodTypeDef {
     name: Name;
-    typeName: "ZsClass";
+    typeName: ZsTypeKind.Class;
     inheritedShape: () => InheritedShape;
     requiredShape: () => RequiresShape;
     ownShape: () => OwnShape;
@@ -114,7 +115,7 @@ export class ZsClass<
     static create<Name extends string>(name: Name): ZsEmptyClass<Name> {
         return new ZsClass({
             name,
-            typeName: "ZsClass",
+            typeName: ZsTypeKind.Class,
             inheritedShape: () => ({}),
             requiredShape: () => ({}),
             ownShape: () => ({}),

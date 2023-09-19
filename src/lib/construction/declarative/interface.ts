@@ -10,6 +10,7 @@ import { combineClassShape, getCombinedType } from "../utils";
 import { fun } from "../expressions/function";
 import { ZsGenericType } from "../generic/generic-type";
 import { ZsMember } from "./member";
+import { ZsTypeKind } from "../kind";
 
 export interface ZsInterfaceDef<
     Name extends string,
@@ -17,7 +18,7 @@ export interface ZsInterfaceDef<
     InheritedShape extends ZsShape<"public">
 > extends ZodTypeDef {
     name: Name;
-    typeName: "ZsInterface";
+    typeName: ZsTypeKind.Interface;
     ownShape: () => OwnShape;
     inheritedShape: () => InheritedShape;
     extends: ZsShapedRef[];
@@ -74,7 +75,7 @@ export class ZsInterface<
     static create<Name extends string>(name: Name): ZsEmptyInterface<Name> {
         return new ZsInterface({
             name,
-            typeName: "ZsInterface",
+            typeName: ZsTypeKind.Interface,
             ownShape: () => ({}),
             inheritedShape: () => ({}),
             extends: []

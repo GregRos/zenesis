@@ -7,11 +7,12 @@ import {
     ZsFunctionTypeAny
 } from "../utils";
 import { ZsMember, ZsMemberAny } from "../declarative/member";
+import { ZsTypeKind } from "../kind";
 
 export interface ZsOverloadsDef<
     Overloads extends readonly [ZodTypeAny, ...ZodTypeAny[]]
 > extends ZodTypeDef {
-    typeName: "ZsOverloads";
+    typeName: ZsTypeKind.Overloads;
     overloads: Overloads;
 }
 
@@ -30,7 +31,7 @@ export class ZsOverloads<
 
     add<NewOverload extends ZodTypeAny>(overload: NewOverload) {
         return new ZsOverloads<[...Overloads, NewOverload]>({
-            typeName: "ZsOverloads",
+            typeName: ZsTypeKind.Overloads,
             overloads: [...this._def.overloads, overload]
         });
     }
@@ -39,7 +40,7 @@ export class ZsOverloads<
         overloads: Overloads
     ) {
         return new ZsOverloads<Overloads>({
-            typeName: "ZsOverloads",
+            typeName: ZsTypeKind.Overloads,
             overloads
         });
     }

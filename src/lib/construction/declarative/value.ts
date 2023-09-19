@@ -1,15 +1,17 @@
 import { ZodTypeAny } from "zod";
 import { ZsValueRef } from "../refs";
 import { ZsFunction } from "../expressions/function";
+import { ZsNodeKind } from "../kind";
 
 export interface ZsValueDef<
     Name extends string,
     Annotation extends ZodTypeAny
 > {
+    typeName: ZsNodeKind.Value;
     name: Name;
     style: "const" | "let" | "var" | "function";
     annotation: Annotation;
-    describe: string;
+    describe?: string;
 }
 
 export class ZsValue<
@@ -64,10 +66,10 @@ export class ZsValue<
 
     static create<Name extends string>(name: Name) {
         return new ZsValue({
+            typeName: ZsNodeKind.Value,
             name,
             style: "const",
-            annotation: undefined as any,
-            describe: ""
+            annotation: undefined as any
         }) as ZsValueBuilder<Name>;
     }
 }
