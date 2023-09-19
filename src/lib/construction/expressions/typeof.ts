@@ -1,9 +1,10 @@
 import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
 import { ZsValueRef } from "../refs";
+import { ZsTypeKind } from "../kinds";
 
 export interface ZsTypeofDef<Type extends ZodTypeAny> extends ZodTypeDef {
-    typeName: "ZsTypeof";
+    typeName: ZsTypeKind.ZsTypeof;
     reference: ZsValueRef<string, Type>;
 }
 
@@ -17,7 +18,7 @@ export class ZsTypeof<Type extends ZodTypeAny> extends ZsMonoType<
         reference: ZsValueRef<string, Type>
     ) {
         return new ZsTypeof<Type>({
-            typeName: "ZsTypeof",
+            typeName: ZsTypeKind.ZsTypeof,
             reference
         });
     }

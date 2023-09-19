@@ -1,11 +1,13 @@
-import { ZodTypeAny } from "zod";
+import { z, ZodAny, ZodTypeAny } from "zod";
 import { ZsValueRef } from "../refs";
 import { ZsFunction } from "../expressions/function";
+import { ZsNodeKind } from "../kinds";
 
 export interface ZsValueDef<
     Name extends string,
     Annotation extends ZodTypeAny
 > {
+    nodeName: ZsNodeKind.ZsValue;
     name: Name;
     style: "const" | "let" | "var" | "function";
     annotation: Annotation;
@@ -13,71 +15,74 @@ export interface ZsValueDef<
 }
 
 export class ZsValue<
-    Name extends string,
-    Annotation extends ZodTypeAny = ZodTypeAny
-> implements ZsValueRef<Name, Annotation>
+        Name extends string,
+        Annotation extends ZodTypeAny = ZodTypeAny
+    >
+    implements ZsValueRef<Name, Annotation>, ZsValueBuilder<Name>
 {
     readonly name = this._def.name;
     readonly declaration = "value";
     readonly annotation = this._def.annotation;
-    constructor(readonly _def: ZsValueDef<Name, Annotation>) {}
 
-    let<Annotation extends ZodTypeAny>(
-        annotation: Annotation
-    ): ZsValue<Name, Annotation> {
-        return new ZsValue({
-            ...this._def,
-            style: "let",
-            annotation
-        });
-    }
+    constructor(readonly _def: ZsValueDef<Name, Annotation>) {}
 
     const<Annotation extends ZodTypeAny>(
         annotation: Annotation
     ): ZsValue<Name, Annotation> {
-        return new ZsValue({
+        return new ZsValue<Name, Annotation>({
             ...this._def,
             style: "const",
             annotation
         });
     }
 
-    var<Annotation extends ZodTypeAny>(
+    function<Annotation extends ZodTypeAny>(
         annotation: Annotation
     ): ZsValue<Name, Annotation> {
-        return new ZsValue({
-            ...this._def,
-            style: "var",
-            annotation
-        });
-    }
-
-    function<Annotation extends ZsFunction<any, any>>(
-        annotation: Annotation
-    ): ZsValue<Name, Annotation> {
-        return new ZsValue({
+        return new ZsValue<Name, Annotation>({
             ...this._def,
             style: "function",
             annotation
         });
     }
 
-    static create<Name extends string>(name: Name) {
-        return new ZsValue({
+    let<Annotation extends ZodTypeAny>(
+        annotation: Annotation
+    ): ZsValue<Name, Annotation> {
+        return new ZsValue<Name, Annotation>({
+            ...this._def,
+            style: "let",
+            annotation
+        });
+    }
+
+    var<Annotation extends ZodTypeAny>(
+        annotation: Annotation
+    ): ZsValue<Name, Annotation> {
+        return new ZsValue<Name, Annotation>({
+            ...this._def,
+            style: "var",
+            annotation
+        });
+    }
+
+    static create<Name extends string>(name: Name): ZsValueBuilder<Name> {
+        return new ZsValue<Name, ZodAny>({
+            nodeName: ZsNodeKind.ZsValue,
             name,
             style: "const",
-            annotation: undefined as any,
-            describe: ""
-        }) as ZsValueBuilder<Name>;
+            annotation: z.any(),
+            describe: `Value ${name}`
+        });
     }
 }
 
 export interface ZsValueBuilder<Name extends string> {
-    let<Annotation extends ZodTypeAny>(
+    const<Annotation extends ZodTypeAny>(
         annotation: Annotation
     ): ZsValue<Name, Annotation>;
 
-    const<Annotation extends ZodTypeAny>(
+    let<Annotation extends ZodTypeAny>(
         annotation: Annotation
     ): ZsValue<Name, Annotation>;
 
@@ -85,7 +90,7 @@ export interface ZsValueBuilder<Name extends string> {
         annotation: Annotation
     ): ZsValue<Name, Annotation>;
 
-    function<Annotation extends ZsFunction<any, any>>(
+    function<Annotation extends ZodTypeAny>(
         annotation: Annotation
     ): ZsValue<Name, Annotation>;
 }

@@ -1,14 +1,15 @@
 import { RecordType, TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod";
-import { VsMapVar } from "./map-var";
+import { ZsMapVar } from "./map-var";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
+import { ZsTypeKind } from "../kinds";
 
 export interface ZsMappedDef<
     In extends ZodTypeAny,
     As extends ZsMonoLike<PropertyKey>,
     Mapping extends ZodTypeAny
 > extends ZodTypeDef {
-    typeName: "ZsMapped";
-    var: VsMapVar<In>;
+    typeName: ZsTypeKind.ZsMapped;
+    var: ZsMapVar<In>;
     key: As;
     value: Mapping;
 }
@@ -25,7 +26,7 @@ export class ZsMapped<
     implements ZsMappedBuilderValue<In, As>
 {
     key<As extends ZsMonoLike<PropertyKey>>(
-        mapping: (var_: VsMapVar<In>) => As
+        mapping: (var_: ZsMapVar<In>) => As
     ) {
         return new ZsMapped<In, As, Mapping>({
             ...this._def,
@@ -34,7 +35,7 @@ export class ZsMapped<
     }
 
     value<Mapping extends ZodTypeAny>(
-        mapping: (var_: VsMapVar<In>) => Mapping
+        mapping: (var_: ZsMapVar<In>) => Mapping
     ) {
         return new ZsMapped<In, As, Mapping>({
             ...this._def,
@@ -48,9 +49,9 @@ export class ZsMapped<
     ): TypeOf<In> extends PropertyKey
         ? ZsMappedBuilderValue<In, In>
         : ZsMappedBuilderKey<In> {
-        const var_ = VsMapVar.create(name, in_);
+        const var_ = ZsMapVar.create(name, in_);
         return new ZsMapped<In, In, In>({
-            typeName: "ZsMapped",
+            typeName: ZsTypeKind.ZsMapped,
             var: var_,
             key: var_ as any,
             value: z.never() as any
@@ -65,12 +66,12 @@ export interface ZsMappedBuilderValue<
     As extends ZsMonoLike<PropertyKey>
 > extends ZsMappedBuilderKey<In> {
     value<Mapping extends ZodTypeAny>(
-        mapping: (var_: VsMapVar<In>) => Mapping
+        mapping: (var_: ZsMapVar<In>) => Mapping
     ): ZsMapped<In, As, Mapping>;
 }
 
 export interface ZsMappedBuilderKey<In extends ZodTypeAny> {
     key<As extends ZsMonoLike<PropertyKey>>(
-        mapping: (var_: VsMapVar<In>) => As
+        mapping: (var_: ZsMapVar<In>) => As
     ): ZsMappedBuilderValue<In, As>;
 }

@@ -1,83 +1,44 @@
-import { objectOutputType, z, ZodRawShape, ZodTypeAny, ZodTypeDef } from "zod";
-import { ZsMonoLike, ZsMonoType } from "../mono-type";
-import { ZsShapedRef, ZsTypedInterfaceRef } from "../refs";
-import {
-    arraysToOverloads,
-    unpackMemberSchemas,
-    ZsShape
-} from "../expressions/overloads";
-import { combineClassShape, getCombinedType } from "../utils";
-import { fun } from "../expressions/function";
-import { ZsGenericType } from "../generic/generic-type";
-import { ZsMember } from "./member";
+import { ZodTypeDef } from "zod";
+import { ZsMonoType } from "../mono-type";
+import { getCombinedType } from "../utils";
+import { ZsTypeKind } from "../kinds";
+import { ZsClassFragment } from "./class-fragment";
 
 export interface ZsInterfaceDef<
     Name extends string,
-    OwnShape extends ZsShape<"public">,
-    InheritedShape extends ZsShape<"public">
+    Fragment extends ZsClassFragment
 > extends ZodTypeDef {
     name: Name;
-    typeName: "ZsInterface";
-    ownShape: () => OwnShape;
-    inheritedShape: () => InheritedShape;
-    extends: ZsShapedRef[];
+    typeName: ZsTypeKind.ZsInterface;
+    fragment: Fragment;
 }
 
 export class ZsInterface<
-        Name extends string,
-        OwnShape extends ZsShape<"public">,
-        InheritedShape extends ZsShape<"public">
-    >
-    extends ZsMonoType<
-        getCombinedType<OwnShape, InheritedShape>,
-        ZsInterfaceDef<Name, OwnShape, InheritedShape>
-    >
-    implements
-        ZsTypedInterfaceRef<Name, getCombinedType<OwnShape, InheritedShape>>
-{
+    Name extends string = string,
+    Fragment extends ZsClassFragment = ZsClassFragment
+> extends ZsMonoType<
+    getCombinedType<Fragment["shape"]>,
+    ZsInterfaceDef<Name, Fragment>
+> {
     readonly declaration = "interface";
     readonly name = this._def.name;
 
-    readonly actsLike = z.lazy(() =>
-        z.object(unpackMemberSchemas(this.shape))
-    ) as ZsMonoLike<getCombinedType<OwnShape, InheritedShape>>;
+    get actsLike() {
+        return this._def.fragment.schema;
+    }
 
     get shape() {
-        return {
-            ...this._def.inheritedShape(),
-            ...this._def.ownShape()
-        };
+        return this._def.fragment.shape;
     }
 
-    parent<const Shape1 extends ZsShape>(other: ZsShapedRef<Shape1>) {
-        return new ZsInterface({
-            ...this._def,
-            inheritedShape: () => ({
-                ...this._def.inheritedShape(),
-                ...other.shape
-            }),
-            extends: [...this._def.extends, other]
-        });
-    }
-
-    body<const Shape2 extends ZsShape<"public">>(other: Shape2) {
-        return new ZsInterface({
-            ...this._def,
-            ownShape: () =>
-                ({
-                    ...this._def.ownShape(),
-                    ...other
-                }) as Shape2 & OwnShape
-        });
-    }
-
-    static create<Name extends string>(name: Name): ZsEmptyInterface<Name> {
+    static create<Name extends string, Fragment extends ZsClassFragment>(
+        name: Name,
+        fragment: Fragment
+    ) {
         return new ZsInterface({
             name,
-            typeName: "ZsInterface",
-            ownShape: () => ({}),
-            inheritedShape: () => ({}),
-            extends: []
+            typeName: ZsTypeKind.ZsInterface,
+            fragment
         });
     }
 }

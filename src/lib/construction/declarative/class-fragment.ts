@@ -54,10 +54,6 @@ export class ZsClassFragment<Decl extends ZsClassDecl = ZsClassDecl> {
     get implements(): ZsImplementable[] {
         return this._schema.pull().implements;
     }
-
-    static create<Decl extends ZsClassDecl>(input: SeqLike<Decl>) {
-        return new ZsClassFragment(input);
-    }
 }
 
 export type getParentShape<Decls extends ZsClassDecl> = {

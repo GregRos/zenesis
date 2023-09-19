@@ -9,11 +9,6 @@ export type getDeclarationType<Ref> = Ref extends {
     ? Type
     : undefined;
 
-export interface ZsMemberDecl<
-    Name extends PropertyKey = PropertyKey,
-    Type extends ZodTypeAny = ZodTypeAny
-> {}
-
 export type ZsTypedDecl<Type extends string = string> = {
     readonly schema: ZodTypeAny;
     readonly declaration: Type;

@@ -1,11 +1,12 @@
-import { TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod";
+import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
 import { ZsTypeAliasRef } from "../refs";
+import { ZsTypeKind } from "../kinds";
 
 export interface ZsTypeAliasDef<Name extends string, Type extends ZodTypeAny>
     extends ZodTypeDef {
     name: Name;
-    typeName: "ZsTypeAlias";
+    typeName: ZsTypeKind.ZsTypeAlias;
     definition: Type;
 }
 
@@ -17,21 +18,11 @@ export class ZsTypeAlias<Name extends string, Instance extends ZodTypeAny>
     readonly actsLike = this._def.definition;
     readonly declaration = "alias";
 
-    static create<Name extends string>(name: Name) {
+    static create<Name extends string>(name: Name, definition: ZodTypeAny) {
         return new ZsTypeAlias({
-            typeName: "ZsTypeAlias",
+            typeName: ZsTypeKind.ZsTypeAlias,
             name,
-            definition: z.undefined()
-        }) as ZsTypeAliasBuilder<Name>;
+            definition
+        });
     }
-
-    body<Instance extends ZodTypeAny>(definition: Instance) {
-        return new ZsTypeAlias({ ...this._def, definition: definition });
-    }
-}
-
-export interface ZsTypeAliasBuilder<Name extends string> {
-    body<Instance extends ZodTypeAny>(
-        definition: Instance
-    ): ZsTypeAlias<Name, Instance>;
 }
