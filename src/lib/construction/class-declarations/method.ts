@@ -2,7 +2,6 @@ import { ZsNodeKind } from "../kinds";
 import { ZsFunction } from "../expressions/function";
 import { Access } from "../utils";
 import { ZsOverloads } from "../expressions/overloads";
-import { ZsNamedDecl, ZsTypedDecl } from "../refs";
 
 export interface ZsDeclMethodDef<
     Name extends string,
@@ -15,11 +14,10 @@ export interface ZsDeclMethodDef<
 }
 
 export class ZsClassMethod<
-        Name extends string = string,
-        Functions extends ZsOverloads<any> = ZsOverloads<any>
-    >
-    implements ZsTypedDecl<"method">, ZsNamedDecl<Name>
-{
+    Name extends string = string,
+    Functions extends ZsOverloads<any> = ZsOverloads<any>
+> {
+    readonly scope = "class";
     readonly declaration = "method";
 
     get name() {

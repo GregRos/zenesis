@@ -1,7 +1,6 @@
 import { ZsNodeKind } from "../kinds";
-import { ZsTypedDecl } from "../refs";
 import { ZsInstantiation } from "../expressions/instantiation";
-import { ZsInterface } from "../declarative/interface";
+import { ZsInterface } from "../module-declarations/interface";
 
 export type ZsImplementable = ZsInterface | ZsInstantiation<ZsInterface>;
 
@@ -18,11 +17,9 @@ export interface ZsImplementsDef<Interface extends ZsImplementable> {
     interface: Interface;
 }
 
-export class ZsImplements<Interface extends ZsImplementable = ZsImplementable>
-    implements ZsTypedDecl<"implements">
-{
+export class ZsImplements<Interface extends ZsImplementable = ZsImplementable> {
+    readonly scope = "class";
     readonly declaration = "implements";
-
     constructor(readonly _def: ZsImplementsDef<Interface>) {}
 
     get schema() {

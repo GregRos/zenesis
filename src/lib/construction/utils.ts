@@ -36,7 +36,7 @@ export type getCombinedType<
     OwnShape extends ZsShape = {},
     InheritedShape extends ZsShape = {},
     RequiredShape extends ZsShape = {}
-> = getTypeFromShape<
+> = baseObjectOutputType<
     combineClassShape<OwnShape, InheritedShape, RequiredShape>
 >;
 

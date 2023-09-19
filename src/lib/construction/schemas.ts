@@ -1,6 +1,6 @@
-import { ZsTypeAlias } from "./declarative/alias";
-import { ZsClass } from "./declarative/class";
-import { ZsInterface } from "./declarative/interface";
+import { ZsTypeAlias } from "./module-declarations/alias";
+import { ZsClass } from "./module-declarations/class";
+import { ZsInterface } from "./module-declarations/interface";
 import { ZsConditional } from "./expressions/conditional";
 import { ZsFunction } from "./expressions/function";
 import { ZsGenericFunction } from "./expressions/generic-function";

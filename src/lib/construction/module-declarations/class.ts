@@ -15,7 +15,7 @@ export interface ZsClassDef<
 }
 
 export class ZsClass<
-    Name extends string,
+    Name extends string = string,
     Fragment extends ZsClassFragment = ZsClassFragment
 > extends ZsMonoType<
     getCombinedType<Fragment["shape"]>,

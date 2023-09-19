@@ -1,7 +1,6 @@
 import { ZsNodeKind } from "../kinds";
 import { Access } from "../utils";
 import { ZodTypeAny } from "zod";
-import { ZsNamedDecl } from "../refs";
 
 export interface ZsClassFieldDef<Name extends string, Type extends ZodTypeAny> {
     kind: ZsNodeKind.ZsField;
@@ -14,8 +13,8 @@ export interface ZsClassFieldDef<Name extends string, Type extends ZodTypeAny> {
 export class ZsClassField<
     Name extends string = string,
     Type extends ZodTypeAny = ZodTypeAny
-> implements ZsNamedDecl<Name>
-{
+> {
+    readonly scope = "class";
     constructor(readonly _def: ZsClassFieldDef<Name, Type>) {}
 
     get name() {

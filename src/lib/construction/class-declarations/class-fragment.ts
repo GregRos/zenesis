@@ -9,17 +9,21 @@ import { ClassDeclarator } from "./declarator";
 
 export type ZsClassDecl = ZsClassMethod | ZsImplements | ZsClassField;
 
-export interface ZsFragmentSchema<Shape extends ZsShape> {
+export interface ZsClassFragmentDef<Shape extends ZsShape> {
     shape: Shape;
     schema: ZodTypeAny;
     implements: ZsImplementable[];
 }
 
+export type ClassDeclaration<Decl extends ZsClassDecl> = (
+    declarator: ClassDeclarator
+) => Iterable<Decl>;
+
 export class ZsClassFragment<Decl extends ZsClassDecl = ZsClassDecl> {
     private _decls: Seq<Decl>;
-    private _schema: Lazy<ZsFragmentSchema<getFullShape<Decl>>>;
+    private _schema: Lazy<ZsClassFragmentDef<getFullShape<Decl>>>;
 
-    constructor(input: SeqLike<Decl>) {
+    constructor(input: Iterable<Decl>) {
         this._decls = seq(input).cache();
         this._schema = lazy(() => {
             const shape: getFullShape<any> = {} as any;
@@ -61,10 +65,8 @@ export class ZsClassFragment<Decl extends ZsClassDecl = ZsClassDecl> {
         return this._decls[Symbol.iterator]();
     }
 
-    static create<Decl extends ZsClassDecl>(
-        input: (declarator: ClassDeclarator) => Iterable<Decl>
-    ) {
-        return new ZsClassFragment(input(new ClassDeclarator()));
+    static create<Decl extends ZsClassDecl>(decl: ClassDeclaration<Decl>) {
+        return new ZsClassFragment(decl(new ClassDeclarator()));
     }
 }
 

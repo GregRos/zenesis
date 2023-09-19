@@ -1,6 +1,11 @@
 import { ZsWorld } from "./world";
-import { ExportsRecord, ZsExportsIterable } from "./types";
 import { ZsExportable, ZsNamedDecl } from "../construction/refs";
+import {
+    ExportsRecord,
+    ZsModuleDecl,
+    ZsModuleDeclarations,
+    ZsNamedModuleDecl
+} from "../construction/module-declarations/module-fragment";
 
 export class ZsDir {
     constructor(
@@ -8,11 +13,11 @@ export class ZsDir {
         private readonly _world: ZsWorld
     ) {}
 
-    file<Exports extends ZsNamedDecl>(
+    file<Exports extends ZsNamedModuleDecl>(
         name: string,
-        exports: () => ZsExportsIterable<Exports>
+        exports: ZsModuleDeclarations<Exports>
     ): ExportsRecord<Exports> {
-        return null!;
+        return this._world.file(`${this.name}/${name}`, exports);
     }
 
     dir<Name extends string>(name: Name) {

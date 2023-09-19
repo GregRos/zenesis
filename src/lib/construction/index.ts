@@ -7,6 +7,12 @@ import { ZsMapped } from "./expressions/mapped";
 import { ZsObjectExpr } from "./expressions/object";
 import { ZsWorld } from "../containers/world";
 import { z } from "zod";
+import {
+    ZsModuleDecl,
+    ZsModuleDeclarations,
+    ZsModuleFragment
+} from "./module-declarations/module-fragment";
+import { ZsClassFragment } from "./class-declarations/class-fragment";
 
 const fullZs = {
     generic: ZsGenericType.create,
@@ -16,6 +22,12 @@ const fullZs = {
     mapped: ZsMapped.create,
     obj: ZsObjectExpr.create,
     world: ZsWorld.create,
+    module: <Exports extends ZsModuleDecl>(
+        exports: ZsModuleDeclarations<Exports>
+    ) => {
+        return ZsModuleFragment.create(exports);
+    },
+    class: ZsClassFragment.create,
     ...z
 };
 
