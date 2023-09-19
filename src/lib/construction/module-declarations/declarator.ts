@@ -1,7 +1,6 @@
 import { ZsInterface } from "./interface";
 import { ZsTypeAlias } from "./alias";
 import { ZsValue } from "./value";
-import { ClassDeclarator } from "../class-declarations/declarator";
 import {
     ClassDeclaration,
     ZsClassDecl,

@@ -1,11 +1,4 @@
-import { ZsClassMethod } from "../class-declarations/method";
-import {
-    ZsImplementable,
-    ZsImplements
-} from "../class-declarations/implements";
-import { ZsClassField } from "../class-declarations/field";
-import { ZsShape } from "../expressions/overloads";
-import { TypeOf, z, ZodTypeAny } from "zod";
+import { z } from "zod";
 import { ZsClass } from "./class";
 import { ZsInterface } from "./interface";
 import { ZsValue } from "./value";
@@ -13,8 +6,6 @@ import { ZsTypeAlias } from "./alias";
 import { seq, Seq } from "lazies";
 
 import { ZsModuleDeclarator } from "./declarator";
-import { ZsNamedDecl } from "../refs";
-import { ZsMonoLike } from "../mono-type";
 
 export type ZsModuleDecl = ZsNamedModuleDecl | ZsValue;
 export type ZsNamedModuleDecl = ZsClass | ZsInterface | ZsTypeAlias;

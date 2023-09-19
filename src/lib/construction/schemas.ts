@@ -10,7 +10,6 @@ import { ZsMapVar } from "./expressions/map-var";
 import { ZsMapped } from "./expressions/mapped";
 import { ZsImportedType } from "./external/import";
 import { ZsInstantiation } from "./expressions/instantiation";
-import { ZsTypeKind } from "./kinds";
 import {
     ZodAny,
     ZodArray,
@@ -22,7 +21,6 @@ import {
     ZodDefault,
     ZodDiscriminatedUnion,
     ZodEnum,
-    ZodError,
     ZodIntersection,
     ZodLazy,
     ZodLiteral,
@@ -41,9 +39,6 @@ import {
     ZodString,
     ZodSymbol,
     ZodTuple,
-    ZodType,
-    ZodTypeAny,
-    ZodTypeDef,
     ZodUndefined,
     ZodUnion,
     ZodUnknown,

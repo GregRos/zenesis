@@ -1,8 +1,6 @@
 import { ZsWorld } from "./world";
-import { ZsExportable, ZsNamedDecl } from "../construction/refs";
 import {
     ExportsRecord,
-    ZsModuleDecl,
     ZsModuleDeclarations,
     ZsNamedModuleDecl
 } from "../construction/module-declarations/module-fragment";

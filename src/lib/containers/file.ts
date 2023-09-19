@@ -1,12 +1,8 @@
-import { ZsNamedDecl } from "../construction/refs";
-import { ZsModuleDeclarator } from "../construction/module-declarations/declarator";
 import {
     ZsModuleDecl,
     ZsModuleDeclarations,
-    ZsModuleFragment,
-    ZsNamedModuleDecl
+    ZsModuleFragment
 } from "../construction/module-declarations/module-fragment";
-import { ZsValue } from "../construction/module-declarations/value";
 
 export class ZsFile<Exports extends ZsModuleDecl> {
     constructor(

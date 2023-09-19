@@ -1,6 +1,4 @@
 import { z, ZodAny, ZodTypeAny } from "zod";
-import { ZsValueRef } from "../refs";
-import { ZsFunction } from "../expressions/function";
 import { ZsNodeKind } from "../kinds";
 
 export interface ZsValueDef<Annotation extends ZodTypeAny> {

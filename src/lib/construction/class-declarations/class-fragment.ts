@@ -1,4 +1,4 @@
-import { lazy, Lazy, Seq, seq, SeqLike } from "lazies";
+import { lazy, Lazy, Seq, seq } from "lazies";
 import { ZsTypedDecl } from "../refs";
 import { isImplementable, ZsImplementable, ZsImplements } from "./implements";
 import { ZsClassMethod } from "./method";
