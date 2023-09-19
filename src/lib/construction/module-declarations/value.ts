@@ -1,8 +1,8 @@
 import { z, ZodAny, ZodTypeAny } from "zod";
-import { ZsNodeKind } from "../kinds";
+import { ZsModuleDeclKind } from "../kinds";
 
 export interface ZsValueDef<Annotation extends ZodTypeAny> {
-    nodeName: ZsNodeKind.ZsValue;
+    nodeName: ZsModuleDeclKind.ZsValue;
     name: string;
     style: "const" | "let" | "var" | "function";
     annotation: Annotation;
@@ -57,7 +57,7 @@ export class ZsValue<Annotation extends ZodTypeAny = ZodTypeAny> {
 
     static create<Name extends string>(name: Name): ZsValueBuilder<Name> {
         return new ZsValue<ZodAny>({
-            nodeName: ZsNodeKind.ZsValue,
+            nodeName: ZsModuleDeclKind.ZsValue,
             name,
             style: "const",
             annotation: z.any(),

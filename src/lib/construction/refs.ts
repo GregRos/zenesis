@@ -9,19 +9,6 @@ export type getDeclarationType<Ref> = Ref extends {
     ? Type
     : undefined;
 
-export type ZsTypedDecl<Type extends string = string> = {
-    readonly schema: ZodTypeAny;
-    readonly declaration: Type;
-};
-
-export type ZsNamedDecl<Name extends string = string> = ZsTypedDecl & {
-    readonly name: Name;
-};
-
-export type ZsExportable<Name extends string> =
-    | ZsDeclaredType<Name>
-    | ZsValueRef<Name>;
-
 export type ZsDeclaredType<Name extends string = string, Monotype = any> =
     | ZsTypedClassRef<Name, Monotype>
     | ZsTypedInterfaceRef<Name, Monotype>
@@ -41,18 +28,6 @@ export type ZsShapedRef<
     readonly declaration: Kind;
 };
 
-export interface ZsShapedClassRef<Shape extends ZsShape>
-    extends ZsMonoLike<getTypeFromShape<Shape>> {
-    readonly shape: Shape;
-    readonly declaration: "class";
-}
-
-export interface ZsShapedInterfaceRef<Shape extends ZsShape>
-    extends ZsMonoLike<getTypeFromShape<Shape>> {
-    readonly declaration: "interface";
-    readonly shape: Shape;
-}
-
 export interface ZsTypeAliasRef<Name extends string, Type>
     extends ZsMonoLike<Type> {
     readonly declaration: "alias";
@@ -63,19 +38,4 @@ export interface ZsTypedInterfaceRef<Name extends string, Monotype>
     extends ZsMonoLike<Monotype> {
     readonly declaration: "interface";
     readonly name: Name;
-}
-
-export interface ZsTypedValueRef<Name extends string, Type> {
-    readonly declaration: "value";
-    readonly annotation: ZsMonoLike<Type>;
-    readonly name: Name;
-}
-
-export interface ZsValueRef<
-    Name extends string,
-    Annotation extends ZodTypeAny = ZodTypeAny
-> {
-    readonly name: Name;
-    readonly declaration: "value";
-    readonly annotation: Annotation;
 }

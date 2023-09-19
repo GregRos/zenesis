@@ -5,7 +5,7 @@ import { ZsGenericType } from "./generic-type";
 import { TypeVarBuilder } from "./type-var-builder";
 import { ZsDeclaredType } from "../refs";
 import { ZsFunction } from "../expressions/function";
-import { ZsNodeKind, ZsTypeKind } from "../kinds";
+import { ZsClassDeclKind, ZsModuleDeclKind, ZsNodeKind, ZsTypeKind } from "../kinds";
 
 export class GenericBuilder<
     Names extends string,
@@ -52,13 +52,27 @@ export class GenericBuilder<
 
     declare<Instance extends ZsDeclaredType>(
         constructor: (reification: Reification<Names, Vars>) => Instance
-    ): ZsGenericType<Vars, Instance> {
-        return new ZsGenericType<Vars, Instance>({
-            typeName: ZsNodeKind.ZsGeneric,
-            instance: () => constructor(this._vars),
-            ordering: this._names,
-            vars: this._vars
-        });
+    ): ZsGenericType<Vars, Instance>;
+    declare<Function extends ZsFunction<any, any>>(
+        constructor: (reification: Reification<Names, Vars>) => Function
+    ): ZsGenericFunction<Vars, Function>;
+    declare(constructor: (reification: Reification<Names, Vars>) => any): any {
+        const result = constructor(this._vars);
+        if (result instanceof ZsFunction) {
+            return new ZsGenericFunction({
+                typeName: ZsTypeKind.ZsGenericFunction,
+                function: result,
+                ordering: this._names,
+                typeArgs: this._vars
+            });
+        } else {
+            return new ZsGenericType({
+                typeName: ZsModuleDeclKind.,
+                instance: result,
+                ordering: this._names,
+                vars: this._vars
+            });
+        }
     }
 
     function<Function extends ZsFunction<any, any>>(

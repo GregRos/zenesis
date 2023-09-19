@@ -3,8 +3,8 @@ import { ParseInput, ParseReturnType, ZodType, ZodTypeDef } from "zod";
 export type ZsMonoLike<Type> = ZodType<Type, any, Type>;
 
 export abstract class ZsMonoType<
-    Monotype,
-    Def extends ZodTypeDef
+    Monotype = any,
+    Def extends ZodTypeDef = ZodTypeDef
 > extends ZodType<Monotype, Def> {
     abstract readonly actsLike: ZsMonoLike<Monotype>;
 

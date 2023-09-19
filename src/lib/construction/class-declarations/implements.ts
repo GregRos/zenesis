@@ -1,6 +1,6 @@
-import { ZsNodeKind } from "../kinds";
 import { ZsInstantiation } from "../expressions/instantiation";
 import { ZsInterface } from "../module-declarations/interface";
+import { ZsClassDeclKind } from "../kinds";
 
 export type ZsImplementable = ZsInterface | ZsInstantiation<ZsInterface>;
 
@@ -13,7 +13,7 @@ export function isImplementable(x: any): x is ZsImplementable {
 }
 
 export interface ZsImplementsDef<Interface extends ZsImplementable> {
-    declName: ZsNodeKind.ZsImplements;
+    declName: ZsClassDeclKind.ZsImplements;
     interface: Interface;
 }
 
@@ -32,7 +32,7 @@ export class ZsImplements<Interface extends ZsImplementable = ZsImplementable> {
 
     static create<Interface extends ZsImplementable>(iface: Interface) {
         return new ZsImplements({
-            declName: ZsNodeKind.ZsImplements,
+            declName: ZsClassDeclKind.ZsImplements,
             interface: iface
         });
     }

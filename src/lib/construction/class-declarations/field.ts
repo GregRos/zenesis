@@ -1,9 +1,9 @@
-import { ZsNodeKind } from "../kinds";
+import { ZsClassDeclKind } from "../kinds";
 import { Access } from "../utils";
 import { ZodTypeAny } from "zod";
 
 export interface ZsClassFieldDef<Name extends string, Type extends ZodTypeAny> {
-    kind: ZsNodeKind.ZsField;
+    kind: ZsClassDeclKind.ZsField;
     access: Access;
     readonly: boolean;
     name: Name;
@@ -32,7 +32,7 @@ export class ZsClassField<
         type: Type
     ) {
         return new ZsClassField({
-            kind: ZsNodeKind.ZsField,
+            kind: ZsClassDeclKind.ZsField,
             access: "public",
             readonly: false,
             name,

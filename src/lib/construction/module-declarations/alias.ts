@@ -11,12 +11,9 @@ export interface ZsTypeAliasDef<Name extends string, Type extends ZodTypeAny>
 }
 
 export class ZsTypeAlias<
-        Name extends string = string,
-        Instance extends ZodTypeAny = ZodTypeAny
-    >
-    extends ZsMonoType<TypeOf<Instance>, ZsTypeAliasDef<Name, Instance>>
-    implements ZsTypeAliasRef<Name, TypeOf<Instance>>
-{
+    Name extends string = string,
+    Instance extends ZodTypeAny = ZodTypeAny
+> extends ZsMonoType<TypeOf<Instance>, ZsTypeAliasDef<Name, Instance>> {
     readonly name = this._def.name;
     readonly actsLike = this._def.definition;
     readonly declaration = "alias";

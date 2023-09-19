@@ -1,11 +1,11 @@
 import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
-import { ZsValueRef } from "../refs";
 import { ZsTypeKind } from "../kinds";
+import { ZsValue } from "../module-declarations/value";
 
 export interface ZsTypeofDef<Type extends ZodTypeAny> extends ZodTypeDef {
     typeName: ZsTypeKind.ZsTypeof;
-    reference: ZsValueRef<string, Type>;
+    reference: ZsValue<Type>;
 }
 
 export class ZsTypeof<Type extends ZodTypeAny> extends ZsMonoType<
@@ -14,9 +14,7 @@ export class ZsTypeof<Type extends ZodTypeAny> extends ZsMonoType<
 > {
     readonly actsLike = this._def.reference.annotation;
 
-    static create<Type extends ZodTypeAny>(
-        reference: ZsValueRef<string, Type>
-    ) {
+    static create<Type extends ZodTypeAny>(reference: ZsValue<Type>) {
         return new ZsTypeof<Type>({
             typeName: ZsTypeKind.ZsTypeof,
             reference

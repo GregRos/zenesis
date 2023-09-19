@@ -1,5 +1,4 @@
 import { lazy, Lazy, Seq, seq } from "lazies";
-import { ZsTypedDecl } from "../refs";
 import { isImplementable, ZsImplementable, ZsImplements } from "./implements";
 import { ZsClassMethod } from "./method";
 import { ZsClassField } from "./field";
@@ -77,7 +76,7 @@ export type getParentShape<Decls extends ZsClassDecl> = {
     > as ""]: Decl["_def"]["interface"]["shape"];
 };
 
-export type getOwnShape<Decls extends ZsTypedDecl> = {
+export type getOwnShape<Decls extends ZsClassDecl> = {
     [Decl in Decls as Decl extends {
         name: infer Name extends string;
     }

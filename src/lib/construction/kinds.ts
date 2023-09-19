@@ -1,4 +1,4 @@
-import { ZodFirstPartyTypeKind } from "zod";
+import { ZodTypeKind } from "./zod-kind";
 
 export enum ZsTypeKind {
     ZsOverloads = "ZsOverloads",
@@ -15,15 +15,14 @@ export enum ZsTypeKind {
     ZsObjectExpr = "ZsObjectExpr",
     ZsTypeof = "ZsTypeof",
     ZsKeyof = "ZsKeyof",
-    ZsImportedType = "ZsImportedType",
-    ZsImportedGeneric = "ZsImportedGeneric"
+    ZsImportedType = "ZsImportedType"
 }
 
-export type AnyKind = ZsTypeKind | ZodFirstPartyTypeKind;
+export type AnyKind = ZsTypeKind | ZodTypeKind;
 export const AnyKind = {
-    ...ZodFirstPartyTypeKind,
+    ...ZodTypeKind,
     ...ZsTypeKind
-};
+} as const;
 
 export enum ZsClassDeclKind {
     ZsImplements = "ZsImplements",
@@ -33,14 +32,15 @@ export enum ZsClassDeclKind {
     ZsConstructor = "ZsConstructor"
 }
 
-export enum ZsNodeKind {
-    ZsNode = "ZsNode",
-    ZsMember = "ZsMember",
-    ZsMethod = "ZsMethod",
-    ZsOverloads = "ZsOverloads",
-    ZsValue = "ZsValue",
-    ZsGeneric = "ZsGeneric",
+export enum ZsTypeCtorKind {
     ZsImportedGeneric = "ZsImportedGeneric",
-    ZsImplements = "ZsImplements",
-    ZsField = "ZsField"
+    ZsGeneric = "ZsGeneric"
+}
+
+export enum ZsModuleDeclKind {
+    ZsValue = "ZsValue"
+}
+
+export enum ZsNodeKind {
+    ZsValue = "ZsValue"
 }
