@@ -5,13 +5,13 @@ import { SchemaSubtypeOf } from "../utils";
 import { ZsInstantiation } from "../expressions/instantiation";
 import { ZsDeclaredType } from "../refs";
 import { GenericBuilder } from "./generic-builder";
-import { ZsTypeKind } from "../kinds";
+import { ZsNodeKind, ZsTypeKind } from "../kinds";
 
 export interface ZsGenericDef<
     Vars extends ZsTypeVarsRecord,
     Instance extends ZodTypeAny
 > extends ZodTypeDef {
-    typeName: ZsNodeKind.Generic;
+    typeName: ZsNodeKind.ZsGeneric;
     vars: Vars;
     instance: () => Instance;
     ordering: (keyof Vars)[];

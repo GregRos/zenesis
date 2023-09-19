@@ -19,8 +19,8 @@ export enum ZsTypeKind {
     ZsImportedGeneric = "ZsImportedGeneric"
 }
 
-export type AnyTypeKind = ZsTypeKind | ZodFirstPartyTypeKind;
-export const AnyTypeKind = {
+export type AnyKind = ZsTypeKind | ZodFirstPartyTypeKind;
+export const AnyKind = {
     ...ZodFirstPartyTypeKind,
     ...ZsTypeKind
 };
@@ -33,8 +33,6 @@ export enum ZsClassDeclKind {
     ZsConstructor = "ZsConstructor"
 }
 
-export interface ZsClass
-
 export enum ZsNodeKind {
     ZsNode = "ZsNode",
     ZsMember = "ZsMember",
@@ -44,5 +42,5 @@ export enum ZsNodeKind {
     ZsGeneric = "ZsGeneric",
     ZsImportedGeneric = "ZsImportedGeneric",
     ZsImplements = "ZsImplements",
-    ZsField = "ZsField",
+    ZsField = "ZsField"
 }

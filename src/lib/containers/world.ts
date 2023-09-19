@@ -1,21 +1,25 @@
+import { ZsExportable, ZsNamedDecl } from "../construction/refs";
 import { ZsFile } from "./file";
-import { ExportsRecord, ZsExportsIterable } from "./types";
-import { ZsExportable } from "../construction/refs";
 import { ZsDir } from "./dir";
+import { ZsDeclarationSpace } from "./declarator";
 
+export const sFiles = Symbol("files");
 export class ZsWorld {
-    private _files: ZsFile[] = [];
-
-    file<Exports extends ZsExportable<any>>(
+    readonly [sFiles]: ZsFile<any>[] = [];
+    file<Exports extends ZsNamedDecl>(
         name: string,
-        exports: () => ZsExportsIterable<Exports>
-    ): ExportsRecord<Exports> {
-        const file = new ZsFile(name, exports());
-        this._files.push(file);
+        init: (space: ZsDeclarationSpace) => Generator<Exports>
+    ) {
+        const file = new ZsFile(name, init);
+        this[sFiles].push(file);
         return file.proxy;
     }
 
-    dir<Name extends string>(name: Name) {
+    dir(name: string) {
         return new ZsDir(name, this);
+    }
+
+    static create() {
+        return new ZsWorld();
     }
 }

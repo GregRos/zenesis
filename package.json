@@ -28,7 +28,7 @@
     "dependencies": {
         "base64-js": "^1.5.1",
         "itertools-ts": "^1.23.0",
-        "lazies": "^0.2.0",
+        "lazies": "^0.4.0",
         "parjs": "^0.16.1",
         "ts-node": "^10.9.1",
         "zod": "^3.21.4"

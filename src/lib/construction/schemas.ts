@@ -10,7 +10,7 @@ import { ZsMapVar } from "./expressions/map-var";
 import { ZsMapped } from "./expressions/mapped";
 import { ZsImportedType } from "./external/import";
 import { ZsInstantiation } from "./expressions/instantiation";
-import { ZsTypeKind } from "./kind";
+import { ZsTypeKind } from "./kinds";
 import {
     ZodAny,
     ZodArray,
@@ -53,8 +53,8 @@ import { ZsKeyof } from "./expressions/keyof";
 import { ZsTypeof } from "./expressions/typeof";
 
 export type ZsSchemas =
-    | ZsClass<any, any, any, any, any>
-    | ZsInterface<any, any, any>
+    | ZsClass<any, any>
+    | ZsInterface<any, any>
     | ZsTypeAlias<any, any>
     | ZsConditional<any, any, any, any>
     | ZsFunction<any, any>

@@ -1,5 +1,5 @@
 import { ZodTypeAny } from "zod";
-import { AnyKind } from "../construction/kind";
+import { AnyKind } from "../construction/kinds";
 import { TypeSchema } from "../construction/schemas";
 import { TypeNode } from "typescript";
 

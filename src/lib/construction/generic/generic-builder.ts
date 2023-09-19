@@ -5,7 +5,7 @@ import { ZsGenericType } from "./generic-type";
 import { TypeVarBuilder } from "./type-var-builder";
 import { ZsDeclaredType } from "../refs";
 import { ZsFunction } from "../expressions/function";
-import { ZsTypeKind } from "../kinds";
+import { ZsNodeKind, ZsTypeKind } from "../kinds";
 
 export class GenericBuilder<
     Names extends string,
@@ -54,7 +54,7 @@ export class GenericBuilder<
         constructor: (reification: Reification<Names, Vars>) => Instance
     ): ZsGenericType<Vars, Instance> {
         return new ZsGenericType<Vars, Instance>({
-            typeName: ZsNodeKind.Generic,
+            typeName: ZsNodeKind.ZsGeneric,
             instance: () => constructor(this._vars),
             ordering: this._names,
             vars: this._vars

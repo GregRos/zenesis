@@ -1,7 +1,7 @@
 import { ZodLiteral, ZodNull, ZodUndefined } from "zod";
 import { tf } from "../factory";
 import { serializes } from "../node-serializer";
-import { AnyKind } from "../../construction/kind";
+import { AnyKind } from "../../construction/kinds";
 import { SyntaxKind } from "typescript";
 
 function getLiteralNode(value: any) {

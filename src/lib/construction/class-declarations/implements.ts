@@ -1,7 +1,7 @@
 import { ZsNodeKind } from "../kinds";
 import { ZsTypedDecl } from "../refs";
 import { ZsInstantiation } from "../expressions/instantiation";
-import { ZsInterface } from "./interface";
+import { ZsInterface } from "../declarative/interface";
 
 export type ZsImplementable = ZsInterface | ZsInstantiation<ZsInterface>;
 

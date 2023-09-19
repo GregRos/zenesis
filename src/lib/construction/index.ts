@@ -5,7 +5,7 @@ import { ZsKeyof } from "./expressions/keyof";
 import { ZsTypeof } from "./expressions/typeof";
 import { ZsMapped } from "./expressions/mapped";
 import { ZsObjectExpr } from "./expressions/object";
-import { ZsUniverse } from "../containers/universe";
+import { ZsWorld } from "../containers/world";
 import { z } from "zod";
 
 const fullZs = {
@@ -14,8 +14,8 @@ const fullZs = {
     when: ZsConditional.create,
     keyof: ZsKeyof.create,
     mapped: ZsMapped.create,
-    obj: ZsObjectExpr.create
-    universe: ZsUniverse.create,
+    obj: ZsObjectExpr.create,
+    world: ZsWorld.create,
     ...z
 };
 

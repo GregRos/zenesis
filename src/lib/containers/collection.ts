@@ -39,10 +39,9 @@ export class NamedDeclCollection<
     }
 
     private _mustByName<T extends Decl["declaration"], K extends Decl["name"]>(
-        type: T,
         name: K
     ): Decl & { declaration: T; name: K } {
-        const result = this._byName(type, name);
+        const result = this._byName(name);
         if (!result) {
             throw new Error(`Could not find export ${name}`);
         }
@@ -53,7 +52,7 @@ export class NamedDeclCollection<
         return new Proxy(this._record, {
             get: (target, prop) => {
                 if (typeof prop === "string") {
-                    return this._mustByName(type, prop);
+                    return this._mustByName(prop);
                 }
                 return Reflect.get(target, prop);
             }

@@ -2,7 +2,7 @@ import { ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
 import { getCombinedType } from "../utils";
 import { ZsTypeKind } from "../kinds";
-import { ZsClassFragment } from "./class-fragment";
+import { ZsClassFragment } from "../class-declarations/class-fragment";
 
 export interface ZsInterfaceDef<
     Name extends string,
@@ -42,5 +42,3 @@ export class ZsInterface<
         });
     }
 }
-
-export type ZsEmptyInterface<Name extends string> = ZsInterface<Name, {}, {}>;

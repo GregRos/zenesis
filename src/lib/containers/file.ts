@@ -1,17 +1,15 @@
 import { ZsExportsIterable } from "./types";
 import { NamedDeclCollection } from "./collection";
+import { ZsNamedDecl } from "../construction/refs";
+import { ZsDeclarationSpace } from "./declarator";
 
-export class ZsFile {
-    private _exports: NamedDeclCollection<any>;
-
+export class ZsFile<Decl extends ZsNamedDecl> {
     constructor(
         readonly name: string,
-        declarations: ZsExportsIterable<any>
-    ) {
-        this._exports = new NamedDeclCollection(declarations);
-    }
+        declarations: (space: ZsDeclarationSpace) => Generator<Decl>
+    ) {}
 
     get proxy() {
-        return this._exports;
+        return null!;
     }
 }

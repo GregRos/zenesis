@@ -9,7 +9,7 @@ export interface ZsObjectExprDef<Shape extends ZsShape> extends ZodTypeDef {
     shape: Shape;
 }
 
-export class ZsObjectExpr<Shape extends ZsShape<"public">> extends ZsMonoType<
+export class ZsObjectExpr<Shape extends ZsShape> extends ZsMonoType<
     getTypeFromShape<Shape>,
     ZsObjectExprDef<Shape>
 > {
@@ -19,7 +19,7 @@ export class ZsObjectExpr<Shape extends ZsShape<"public">> extends ZsMonoType<
 
     readonly actsLike = z.object(unpackMemberSchemas(this.shape));
 
-    static create<Shape extends ZsShape<"public">>(shape: Shape) {
+    static create<Shape extends ZsShape>(shape: Shape) {
         return new ZsObjectExpr<Shape>({
             typeName: ZsTypeKind.ZsObjectExpr,
             shape
