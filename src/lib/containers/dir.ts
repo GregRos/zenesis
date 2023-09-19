@@ -1,23 +1,21 @@
+import { ZsWorld } from "./world";
+import { ExportsRecord, ZsExportsIterable } from "./types";
 import { ZsExportable } from "../construction/refs";
-import { ZsDeclarationSpace } from "./declarator";
-import { ZsUniverse } from "./universe";
 
 export class ZsDir {
     constructor(
         readonly name: string,
-        private readonly _universe: ZsUniverse
+        private readonly _world: ZsWorld
     ) {}
-
-    private _getFileName(name: string) {
-        return `${this.name}/${name}`;
-    }
 
     file<Exports extends ZsExportable<any>>(
         name: string,
-        init: (space: ZsDeclarationSpace) => Generator<Exports>
-    ) {
-        return this._universe.file(this._getFileName(name), () =>
-            init(new ZsDeclarationSpace())
-        );
+        exports: () => ZsExportsIterable<Exports>
+    ): ExportsRecord<"export", Exports> {
+        return this._world.file(`${this.name}/${name}`, exports);
+    }
+
+    dir<Name extends string>(name: Name) {
+        return new ZsDir(`${this.name}/${name}`, this._world);
     }
 }

@@ -9,9 +9,23 @@ export type getDeclarationType<Ref> = Ref extends {
     ? Type
     : undefined;
 
+export interface ZsMemberDecl<
+    Name extends PropertyKey = PropertyKey,
+    Type extends ZodTypeAny = ZodTypeAny
+> {}
+
+export type ZsTypedDecl<Type extends string = string> = {
+    readonly schema: ZodTypeAny;
+    readonly declaration: Type;
+};
+
+export type ZsNamedDecl<Name extends string = string> = ZsTypedDecl & {
+    readonly name: Name;
+};
+
 export type ZsExportable<Name extends string> =
     | ZsDeclaredType<Name>
-    | ZsValueRef<never>;
+    | ZsValueRef<Name>;
 
 export type ZsDeclaredType<Name extends string = string, Monotype = any> =
     | ZsTypedClassRef<Name, Monotype>

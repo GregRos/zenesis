@@ -1,23 +1,17 @@
-import { ZsExportable } from "../construction/refs";
-import { z } from "zod";
-import { zs } from "../construction";
-import { ExportsCollection, ZsExports } from "./exports";
-import { seq, SeqLike } from "lazies";
-import { ZsDeclarationSpace } from "./declarator";
+import { ZsExportsIterable } from "./types";
+import { NamedDeclCollection } from "./collection";
 
-export class ZsFile<Exports extends ZsExportable<any>> {
-    private _exportsProxy: ExportsCollection<Exports>;
+export class ZsFile {
+    private _exports: NamedDeclCollection<any>;
 
     constructor(
         readonly name: string,
-        exports: (space: ZsDeclarationSpace) => Generator<Exports>
+        declarations: ZsExportsIterable<any>
     ) {
-        this._exportsProxy = new ExportsCollection(
-            seq(exports(new ZsDeclarationSpace()))
-        );
+        this._exports = new NamedDeclCollection(declarations);
     }
 
-    get exportsProxy() {
-        return this._exportsProxy.proxy(this);
+    get proxy() {
+        return this._exports;
     }
 }

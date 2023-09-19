@@ -1,7 +1,7 @@
 import { ZodType, ZodTypeAny } from "zod";
 import { ZsGenericType } from "../generic/generic-type";
-import { ImportBuilder, ZsImportedGeneric, ZsImportedType } from "./import";
-import { ZsDeclaredType } from "../refs";
+import { ImportBuilder, ZsImportedType } from "./import";
+import { ZsImportedGeneric } from "./imported-generic";
 
 export class ZsExporter {
     import(name: string): ImportBuilder {

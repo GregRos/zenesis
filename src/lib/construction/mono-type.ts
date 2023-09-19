@@ -1,10 +1,4 @@
-import {
-    ParseInput,
-    ParseReturnType,
-    undefined,
-    ZodType,
-    ZodTypeDef
-} from "zod";
+import { ParseInput, ParseReturnType, ZodType, ZodTypeDef } from "zod";
 
 export type ZsMonoLike<Type> = ZodType<Type, any, Type>;
 
