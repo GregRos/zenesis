@@ -54,6 +54,7 @@ export class GenericBuilder<
         constructor: (reification: Reification<Names, Vars>) => Instance
     ): ZsGenericType<Vars, Instance> {
         return new ZsGenericType<Vars, Instance>({
+            typeName: ZsNodeKind.Generic,
             instance: () => constructor(this._vars),
             ordering: this._names,
             vars: this._vars

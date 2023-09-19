@@ -11,7 +11,7 @@ export interface ZsValueDef<
     name: Name;
     style: "const" | "let" | "var" | "function";
     annotation: Annotation;
-    describe: string;
+    describe?: string;
 }
 
 export class ZsValue<

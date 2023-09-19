@@ -11,6 +11,7 @@ export interface ZsGenericDef<
     Vars extends ZsTypeVarsRecord,
     Instance extends ZodTypeAny
 > extends ZodTypeDef {
+    typeName: ZsNodeKind.Generic;
     vars: Vars;
     instance: () => Instance;
     ordering: (keyof Vars)[];
