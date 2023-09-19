@@ -13,8 +13,8 @@ export interface ZsFunctionDef<
 }
 
 export class ZsFunction<
-    Tuple extends AnyZodTuple,
-    Return extends ZodTypeAny
+    Tuple extends AnyZodTuple = AnyZodTuple,
+    Return extends ZodTypeAny = ZodTypeAny
 > extends ZsMonoType<
     InnerTypeOfFunction<Tuple, Return>,
     ZsFunctionDef<Tuple, Return>

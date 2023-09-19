@@ -5,6 +5,7 @@ import { ZsClassMethod } from "./method";
 import { ZsClassField } from "./field";
 import { unpackMemberSchemas, ZsShape } from "../expressions/overloads";
 import { z, ZodTypeAny } from "zod";
+import { ClassDeclarator } from "./declarator";
 
 export type ZsClassDecl = ZsClassMethod | ZsImplements | ZsClassField;
 
@@ -58,6 +59,12 @@ export class ZsClassFragment<Decl extends ZsClassDecl = ZsClassDecl> {
 
     [Symbol.iterator]() {
         return this._decls[Symbol.iterator]();
+    }
+
+    static create<Decl extends ZsClassDecl>(
+        input: (declarator: ClassDeclarator) => Iterable<Decl>
+    ) {
+        return new ZsClassFragment(input(new ClassDeclarator()));
     }
 }
 

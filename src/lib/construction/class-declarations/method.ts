@@ -6,19 +6,17 @@ import { ZsNamedDecl, ZsTypedDecl } from "../refs";
 
 export interface ZsDeclMethodDef<
     Name extends string,
-    A extends Access,
     Functions extends ZsOverloads<any>
 > {
     kind: ZsNodeKind.ZsMethod;
-    access: A;
+    access: Access;
     name: Name;
     type: Functions;
 }
 
 export class ZsClassMethod<
         Name extends string = string,
-        Functions extends ZsOverloads<any> = ZsOverloads<any>,
-        A extends Access = "public"
+        Functions extends ZsOverloads<any> = ZsOverloads<any>
     >
     implements ZsTypedDecl<"method">, ZsNamedDecl<Name>
 {
@@ -32,7 +30,7 @@ export class ZsClassMethod<
         return this._def.type;
     }
 
-    constructor(readonly _def: ZsDeclMethodDef<Name, A, Functions>) {}
+    constructor(readonly _def: ZsDeclMethodDef<Name, Functions>) {}
 
     static create<
         Name extends string,
