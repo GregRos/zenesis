@@ -1,6 +1,5 @@
 import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
-import { ZsTypeAliasRef } from "../refs";
 import { ZsTypeKind } from "../kinds";
 
 export interface ZsTypeAliasDef<Name extends string, Type extends ZodTypeAny>

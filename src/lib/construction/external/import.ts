@@ -5,6 +5,7 @@ import { ZsExporter } from "./module";
 import { getDeclarationType } from "../refs";
 import { ZsTypeKind } from "../kinds";
 import { ZsImportedGeneric } from "./imported-generic";
+import { ZodNamedTypeAny } from "../../zod-walker/types";
 
 export interface ZsSharedImportDef<Typed> {
     module: ZsExporter;
@@ -25,16 +26,15 @@ export interface ImportBuilder {
     typed<As extends ZodTypeAny | ZsGenericType>(
         as: As
     ): As extends ZodTypeAny
-        ? ZsImportedType<As>
+        ? ZsImport<As>
         : As extends ZsGenericType
         ? ZsImportedGeneric<As>
         : never;
 }
 
-export class ZsImportedType<As extends ZodTypeAny> extends ZsMonoType<
-    TypeOf<As>,
-    ZsImportDef<As>
-> {
+export class ZsImport<
+    As extends ZodTypeAny = ZodNamedTypeAny
+> extends ZsMonoType<TypeOf<As>, ZsImportDef<As>> {
     get actsLike() {
         return this._def.typed();
     }
@@ -49,7 +49,7 @@ export class ZsImportedType<As extends ZodTypeAny> extends ZsMonoType<
         name: string,
         typed: () => Typed
     ) {
-        return new ZsImportedType<Typed>({
+        return new ZsImport<Typed>({
             typeName: ZsTypeKind.ZsImportedType,
             module,
             name,

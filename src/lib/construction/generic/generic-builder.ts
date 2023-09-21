@@ -5,7 +5,8 @@ import { ZsGenericType } from "./generic-type";
 import { TypeVarBuilder } from "./type-var-builder";
 import { ZsDeclaredType } from "../refs";
 import { ZsFunction } from "../expressions/function";
-import { ZsClassDeclKind, ZsModuleDeclKind, ZsNodeKind, ZsTypeKind } from "../kinds";
+import { ZsModuleDeclKind, ZsTypeCtorKind, ZsTypeKind } from "../kinds";
+import { ZsTypeCtors } from "../expressions/instantiation";
 
 export class GenericBuilder<
     Names extends string,
@@ -50,7 +51,7 @@ export class GenericBuilder<
         }) as any;
     }
 
-    declare<Instance extends ZsDeclaredType>(
+    declare<Instance extends ZsTypeCtors>(
         constructor: (reification: Reification<Names, Vars>) => Instance
     ): ZsGenericType<Vars, Instance>;
     declare<Function extends ZsFunction<any, any>>(
@@ -67,7 +68,7 @@ export class GenericBuilder<
             });
         } else {
             return new ZsGenericType({
-                typeName: ZsModuleDeclKind.,
+                typeName: ZsTypeKind.GenericZsType,
                 instance: result,
                 ordering: this._names,
                 vars: this._vars

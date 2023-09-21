@@ -8,7 +8,7 @@ import { ZsObjectExpr } from "./expressions/object";
 import { ZsTypeVar } from "./generic/type-var";
 import { ZsMapVar } from "./expressions/map-var";
 import { ZsMapped } from "./expressions/mapped";
-import { ZsImportedType } from "./external/import";
+import { ZsImport } from "./external/import";
 import { ZsInstantiation } from "./expressions/instantiation";
 import {
     ZodAny,
@@ -46,8 +46,10 @@ import {
 } from "zod";
 import { ZsKeyof } from "./expressions/keyof";
 import { ZsTypeof } from "./expressions/typeof";
+import { ZsGenericType } from "./generic/generic-type";
+import { ZsImportedGeneric } from "./external/imported-generic";
 
-export type ZsSchemas =
+export type ZsTypeSchema =
     | ZsClass<any, any>
     | ZsInterface<any, any>
     | ZsTypeAlias<any, any>
@@ -60,10 +62,10 @@ export type ZsSchemas =
     | ZsKeyof<any>
     | ZsMapped<any, any, any>
     | ZsTypeof<any>
-    | ZsImportedType<any>
+    | ZsImport<any>
     | ZsInstantiation<any>;
 
-export type ZodSchemas =
+export type ZodTypeSchema =
     | ZodString
     | ZodLiteral<any>
     | ZodNaN
@@ -97,4 +99,7 @@ export type ZodSchemas =
     | ZodEnum<any>
     | ZodNativeEnum<any>;
 
-export type TypeSchema = ZsSchemas | ZodSchemas;
+export type GenericZsNode = ZsGenericType | ZsImportedGeneric;
+
+export type AnyTypeSchema = ZsTypeSchema | ZodTypeSchema;
+export type AnyTypeNode = AnyTypeSchema | GenericZsNode;

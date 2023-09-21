@@ -1,18 +1,25 @@
-import { ZodTypeAny, ZodTypeDef } from "zod";
+import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMonoType } from "../mono-type";
 import { ZsDeclaredType, ZsShapedRef } from "../refs";
 import { ZsTypeKind } from "../kinds";
+import { ZsTypeAlias } from "../module-declarations/alias";
+import { ZsInterface } from "../module-declarations/interface";
+import { ZsClass } from "../module-declarations/class";
+import { ZsImport } from "../external/import";
+
+export type ZsTypeCtors = ZsTypeAlias | ZsInterface | ZsClass | ZsImport;
 
 export interface ZsInstantiationDef<Instance extends ZodTypeAny>
     extends ZodTypeDef {
     typeName: ZsTypeKind.ZsInstantiation;
     typeArgs: [ZodTypeAny, ...ZodTypeAny[]] | [];
-    instance: () => Instance;
+    instance: Instance;
 }
 
-export class ZsInstantiation<
-    Instance extends ZsDeclaredType
-> extends ZsMonoType<Instance, ZsInstantiationDef<Instance>> {
+export class ZsInstantiation<Instance extends ZsTypeCtors> extends ZsMonoType<
+    TypeOf<Instance>,
+    ZsInstantiationDef<Instance>
+> {
     get declaration(): Instance extends ZsShapedRef
         ? Instance["declaration"]
         : undefined {
@@ -30,6 +37,6 @@ export class ZsInstantiation<
     }
 
     get actsLike() {
-        return this._def.instance();
+        return this._def.instance;
     }
 }

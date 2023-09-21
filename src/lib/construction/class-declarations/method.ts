@@ -7,7 +7,7 @@ export interface ZsDeclMethodDef<
     Name extends string,
     Functions extends ZsOverloads<any>
 > {
-    kind: ZsClassDeclKind.ZsMethod;
+    typeName: ZsClassDeclKind.ZsMethod;
     access: Access;
     name: Name;
     type: Functions;
@@ -35,7 +35,7 @@ export class ZsClassMethod<
         Function extends [ZsFunction<any, any>, ...ZsFunction<any, any>[]]
     >(name: Name, ...overloads: Function) {
         return new ZsClassMethod({
-            kind: ZsClassDeclKind.ZsMethod,
+            typeName: ZsClassDeclKind.ZsMethod,
             access: "public",
             name,
             type: ZsOverloads.create(...overloads)

@@ -1,6 +1,6 @@
 import { ZodType, ZodTypeAny } from "zod";
 import { ZsGenericType } from "../generic/generic-type";
-import { ImportBuilder, ZsImportedType } from "./import";
+import { ImportBuilder, ZsImport } from "./import";
 import { ZsImportedGeneric } from "./imported-generic";
 
 export class ZsExporter {
@@ -8,7 +8,7 @@ export class ZsExporter {
         return {
             typed: <As extends ZsGenericType | ZodTypeAny>(typed: As): any => {
                 if (typed instanceof ZodType) {
-                    return ZsImportedType.create(this, name, () => typed);
+                    return ZsImport.create(this, name, () => typed);
                 } else if (typed instanceof ZsGenericType) {
                     return ZsImportedGeneric.create(this, name, () => typed);
                 } else {

@@ -2,16 +2,16 @@ import { ZsTypeVar, ZsTypeVarsRecord } from "./type-var";
 import { ZodAny, ZodTypeAny, ZodTypeDef } from "zod";
 import { SchemaSubtypeOf } from "../utils";
 
-import { ZsInstantiation } from "../expressions/instantiation";
+import { ZsInstantiation, ZsTypeCtors } from "../expressions/instantiation";
 import { ZsDeclaredType } from "../refs";
 import { GenericBuilder } from "./generic-builder";
-import { ZsNodeKind, ZsTypeCtorKind, ZsTypeKind } from "../kinds";
+import { ZsTypeKind } from "../kinds";
 
 export interface ZsGenericDef<
     Vars extends ZsTypeVarsRecord,
     Instance extends ZodTypeAny
 > extends ZodTypeDef {
-    typeName: ZsTypeCtorKind.ZsGeneric;
+    typeName: ZsTypeKind.GenericZsType;
     vars: Vars;
     instance: Instance;
     ordering: (keyof Vars)[];
@@ -19,7 +19,7 @@ export interface ZsGenericDef<
 
 export class ZsGenericType<
     Vars extends ZsTypeVarsRecord = ZsTypeVarsRecord,
-    Instance extends ZsDeclaredType = ZsDeclaredType
+    Instance extends ZsTypeCtors = ZsTypeCtors
 > {
     constructor(readonly _def: ZsGenericDef<Vars, Instance>) {}
 

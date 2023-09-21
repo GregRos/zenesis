@@ -1,7 +1,5 @@
 import { ZsMonoLike } from "./mono-type";
 import { ZsShape } from "./expressions/overloads";
-import { getTypeFromShape } from "./utils";
-import { ZodTypeAny } from "zod";
 
 export type getDeclarationType<Ref> = Ref extends {
     declaration: infer Type;

@@ -1,15 +1,15 @@
 import { ZsGenericType } from "../generic/generic-type";
-import { ZsTypeKind } from "../kinds";
+import { ZsTypeCtorKind, ZsTypeKind } from "../kinds";
 import { getDeclarationType } from "../refs";
 import { ZsExporter } from "./module";
 import { ZsSharedImportDef } from "./import";
 
 export interface ZsGenericImportDef<G extends ZsGenericType>
     extends ZsSharedImportDef<G> {
-    typeName: ZsTypeKind.ZsImportedGeneric;
+    typeName: ZsTypeKind.GenericZsImportedType;
 }
 
-export class ZsImportedGeneric<G extends ZsGenericType> {
+export class ZsImportedGeneric<G extends ZsGenericType = ZsGenericType> {
     constructor(readonly _def: ZsGenericImportDef<G>) {}
 
     instantiate: G["instantiate"] = (...args) => {
@@ -27,7 +27,7 @@ export class ZsImportedGeneric<G extends ZsGenericType> {
         typed: () => G
     ) {
         return new ZsImportedGeneric<G>({
-            typeName: ZsTypeKind.ZsImportedGeneric,
+            typeName: ZsTypeKind.GenericZsImportedType,
             module,
             name,
             typed: typed
