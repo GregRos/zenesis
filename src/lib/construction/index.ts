@@ -3,7 +3,6 @@ import { ZsFunction } from "./expressions/function";
 import { ZsConditional } from "./expressions/conditional";
 import { ZsKeyof } from "./expressions/keyof";
 import { ZsMapped } from "./expressions/mapped";
-import { ZsObjectExpr } from "./expressions/object";
 import { ZsWorld } from "../containers/world";
 import { z } from "zod";
 import {
@@ -19,7 +18,6 @@ const fullZs = {
     when: ZsConditional.create,
     keyof: ZsKeyof.create,
     mapped: ZsMapped.create,
-    obj: ZsObjectExpr.create,
     world: ZsWorld.create,
     module: <Exports extends ZsModuleDecl>(
         exports: ZsModuleDeclarations<Exports>

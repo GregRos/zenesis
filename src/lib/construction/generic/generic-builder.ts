@@ -33,7 +33,7 @@ export class GenericBuilder<
         declarator: (
             w: TypeVarBuilder<
                 Vars[Name]["_def"]["extends"],
-                Vars[Name]["_def"]["default"]
+                Vars[Name]["_def"]["defaultType"]
             > &
                 Reification<Names, Vars>
         ) => TypeVarBuilder<NewExtends, NewDefault>

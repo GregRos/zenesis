@@ -1,34 +1,53 @@
 import { ZodNamedTypeAny, ZodNameOf } from "./types";
-import { Set, Map } from "immutable";
+import { Map } from "immutable";
 import { Scope } from "./scope";
-import { TypeNode } from "typescript";
+import { ReadonlyKeyword, SyntaxKind, TypeNode } from "typescript";
+import { Modifier, Modifiers, TypeModifierToken } from "./modifiers";
+import { tf } from "../generation/tf";
+
+export type ZodWalkerHandler<
+    AllZods extends ZodNamedTypeAny,
+    MyZod extends AllZods,
+    Out
+> = (z: MyZod, ctx: TypeWalkerCtx<AllZods, Out>) => Out;
+
+export type ZodTransformsMap<
+    MyZods extends ZodNamedTypeAny,
+    AllZods extends ZodNamedTypeAny
+> = {
+    [K in ZodNameOf<MyZods>]: ZodWalkerHandler<MyZods, AllZods[K], unknown>;
+};
 
 export interface TypeWalkerCtx<Zods extends ZodNamedTypeAny, Out> {
     recurse<Z extends Zods>(node: Z): Out;
+    readonly readonly: Modifier<ReadonlyKeyword>;
     readonly scope: Scope<Zods>;
 }
-
-export type ZodWalkerHandler<Zods extends ZodNamedTypeAny, Out> = (
-    z: Zods,
-    ctx: TypeWalkerCtx<Zods, Out>
-) => Out;
 
 export type ZodWalkerSubset<
     AllZods extends ZodNamedTypeAny,
     SomeZods extends AllZods
 > = {
-    [K in ZodNameOf<SomeZods>]: ZodWalkerHandler<AllZods, TypeNode>;
+    [K in ZodNameOf<SomeZods>]: ZodWalkerHandler<AllZods, SomeZods[K], any>;
 };
 
 export class ZodWalker<Zods extends ZodNamedTypeAny, Out> {
     private _scopes = new Scope<Zods>();
+
     constructor(
-        private _handlers: Map<ZodNameOf<Zods>, ZodWalkerHandler<Zods, Out>>
+        private _handlers: Map<
+            ZodNameOf<Zods>,
+            ZodWalkerHandler<Zods, Zods, Out>
+        >
     ) {}
 
     private _createCtx() {
         const walker = this;
         return {
+            readonly: Modifier.create(
+                "readonly",
+                tf.createToken(SyntaxKind.ReadonlyKeyword)
+            ),
             recurse<Z extends Zods>(node: Z): Out {
                 return walker._walk(node, this);
             },
@@ -43,25 +62,12 @@ export class ZodWalker<Zods extends ZodNamedTypeAny, Out> {
         }
         return handler(node, ctx);
     }
-
-    extend<Zods2 extends ZodNamedTypeAny, Out>(handlers: {
-        [K in ZodNameOf<Zods2>]: ZodWalkerHandler<Zods2, Out>;
-    }) {
-        const newHandlers = this._handlers.merge(Map(handlers));
-
-        return new ZodWalker<Zods | Zods2, Out>(newHandlers as any);
-    }
-
-    static create<Zods extends ZodNamedTypeAny, Out>(handlers: {
-        [Z in Zods as ZodNameOf<Z>]: ZodWalkerHandler<Zods, Out>;
-    }) {
-        return new ZodWalker<Zods, Out>(Map(handlers));
-    }
 }
 
 export function createHandlersFactory<AllZods extends ZodNamedTypeAny>() {
     return function createHandlers<Names extends ZodNameOf<AllZods>>(handlers: {
         [K in Names]: ZodWalkerHandler<
+            AllZods,
             Extract<AllZods, ZodNamedTypeAny<K>>,
             TypeNode
         >;

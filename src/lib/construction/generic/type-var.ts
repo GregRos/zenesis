@@ -2,13 +2,14 @@ import { z, ZodTypeAny, ZodTypeDef } from "zod";
 import { SchemaSubtypeOf } from "../utils";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
 import { ZsTypeKind } from "../kinds";
+import { ZodNamedTypeAny } from "../../zod-walker/types";
 
 export interface ZsTypeVarRef<Extends> extends ZsMonoLike<Extends> {
     readonly declaration: "typeVar";
 }
 
 export class ZsTypeVar<
-        Extends extends ZodTypeAny = ZodTypeAny,
+        Extends extends ZodTypeAny = ZodNamedTypeAny,
         Default extends
             SchemaSubtypeOf<Extends> | null = SchemaSubtypeOf<Extends> | null
     >
@@ -22,9 +23,18 @@ export class ZsTypeVar<
             typeName: ZsTypeKind.ZsTypeVar,
             name,
             extends: z.any(),
-            default: null,
+            defaultType: null,
             const: false,
             variance: ""
+        });
+    }
+
+    defaultType<Default2 extends SchemaSubtypeOf<Extends> | null>(
+        defaultType: Default2
+    ) {
+        return new ZsTypeVar<Extends, Default2>({
+            ...this._def,
+            defaultType
         });
     }
 
@@ -50,7 +60,7 @@ export interface ZsTypeVarDef<
     readonly typeName: ZsTypeKind.ZsTypeVar;
     readonly name: string;
     readonly extends: Extends;
-    readonly default: Default;
+    readonly defaultType: Default;
     readonly const: boolean;
     readonly variance: ZsTypeVarVariance;
 }

@@ -1,6 +1,6 @@
-import { factory } from "typescript";
-import { AnyTypeSchema } from "../construction/schemas";
+import { factory, EntityName } from "typescript";
 import { createHandlersFactory } from "../zod-walker/walker";
+import { AnyTypeSchema } from "../zod-walker/types";
 
 export { factory as tf };
 

@@ -16,8 +16,8 @@ export interface ZsGenericFunctionDef<
 }
 
 export class ZsGenericFunction<
-    TypeArgs extends ZsTypeVarsRecord,
-    Function extends ZsFunction<any, any>
+    TypeArgs extends ZsTypeVarsRecord = ZsTypeVarsRecord,
+    Function extends ZsFunction<any, any> = ZsFunction<any, any>
 > extends ZsMonoType<
     TypeOf<Function>,
     ZsGenericFunctionDef<TypeArgs, Function>

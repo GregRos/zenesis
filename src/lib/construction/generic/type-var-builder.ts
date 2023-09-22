@@ -27,7 +27,7 @@ export class TypeVarBuilder<
         return new TypeVarBuilder(
             new ZsTypeVar({
                 ...this._var._def,
-                default: defaultValue
+                defaultType: defaultValue
             })
         );
     }

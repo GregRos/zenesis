@@ -11,7 +11,7 @@ export class ZsConditional<What, Extends, Then, Otherwise> extends ZsMonoType<
     when<What2>(what2: ZsMonoLike<What2>) {
         return new ZsConditional<What2, Extends, Then, Otherwise>({
             ...this._def,
-            when: what2
+            what: what2
         });
     }
 
@@ -38,7 +38,7 @@ export class ZsConditional<What, Extends, Then, Otherwise> extends ZsMonoType<
     ): ZsConditionalExtends<What> {
         return new ZsConditional({
             typeName: ZsTypeKind.ZsConditional,
-            when: what,
+            what: what,
             extends: z.never(),
             then: z.never(),
             otherwise: z.never()
@@ -49,7 +49,7 @@ export class ZsConditional<What, Extends, Then, Otherwise> extends ZsMonoType<
 export interface ZsConditionalDef<What, Extends, IfTrue, IfFalse>
     extends ZodTypeDef {
     typeName: ZsTypeKind.ZsConditional;
-    when: ZsMonoLike<What>;
+    what: ZsMonoLike<What>;
     extends: ZsMonoLike<Extends>;
     then: ZsMonoLike<IfTrue>;
     otherwise: ZsMonoLike<IfFalse>;

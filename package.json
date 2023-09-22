@@ -26,12 +26,15 @@
         "docs": "node dist/generate-docs/run.js"
     },
     "dependencies": {
+        "@assertive-ts/core": "^2.0.0",
         "base64-js": "^1.5.1",
+        "fp-ts": "^2.16.1",
         "immutable": "^5.0.0-beta.4",
         "itertools-ts": "^1.23.0",
         "lazies": "^0.4.0",
         "parjs": "^0.16.1",
         "ts-node": "^10.9.1",
+        "typed-assert": "^1.0.9",
         "zod": "^3.22.2"
     },
     "devDependencies": {

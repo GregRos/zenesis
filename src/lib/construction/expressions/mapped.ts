@@ -2,6 +2,7 @@ import { RecordType, TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod";
 import { ZsMapVar } from "./map-var";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
 import { ZsTypeKind } from "../kinds";
+import { ZodNamedTypeAny } from "../../zod-walker/types";
 
 export interface ZsMappedDef<
     In extends ZodTypeAny,
@@ -12,12 +13,18 @@ export interface ZsMappedDef<
     var: ZsMapVar<In>;
     key: As;
     value: Mapping;
+    modifiers: ZsMappedTypeModifiers;
+}
+
+export interface ZsMappedTypeModifiers {
+    readonly: "add" | "remove" | "readonly" | null;
+    optional: "add" | "remove" | "optional" | null;
 }
 
 export class ZsMapped<
-        In extends ZodTypeAny,
-        As extends ZsMonoLike<PropertyKey>,
-        Mapping extends ZodTypeAny
+        In extends ZodTypeAny = ZodNamedTypeAny,
+        As extends ZsMonoLike<PropertyKey> = ZodNamedTypeAny,
+        Mapping extends ZodTypeAny = ZodNamedTypeAny
     >
     extends ZsMonoType<
         RecordType<TypeOf<As>, Mapping>,
@@ -43,6 +50,19 @@ export class ZsMapped<
         });
     }
 
+    modifier<M extends keyof ZsMappedTypeModifiers>(
+        modifier: keyof ZsMappedTypeModifiers,
+        state: ZsMappedTypeModifiers[M]
+    ) {
+        return new ZsMapped<In, As, Mapping>({
+            ...this._def,
+            modifiers: {
+                ...this._def.modifiers,
+                [modifier]: state
+            }
+        });
+    }
+
     static create<In extends ZodTypeAny>(
         name: string,
         in_: In
@@ -54,7 +74,11 @@ export class ZsMapped<
             typeName: ZsTypeKind.ZsMapped,
             var: var_,
             key: var_ as any,
-            value: z.never() as any
+            value: z.never() as any,
+            modifiers: {
+                readonly: false,
+                optional: false
+            }
         }) as any;
     }
 
