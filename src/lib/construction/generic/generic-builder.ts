@@ -27,7 +27,7 @@ export class GenericBuilder<
     where<
         Name extends Names,
         NewExtends extends ZodTypeAny = Vars[Name]["_def"]["extends"],
-        NewDefault extends ZodTypeAny | null = Vars[Name]["_def"]["default"]
+        NewDefault extends ZodTypeAny | null = Vars[Name]["_def"]["defaultType"]
     >(
         name: Name,
         declarator: (

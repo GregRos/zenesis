@@ -1,14 +1,15 @@
 import { TypeNode } from "typescript";
 import { Map } from "immutable";
 
-import { ZodNamedTypeAny } from "./types";
+import { ZodNamedTypeAny, ZodNamedTypeDef } from "./types";
+import { ZodType } from "zod";
 
 export interface RestorePreviousScope {
     load(): void;
 }
 
 export class Scope<All extends ZodNamedTypeAny> {
-    private _scopes = Map<All, TypeNode>();
+    private _scopes = Map<ZodNamedTypeDef, TypeNode>();
 
     get snapshot(): RestorePreviousScope {
         const current = this._scopes;
@@ -19,15 +20,26 @@ export class Scope<All extends ZodNamedTypeAny> {
         };
     }
 
-    set(schema: All, reference: TypeNode) {
-        const current = this._scopes;
-        this._scopes = current.set(schema, reference);
+    private _getDef(schemaOrDef: All | All["_def"]): All["_def"] {
+        return schemaOrDef instanceof ZodType ? schemaOrDef._def : schemaOrDef;
     }
 
-    get(node: All) {
-        if (!this._scopes.has(node)) {
+    set(schema: All | All["_def"], reference: TypeNode) {
+        const restorer = this.snapshot;
+        const def = this._getDef(schema);
+        if (this._scopes.has(def)) {
+            throw new Error(`The node ${schema} already exists`);
+        }
+        const current = this._scopes;
+        this._scopes = current.set(def, reference);
+        return restorer;
+    }
+
+    get(node: All | All["_def"]): TypeNode {
+        const def = this._getDef(node);
+        if (!this._scopes.has(def)) {
             throw new Error(`No scope for ${node}`);
         }
-        return this._scopes.get(node)!;
+        return this._scopes.get(def)!;
     }
 }

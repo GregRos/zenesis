@@ -1,6 +1,7 @@
 import { ZodTypeKind } from "./zod-kind";
 
 export enum ZsTypeKind {
+    ZsLookup = "ZsLookup",
     ZsOverloads = "ZsOverloads",
     ZsClass = "ZsClass",
     ZsInterface = "ZsInterface",
@@ -12,8 +13,6 @@ export enum ZsTypeKind {
     ZsMapped = "ZsMapped",
     ZsMapVar = "ZsMapVar",
     ZsInstantiation = "ZsInstantiation",
-    ZsObjectExpr = "ZsObjectExpr",
-    ZsTypeof = "ZsTypeof",
     ZsKeyof = "ZsKeyof",
     ZsImportedType = "ZsImportedType",
     ZsEnum = "ZsEnum",

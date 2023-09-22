@@ -2,14 +2,12 @@ import { ZodNamedTypeAny, ZodNameOf } from "./types";
 import { Map } from "immutable";
 import { Scope } from "./scope";
 import { ReadonlyKeyword, SyntaxKind, TypeNode } from "typescript";
-import { Modifier, Modifiers, TypeModifierToken } from "./modifiers";
-import { tf } from "../generation/tf";
 
 export type ZodWalkerHandler<
     AllZods extends ZodNamedTypeAny,
     MyZod extends AllZods,
     Out
-> = (z: MyZod, ctx: TypeWalkerCtx<AllZods, Out>) => Out;
+> = (z: MyZod["_def"], ctx: TypeWalkerCtx<AllZods, Out>) => Out;
 
 export type ZodTransformsMap<
     MyZods extends ZodNamedTypeAny,
@@ -20,8 +18,7 @@ export type ZodTransformsMap<
 
 export interface TypeWalkerCtx<Zods extends ZodNamedTypeAny, Out> {
     recurse<Z extends Zods>(node: Z): Out;
-    readonly readonly: Modifier<ReadonlyKeyword>;
-    readonly scope: Scope<Zods>;
+    readonly scope: Scope<Zods["_def"]>;
 }
 
 export type ZodWalkerSubset<
@@ -32,7 +29,7 @@ export type ZodWalkerSubset<
 };
 
 export class ZodWalker<Zods extends ZodNamedTypeAny, Out> {
-    private _scopes = new Scope<Zods>();
+    private _scopes = new Scope<Zods["_def"]>();
 
     constructor(
         private _handlers: Map<
@@ -44,10 +41,6 @@ export class ZodWalker<Zods extends ZodNamedTypeAny, Out> {
     private _createCtx() {
         const walker = this;
         return {
-            readonly: Modifier.create(
-                "readonly",
-                tf.createToken(SyntaxKind.ReadonlyKeyword)
-            ),
             recurse<Z extends Zods>(node: Z): Out {
                 return walker._walk(node, this);
             },

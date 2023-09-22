@@ -9,7 +9,7 @@ export interface ZsTypeVarRef<Extends> extends ZsMonoLike<Extends> {
 }
 
 export class ZsTypeVar<
-        Extends extends ZodTypeAny = ZodNamedTypeAny,
+        Extends extends ZodTypeAny = ZodTypeAny,
         Default extends
             SchemaSubtypeOf<Extends> | null = SchemaSubtypeOf<Extends> | null
     >

@@ -50,7 +50,6 @@ import { ZsTypeVar } from "../construction/generic/type-var";
 import { ZsMapVar } from "../construction/expressions/map-var";
 import { ZsKeyof } from "../construction/expressions/keyof";
 import { ZsMapped } from "../construction/expressions/mapped";
-import { ZsTypeof } from "../construction/expressions/typeof";
 import { ZsImport } from "../construction/external/import";
 import {
     ZsInstantiation,
@@ -59,6 +58,7 @@ import {
 import { EnumLike, ZodDiscriminatedUnionOption } from "zod/lib/types";
 import { ZsGenericType } from "../construction/generic/generic-type";
 import { ZsImportedGeneric } from "../construction/external/imported-generic";
+import { ZsIndexedType } from "../construction/expressions/lookup";
 
 export type ZodNamedTypeDef<K extends string = string> = ZodTypeDef & {
     typeName: K;
@@ -79,8 +79,8 @@ export type ZsTypeSchema =
     | ZsMapVar
     | ZsKeyof
     | ZsMapped
-    | ZsTypeof
     | ZsImport
+    | ZsIndexedType
     | ZsInstantiation<ZsTypeCtors>;
 export type ZodTypeSchema =
     | ZodString

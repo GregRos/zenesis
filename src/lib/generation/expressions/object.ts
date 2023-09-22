@@ -1,10 +1,10 @@
 import { createHandlers, tf } from "../tf";
 import { AnyKind } from "../../construction/kinds";
-import { extractModifiers } from "./extract-modifiers";
+import { extractModifiers } from "../extract-modifiers";
 
 export default createHandlers({
     [AnyKind.ZodObject](node, ctx) {
-        const members = node.shape;
+        const members = node.shape();
         const properties = Object.entries(members).map(([name, type]) => {
             const { optional, readonly, innerType } = extractModifiers(type);
             return tf.createPropertySignature(

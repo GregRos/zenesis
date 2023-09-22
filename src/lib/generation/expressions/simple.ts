@@ -7,11 +7,7 @@ import {
     TypeReferenceNode
 } from "typescript";
 import { z } from "zod";
-import { ExtractModifier, extractModifiers } from "./extract-modifiers";
-
-type A = {
-    readonly [K in "a" | "b"]: string;
-};
+import { ExtractModifier, extractModifiers } from "../extract-modifiers";
 
 function getLiteralNode(value: any) {
     switch (typeof value) {
@@ -68,27 +64,25 @@ export default createHandlers({
         return tf.createKeywordTypeNode(SyntaxKind.SymbolKeyword);
     },
     [AnyKind.ZodArray](node, ctx) {
-        return tf.createArrayTypeNode(ctx.recurse(node._def.type));
+        return tf.createArrayTypeNode(ctx.recurse(node.type));
     },
     [AnyKind.ZodMap](node, ctx) {
         return tf.createTypeReferenceNode("Map", [
-            ctx.recurse(node._def.keyType),
-            ctx.recurse(node._def.valueType)
+            ctx.recurse(node.keyType),
+            ctx.recurse(node.valueType)
         ]);
     },
     [AnyKind.ZodSet](node, ctx) {
-        return tf.createTypeReferenceNode("Set", [
-            ctx.recurse(node._def.valueType)
-        ]);
+        return tf.createTypeReferenceNode("Set", [ctx.recurse(node.valueType)]);
     },
     [AnyKind.ZodRecord](node, ctx) {
         return tf.createTypeReferenceNode("Record", [
-            ctx.recurse(node._def.keyType),
-            ctx.recurse(node._def.valueType)
+            ctx.recurse(node.keyType),
+            ctx.recurse(node.valueType)
         ]);
     },
     [AnyKind.ZodTuple](node, ctx) {
-        const members = node._def.items.map(item => {
+        const members = node.items.map(item => {
             const { innerType, optional } = extractModifiers(
                 item,
                 ExtractModifier.Optional
@@ -96,42 +90,38 @@ export default createHandlers({
             const recursed = ctx.recurse(innerType);
             return optional ? tf.createOptionalTypeNode(recursed) : recursed;
         });
-        if (node._def.rest) {
-            members.push(tf.createRestTypeNode(ctx.recurse(node._def.rest)));
+        if (node.rest) {
+            members.push(tf.createRestTypeNode(ctx.recurse(node.rest)));
         }
         return tf.createTupleTypeNode(members);
     },
     [AnyKind.ZodUnion](node, ctx) {
         return tf.createUnionTypeNode(
-            node._def.options.map(option => ctx.recurse(option))
+            node.options.map(option => ctx.recurse(option))
         );
     },
     [AnyKind.ZodIntersection](node, ctx) {
         return tf.createIntersectionTypeNode([
-            ctx.recurse(node._def.left),
-            ctx.recurse(node._def.right)
+            ctx.recurse(node.left),
+            ctx.recurse(node.right)
         ]);
     },
     [AnyKind.ZodNullable](node, ctx) {
         return tf.createUnionTypeNode([
-            ctx.recurse(node._def.innerType),
+            ctx.recurse(node.innerType),
             tf.createLiteralTypeNode(tf.createNull())
         ]);
     },
     [AnyKind.ZodDefault](node, ctx) {
-        return ctx.recurse(node._def.innerType);
+        return ctx.recurse(node.innerType);
     },
     [AnyKind.ZodPromise](node, ctx) {
-        return tf.createTypeReferenceNode("Promise", [
-            ctx.recurse(node._def.type)
-        ]);
+        return tf.createTypeReferenceNode("Promise", [ctx.recurse(node.type)]);
     },
     [AnyKind.ZodCatch](node, ctx) {
-        return ctx.recurse(node._def.innerType);
+        return ctx.recurse(node.innerType);
     },
-    [AnyKind.ZodEffects](node, ctx) {
-        throw new Error("Effects are not supported");
-    },
+
     [AnyKind.ZsClass](node, ctx) {
         return ctx.scope.get(node);
     },
@@ -140,14 +130,6 @@ export default createHandlers({
     },
     [AnyKind.ZsTypeAlias](node, ctx) {
         return ctx.scope.get(node);
-    },
-    [AnyKind.ZsConditional](node, ctx) {
-        return tf.createConditionalTypeNode(
-            ctx.recurse(node._def.what),
-            ctx.recurse(node._def.extends),
-            ctx.recurse(node._def.then),
-            ctx.recurse(node._def.otherwise)
-        );
     },
     [AnyKind.ZsTypeVar](node, ctx) {
         return ctx.scope.get(node);
@@ -158,30 +140,29 @@ export default createHandlers({
     [AnyKind.ZsKeyof](node, ctx) {
         return tf.createTypeOperatorNode(
             SyntaxKind.KeyOfKeyword,
-            ctx.recurse(node._def.of)
+            ctx.recurse(node.of)
         );
     },
-    [AnyKind.ZodPipeline](node, ctx) {
-        throw new Error("Pipelines are not supported");
-    },
+
     [AnyKind.ZodDiscriminatedUnion](node, ctx) {
-        return tf.createUnionTypeNode(
-            node._def.options.map(x => ctx.recurse(x))
-        );
+        return tf.createUnionTypeNode(node.options.map(x => ctx.recurse(x)));
     },
     [AnyKind.ZodBranded](node, ctx) {
-        return ctx.recurse(node._def.type);
+        return ctx.recurse(node.type);
     },
 
     [AnyKind.ZodLazy](node, ctx) {
-        return ctx.recurse(node._def.getter());
+        return ctx.recurse(node.getter());
     },
     [AnyKind.ZsInstantiation](node, ctx) {
         // An instantiation will always be of a declared type that must be in scope
-        const genericType = ctx.scope.get(
-            node._def.instance
-        ) as TypeReferenceNode;
-        const typeArgs = node._def.typeArgs.map(arg => ctx.recurse(arg));
+        const genericType = ctx.scope.get(node.instance) as TypeReferenceNode;
+        const typeArgs = node.typeArgs.map(arg => ctx.recurse(arg));
         return tf.createTypeReferenceNode(genericType.typeName, typeArgs);
+    },
+    [AnyKind.ZsLookup](node, ctx) {
+        const targetType = ctx.recurse(node.target);
+        const indexType = ctx.recurse(node.index);
+        return tf.createIndexedAccessTypeNode(targetType, indexType);
     }
 });

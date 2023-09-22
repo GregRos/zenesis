@@ -3,6 +3,7 @@ import { ZsMapVar } from "./map-var";
 import { ZsMonoLike, ZsMonoType } from "../mono-type";
 import { ZsTypeKind } from "../kinds";
 import { ZodNamedTypeAny } from "../../zod-walker/types";
+import { ZsMappedTypeModifiers } from "../modifier-states";
 
 export interface ZsMappedDef<
     In extends ZodTypeAny,
@@ -11,14 +12,9 @@ export interface ZsMappedDef<
 > extends ZodTypeDef {
     typeName: ZsTypeKind.ZsMapped;
     var: ZsMapVar<In>;
-    key: As;
+    nameType: As;
     value: Mapping;
     modifiers: ZsMappedTypeModifiers;
-}
-
-export interface ZsMappedTypeModifiers {
-    readonly: "add" | "remove" | "readonly" | null;
-    optional: "add" | "remove" | "optional" | null;
 }
 
 export class ZsMapped<
@@ -37,7 +33,7 @@ export class ZsMapped<
     ) {
         return new ZsMapped<In, As, Mapping>({
             ...this._def,
-            key: mapping(this._def.var)
+            nameType: mapping(this._def.var)
         });
     }
 
@@ -73,16 +69,16 @@ export class ZsMapped<
         return new ZsMapped<In, In, In>({
             typeName: ZsTypeKind.ZsMapped,
             var: var_,
-            key: var_ as any,
+            nameType: var_ as any,
             value: z.never() as any,
             modifiers: {
-                readonly: false,
-                optional: false
+                readonly: null,
+                optional: null
             }
         }) as any;
     }
 
-    readonly actsLike = z.record(this._def.key, this._def.value);
+    readonly actsLike = z.record(this._def.nameType, this._def.value);
 }
 
 export interface ZsMappedBuilderValue<
