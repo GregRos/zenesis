@@ -21,13 +21,6 @@ export interface TypeWalkerCtx<Zods extends ZodNamedTypeAny, Out> {
     readonly scope: Scope<Zods["_def"]>
 }
 
-export type ZodWalkerSubset<
-    AllZods extends ZodNamedTypeAny,
-    SomeZods extends AllZods
-> = {
-    [K in ZodNameOf<SomeZods>]: ZodWalkerHandler<AllZods, SomeZods[K], any>
-}
-
 export class ZodWalker<Zods extends ZodNamedTypeAny, Out> {
     private _scopes = new Scope<Zods["_def"]>()
 

@@ -2,22 +2,27 @@ import { AnyZodTuple, z, ZodTuple, ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsMonoType } from "../mono-type"
 import { InnerTypeOfFunction } from "zod/lib/types"
 import { ZsTypeKind } from "../kinds"
+import { ZsTypeVarsRecord } from "../generic/type-var"
 
 export interface ZsFunctionDef<
-    Tuple extends AnyZodTuple,
-    Return extends ZodTypeAny
+    ZParams extends AnyZodTuple,
+    ZReturns extends ZodTypeAny,
+    ZTypeArgs extends ZsTypeVarsRecord
 > extends ZodTypeDef {
     typeName: ZsTypeKind.ZsFunction
-    args: Tuple
-    returns: Return
+    args: ZParams
+    returns: ZReturns
+    typeArgs: ZTypeArgs
+    typeVarOrdering: (keyof ZTypeArgs)[]
 }
 
 export class ZsFunction<
     ZTuple extends AnyZodTuple = AnyZodTuple,
-    ZReturns extends ZodTypeAny = ZodTypeAny
+    ZReturns extends ZodTypeAny = ZodTypeAny,
+    ZTypeArgs extends ZsTypeVarsRecord = ZsTypeVarsRecord
 > extends ZsMonoType<
     InnerTypeOfFunction<ZTuple, ZReturns>,
-    ZsFunctionDef<ZTuple, ZReturns>
+    ZsFunctionDef<ZTuple, ZReturns, ZTypeArgs>
 > {
     readonly actsLike = z.function(this._def.args, this._def.returns)
 
@@ -29,13 +34,13 @@ export class ZsFunction<
         ...params: Args
     ): ZsFunction<
         ZodTuple<Args, this["_def"]["args"]["_def"]["rest"]>,
-        ZReturns
+        ZReturns,
+        ZTypeArgs
     > {
         const args = z.tuple(params)
         return new ZsFunction({
-            typeName: ZsTypeKind.ZsFunction,
-            args: this._rest ? args.rest(this._rest) : args,
-            returns: this._def.returns
+            ...this._def,
+            args: this._rest ? args.rest(this._rest) : args
         })
     }
 
@@ -43,32 +48,33 @@ export class ZsFunction<
         rest: Rest
     ): ZsFunction<
         ZodTuple<this["_def"]["args"]["_def"]["items"], Rest>,
-        ZReturns
+        ZReturns,
+        ZTypeArgs
     > {
         return new ZsFunction({
-            typeName: ZsTypeKind.ZsFunction,
-            args: this._def.args.rest(rest),
-            returns: this._def.returns
+            ...this._def,
+            args: this._def.args.rest(rest)
         })
     }
 
     returns<Return2 extends ZodTypeAny>(
         returns: Return2
-    ): ZsFunction<ZTuple, Return2> {
+    ): ZsFunction<ZTuple, Return2, ZTypeArgs> {
         return new ZsFunction({
-            typeName: ZsTypeKind.ZsFunction,
-            args: this._def.args,
+            ...this._def,
             returns
         })
     }
 
     static create<Args extends [ZodTypeAny, ...ZodTypeAny[]] | []>(
-        ...args: Args
+        args: Args
     ): ZsRestBuilder<ZodTuple<Args, null>> {
         return new ZsFunction({
             typeName: ZsTypeKind.ZsFunction,
             args: z.tuple(args),
-            returns: z.unknown()
+            returns: z.unknown(),
+            typeArgs: {},
+            typeVarOrdering: []
         })
     }
 }
@@ -86,5 +92,3 @@ export interface ZsRestBuilder<Tuple extends AnyZodTuple> {
         returns: Return
     ): ZsFunction<Tuple, Return>
 }
-
-export const fun = ZsFunction.create

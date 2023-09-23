@@ -29,3 +29,25 @@ const fullZs = {
 }
 
 export const zs = fullZs as Omit<typeof fullZs, "function">
+export { ZsTypeAlias } from "./module-declarations/alias"
+export { ZsInterface } from "./module-declarations/interface"
+export { ZsClass } from "./module-declarations/class"
+export { ZsImport } from "./external/import"
+export { ZsInstantiation } from "./expressions/instantiation"
+export { ZsTypeVar } from "./generic/type-var"
+export { ZsMapVar } from "./expressions/map-var"
+export { ZsLookup } from "./expressions/lookup"
+export { ZsOverloads } from "./expressions/overloads"
+export { ZsAccess } from "./class-declarations/public"
+export { ZsTypeKind } from "./kinds"
+export { ZsMonoType } from "./mono-type"
+export { ZsTypeCtors } from "./expressions/instantiation"
+export {
+    ZsConditional,
+    ZsFunction,
+    ZsGenericType,
+    ZsKeyof,
+    ZsMapped,
+    ZsWorld,
+    ZsClassFragment
+}

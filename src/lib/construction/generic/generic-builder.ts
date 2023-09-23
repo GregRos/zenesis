@@ -1,6 +1,5 @@
 import { Reification, ZsTypeVar, ZsTypeVarsRecord } from "./type-var"
-import { ZodAny, ZodTypeAny } from "zod"
-import { ZsGenericFunction } from "../expressions/generic-function"
+import { AnyZodTuple, ZodAny, ZodTypeAny } from "zod"
 import { ZsGenericType } from "./generic-type"
 import { TypeVarBuilder } from "./type-var-builder"
 import { ZsFunction } from "../expressions/function"
@@ -50,39 +49,25 @@ export class GenericBuilder<
         }) as any
     }
 
-    declare<Instance extends ZsTypeCtors>(
-        constructor: (reification: Reification<Names, Vars>) => Instance
-    ): ZsGenericType<Vars, Instance>
-    declare<Function extends ZsFunction<any, any>>(
-        constructor: (reification: Reification<Names, Vars>) => Function
-    ): ZsGenericFunction<Vars, Function>
-    declare(constructor: (reification: Reification<Names, Vars>) => any): any {
+    class(constructor: (reification: Reification<Names, Vars>) => any): any {
         const result = constructor(this._vars)
-        if (result instanceof ZsFunction) {
-            return new ZsGenericFunction({
-                typeName: ZsTypeKind.ZsGenericFunction,
-                function: result,
-                ordering: this._names,
-                typeArgs: this._vars
-            })
-        } else {
-            return new ZsGenericType({
-                typeName: "ZsGenericType",
-                instance: result,
-                ordering: this._names,
-                vars: this._vars
-            })
-        }
+        return new ZsGenericType({
+            typeName: "ZsGenericType",
+            instance: result,
+            ordering: this._names,
+            vars: this._vars
+        })
     }
 
-    function<Function extends ZsFunction<any, any>>(
-        constructor: (reification: Reification<Names, Vars>) => Function
-    ): ZsGenericFunction<Vars, Function> {
+    function<ZParams extends AnyZodTuple, ZReturn extends ZodTypeAny>(
+        constructor: (
+            reification: Reification<Names, Vars>
+        ) => ZsFunction<ZParams, ZReturn>
+    ): ZsFunction<ZParams, ZReturn, Vars> {
         const instance = constructor(this._vars)
-        return new ZsGenericFunction({
-            typeName: ZsTypeKind.ZsGenericFunction,
-            function: instance,
-            ordering: this._names,
+        return new ZsFunction<ZParams, ZReturn, Vars>({
+            ...instance._def,
+            typeVarOrdering: this._names,
             typeArgs: this._vars
         })
     }

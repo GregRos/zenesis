@@ -1,9 +1,21 @@
 import { createHandlers, tf } from "../tf"
 import { AnyTypeKind } from "../../construction/kinds"
-import ts, { SyntaxKind, TypeReferenceNode } from "typescript"
+import {
+    LiteralTypeNode,
+    SyntaxKind,
+    TypeLiteralNode,
+    TypeNode,
+    TypeReferenceNode
+} from "typescript"
 import { ExtractModifier, extractModifiers } from "../extract-modifiers"
 import { getParamInfo } from "../get-param-info"
 import { getOptional, getReadonly } from "../modifier-tokens"
+import { convertTypeVarsToDeclarations } from "./convert-type-vars-to-declarations"
+import { convertZodFunctionToZsFunction } from "./zod-function-to-zs-function"
+import { convertParamsToDeclarations } from "./params-into-declarations"
+import { convertZsFunctionToSomething } from "./function-to-call-signature"
+import { matchType } from "../../zod-walker/patterns"
+import { convertMemberList } from "./convert-member-list"
 
 function getLiteralNode(value: any) {
     switch (typeof value) {
@@ -123,7 +135,9 @@ export default createHandlers({
     [AnyTypeKind.ZodCatch](node, ctx) {
         return ctx.recurse(node.innerType)
     },
-
+    [AnyTypeKind.ZsAccess](node, ctx) {
+        return ctx.recurse(node.innerType)
+    },
     [AnyTypeKind.ZsClass](node, ctx) {
         return ctx.scope.get(node)
     },
@@ -167,40 +181,33 @@ export default createHandlers({
         const indexType = ctx.recurse(node.index)
         return tf.createIndexedAccessTypeNode(targetType, indexType)
     },
-    [AnyTypeKind.ZsFunction](node, ctx) {
-        const paramSchemas = node.args.items
-
-        const scalarParams = paramSchemas.map((param, i) => {
-            const { optional, innerType } = extractModifiers(
-                param,
-                ExtractModifier.Optional
-            )
-            const info = getParamInfo(i, param.description)
-            const paramType = ctx.recurse(innerType)
-            const decl = tf.createParameterDeclaration(
-                undefined, // modifiers
-                undefined, // decorators
-                info.name, //name
-                optional, //questionToken
-                paramType, // type
-                undefined //initializer
+    [AnyTypeKind.ZodFunction](node, ctx) {
+        return ctx.recurse(convertZodFunctionToZsFunction(node))
+    },
+    [AnyTypeKind.ZsOverloads](node, ctx) {
+        // We're going to convert this into a callable with multiple signatures
+        // Parents will unpack it and do with the contents whatever they want.
+        const signatures = node.overloads.map(overload => {
+            const decl = convertZsFunctionToSomething(
+                overload._def,
+                ctx,
+                tf.createCallSignature
             )
             return decl
         })
-        const returnType = ctx.recurse(node.returns)
-        return tf.createFunctionTypeNode(undefined, scalarParams, returnType)
+        return tf.createTypeLiteralNode(signatures)
+    },
+    [AnyTypeKind.ZsFunction](node, ctx) {
+        const func = convertZsFunctionToSomething(
+            node,
+            ctx,
+            tf.createFunctionTypeNode
+        )
+        return func
     },
     [AnyTypeKind.ZodObject](node, ctx) {
         const members = node.shape()
-        const properties = Object.entries(members).flatMap(([name, type]) => {
-            const { optional, readonly, innerType } = extractModifiers(type)
-            return tf.createPropertySignature(
-                readonly ? [readonly] : [],
-                name,
-                optional,
-                ctx.recurse(innerType)
-            )
-        })
+        const properties = convertMemberList(members, ctx)
         return tf.createTypeLiteralNode(properties)
     },
     [AnyTypeKind.ZodOptional](node, ctx) {

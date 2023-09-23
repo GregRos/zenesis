@@ -1,4 +1,4 @@
-import { lazy, Lazy, seq } from "lazies"
+import { lazy, seq } from "lazies"
 import { isImplementable, ZsImplementable, ZsImplements } from "./implements"
 import { ZsClassMethod } from "./method"
 import { ZsClassField } from "./field"
@@ -9,9 +9,12 @@ import { ClassDeclarator } from "./declarator"
 export type ZsClassDecl = ZsClassMethod | ZsImplements | ZsClassField
 
 export interface ZsClassFragmentDef<Shape extends ZsShape> {
-    shape: Shape
-    schema: ZodTypeAny
-    implements: ZsImplementable[]
+    definition: () => {
+        shape: Shape
+        schema: ZodTypeAny
+        implements: ZsImplementable[]
+    }
+    decls: Iterable<ZsClassDecl>
 }
 
 export type ClassDeclaration<Decl extends ZsClassDecl> = (
@@ -19,46 +22,46 @@ export type ClassDeclaration<Decl extends ZsClassDecl> = (
 ) => Iterable<Decl>
 
 export class ZsClassFragment<Decl extends ZsClassDecl = ZsClassDecl> {
-    private _schema: Lazy<ZsClassFragmentDef<getFullShape<Decl>>>
-
-    constructor(input: Iterable<Decl>) {
-        const decls = seq(input).cache()
-        this._schema = lazy(() => {
-            const shape: getFullShape<any> = {} as any
-
-            for (const decl of decls.ofTypes(ZsClassField, ZsClassMethod)) {
-                shape[decl.name] = decl.schema
-            }
-            const parents = decls.filterAs(isImplementable).toArray().pull()
-            for (const decl of parents) {
-                Object.assign(shape, decl.shape)
-            }
-            return {
-                shape,
-                implements: parents,
-                schema: z.object(unpackMemberSchemas(shape))
-            }
-        })
-    }
+    constructor(readonly _def: ZsClassFragmentDef<getFullShape<Decl>>) {}
 
     get schema(): ZodTypeAny {
-        return this._schema.pull().schema
+        return this._def.definition().schema
     }
 
     get shape(): getFullShape<Decl> {
-        return this._schema.pull().shape
+        return this._def.definition().shape
     }
 
     get implements(): ZsImplementable[] {
-        return this._schema.pull().implements
+        return this._def.definition().implements
     }
 
     [Symbol.iterator]() {
-        return this._decls[Symbol.iterator]()
+        return this._def.decls[Symbol.iterator]()
     }
 
     static create<Decl extends ZsClassDecl>(decl: ClassDeclaration<Decl>) {
-        return new ZsClassFragment(decl(new ClassDeclarator()))
+        const input = decl(new ClassDeclarator())
+        const decls = seq(input).cache()
+        return new ZsClassFragment({
+            definition: lazy(() => {
+                const shape: getFullShape<any> = {} as any
+
+                for (const decl of decls.ofTypes(ZsClassField, ZsClassMethod)) {
+                    shape[decl.name] = decl.schema
+                }
+                const parents = decls.filterAs(isImplementable).toArray().pull()
+                for (const decl of parents) {
+                    Object.assign(shape, decl.shape)
+                }
+                return {
+                    shape,
+                    implements: parents,
+                    schema: z.object(unpackMemberSchemas(shape))
+                }
+            }).pull,
+            decls
+        })
     }
 }
 

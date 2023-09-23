@@ -1,4 +1,5 @@
 import {
+    AnyZodTuple,
     ZodAny,
     ZodArray,
     ZodBigInt,
@@ -10,6 +11,7 @@ import {
     ZodDiscriminatedUnion,
     ZodEffects,
     ZodEnum,
+    ZodFunction,
     ZodIntersection,
     ZodLazy,
     ZodLiteral,
@@ -38,24 +40,21 @@ import {
     ZodUnknown,
     ZodVoid
 } from "zod"
-import { ZsClass } from "../construction/module-declarations/class"
-import { ZsInterface } from "../construction/module-declarations/interface"
-import { ZsTypeAlias } from "../construction/module-declarations/alias"
-import { ZsConditional } from "../construction/expressions/conditional"
-import { ZsFunction } from "../construction/expressions/function"
-import { ZsGenericFunction } from "../construction/expressions/generic-function"
-import { ZsTypeVar } from "../construction/generic/type-var"
-import { ZsMapVar } from "../construction/expressions/map-var"
-import { ZsKeyof } from "../construction/expressions/keyof"
-import { ZsMapped } from "../construction/expressions/mapped"
-import { ZsImport } from "../construction/external/import"
-import {
-    ZsInstantiation,
-    ZsTypeCtors
-} from "../construction/expressions/instantiation"
+import { ZsClass } from "../construction"
+import { ZsInterface } from "../construction"
+import { ZsTypeAlias } from "../construction"
+import { ZsConditional } from "../construction"
+import { ZsFunction } from "../construction"
+import { ZsTypeVar } from "../construction"
+import { ZsMapVar } from "../construction"
+import { ZsKeyof } from "../construction"
+import { ZsMapped } from "../construction"
+import { ZsImport } from "../construction"
+import { ZsInstantiation } from "../construction"
 import { EnumLike, ZodDiscriminatedUnionOption } from "zod/lib/types"
-import { ZsGenericType } from "../construction/generic/generic-type"
-import { ZsLookup } from "../construction/expressions/lookup"
+import { ZsLookup } from "../construction"
+import { ZsOverloads } from "../construction"
+import { ZsAccess } from "../construction"
 
 export type ZodNamedTypeDef<K extends string = string> = ZodTypeDef & {
     typeName: K
@@ -71,7 +70,6 @@ export type ZsTypeSchema =
     | ZsTypeAlias
     | ZsConditional
     | ZsFunction
-    | ZsGenericFunction
     | ZsTypeVar
     | ZsMapVar
     | ZsKeyof
@@ -79,6 +77,8 @@ export type ZsTypeSchema =
     | ZsImport
     | ZsLookup
     | ZsInstantiation
+    | ZsOverloads
+    | ZsAccess
 export type ZodTypeSchema =
     | ZodString
     | ZodLiteral<unknown>
@@ -113,6 +113,7 @@ export type ZodTypeSchema =
     | ZodDiscriminatedUnion<string, ZodDiscriminatedUnionOption<string>[]>
     | ZodEnum<[string, ...string[]]>
     | ZodNativeEnum<EnumLike>
+    | ZodFunction<AnyZodTuple, ZodNamedTypeAny>
     | ZodEffects<ZodNamedTypeAny>
     | ZodPipeline<ZodNamedTypeAny, ZodNamedTypeAny>
 

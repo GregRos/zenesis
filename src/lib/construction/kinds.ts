@@ -8,14 +8,13 @@ export enum ZsTypeKind {
     ZsTypeAlias = "ZsTypeAlias",
     ZsFunction = "ZsFunction",
     ZsConditional = "ZsConditional",
-    ZsGenericFunction = "ZsGenericFunction",
     ZsTypeVar = "ZsTypeVar",
     ZsMapped = "ZsMapped",
     ZsMapVar = "ZsMapVar",
     ZsInstantiation = "ZsInstantiation",
     ZsKeyof = "ZsKeyof",
     ZsImportedType = "ZsImportedType",
-    ZsEnum = "ZsEnum"
+    ZsAccess = "ZsAccess"
 }
 
 export type AnyTypeKind = ZsTypeKind | ZodTypeKind
