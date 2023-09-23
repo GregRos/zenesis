@@ -1,7 +1,7 @@
-import { ZodTypeKind } from "./zod-kind";
+import { ZodTypeKind } from "./zod-kind"
 
 export enum ZsTypeKind {
-    ZsLookup = "ZsLookup",
+    ZsIndexedAccess = "ZsIndexedAccess",
     ZsOverloads = "ZsOverloads",
     ZsClass = "ZsClass",
     ZsInterface = "ZsInterface",
@@ -15,16 +15,14 @@ export enum ZsTypeKind {
     ZsInstantiation = "ZsInstantiation",
     ZsKeyof = "ZsKeyof",
     ZsImportedType = "ZsImportedType",
-    ZsEnum = "ZsEnum",
-    GenericZsType = "GenericZsType",
-    GenericZsImportedType = "GenericZsImportedType"
+    ZsEnum = "ZsEnum"
 }
 
-export type AnyKind = ZsTypeKind | ZodTypeKind;
+export type AnyKind = ZsTypeKind | ZodTypeKind
 export const AnyKind = {
     ...ZodTypeKind,
     ...ZsTypeKind
-} as const;
+} as const
 
 export enum ZsClassDeclKind {
     ZsImplements = "ZsImplements",

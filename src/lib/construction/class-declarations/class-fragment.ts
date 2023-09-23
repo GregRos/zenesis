@@ -19,24 +19,17 @@ export type ClassDeclaration<Decl extends ZsClassDecl> = (
 ) => Iterable<Decl>;
 
 export class ZsClassFragment<Decl extends ZsClassDecl = ZsClassDecl> {
-    private _decls: Seq<Decl>;
     private _schema: Lazy<ZsClassFragmentDef<getFullShape<Decl>>>;
 
     constructor(input: Iterable<Decl>) {
-        this._decls = seq(input).cache();
+        const decls = seq(input).cache();
         this._schema = lazy(() => {
             const shape: getFullShape<any> = {} as any;
 
-            for (const decl of this._decls.ofTypes(
-                ZsClassField,
-                ZsClassMethod
-            )) {
+            for (const decl of decls.ofTypes(ZsClassField, ZsClassMethod)) {
                 shape[decl.name] = decl.schema;
             }
-            const parents = this._decls
-                .filterAs(isImplementable)
-                .toArray()
-                .pull();
+            const parents = decls.filterAs(isImplementable).toArray().pull();
             for (const decl of parents) {
                 Object.assign(shape, decl.shape);
             }

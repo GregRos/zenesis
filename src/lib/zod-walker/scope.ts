@@ -1,4 +1,4 @@
-import { TypeNode } from "typescript";
+import { TypeNode, TypeReferenceNode } from "typescript";
 import { Map } from "immutable";
 
 import { ZodNamedTypeAny, ZodNamedTypeDef } from "./types";
@@ -9,7 +9,7 @@ export interface RestorePreviousScope {
 }
 
 export class Scope<All extends ZodNamedTypeAny> {
-    private _scopes = Map<ZodNamedTypeDef, TypeNode>();
+    private _scopes = Map<ZodNamedTypeDef, TypeReferenceNode>();
 
     get snapshot(): RestorePreviousScope {
         const current = this._scopes;
@@ -24,7 +24,7 @@ export class Scope<All extends ZodNamedTypeAny> {
         return schemaOrDef instanceof ZodType ? schemaOrDef._def : schemaOrDef;
     }
 
-    set(schema: All | All["_def"], reference: TypeNode) {
+    set(schema: All | All["_def"], reference: TypeReferenceNode) {
         const restorer = this.snapshot;
         const def = this._getDef(schema);
         if (this._scopes.has(def)) {
@@ -35,7 +35,7 @@ export class Scope<All extends ZodNamedTypeAny> {
         return restorer;
     }
 
-    get(node: All | All["_def"]): TypeNode {
+    get(node: All | All["_def"]): TypeReferenceNode {
         const def = this._getDef(node);
         if (!this._scopes.has(def)) {
             throw new Error(`No scope for ${node}`);

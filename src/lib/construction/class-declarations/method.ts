@@ -17,9 +17,6 @@ export class ZsClassMethod<
     Name extends string = string,
     Functions extends ZsOverloads<any> = ZsOverloads<any>
 > {
-    readonly scope = "class";
-    readonly declaration = "method";
-
     get name() {
         return this._def.name;
     }
