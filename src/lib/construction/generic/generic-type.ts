@@ -3,7 +3,6 @@ import { ZodAny, ZodTypeAny, ZodTypeDef } from "zod"
 import { SchemaSubtypeOf } from "../utils"
 
 import { ZsInstantiation, ZsTypeCtors } from "../expressions/instantiation"
-import { ZsDeclaredType } from "../refs"
 import { GenericBuilder } from "./generic-builder"
 import { ZsTypeKind } from "../kinds"
 import { ZsInterface } from "../module-declarations/interface"
@@ -14,7 +13,7 @@ export interface ZsGenericDef<
     Vars extends ZsTypeVarsRecord,
     Instance extends ZodTypeAny
 > extends ZodTypeDef {
-    typeName: ZsTypeKind.GenericZsType
+    typeName: "ZsGenericType"
     vars: Vars
     instance: Instance
     ordering: (keyof Vars)[]

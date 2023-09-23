@@ -1,16 +1,16 @@
-import { ZsGenericType } from "./generic/generic-type";
-import { ZsFunction } from "./expressions/function";
-import { ZsConditional } from "./expressions/conditional";
-import { ZsKeyof } from "./expressions/keyof";
-import { ZsMapped } from "./expressions/mapped";
-import { ZsWorld } from "../containers/world";
-import { z } from "zod";
+import { ZsGenericType } from "./generic/generic-type"
+import { ZsFunction } from "./expressions/function"
+import { ZsConditional } from "./expressions/conditional"
+import { ZsKeyof } from "./expressions/keyof"
+import { ZsMapped } from "./expressions/mapped"
+import { ZsWorld } from "../containers/world"
+import { z } from "zod"
 import {
     ZsModuleDecl,
     ZsModuleDeclarations,
     ZsModuleFragment
-} from "./module-declarations/module-fragment";
-import { ZsClassFragment } from "./class-declarations/class-fragment";
+} from "./module-declarations/module-fragment"
+import { ZsClassFragment } from "./class-declarations/class-fragment"
 
 const fullZs = {
     generic: ZsGenericType.create,
@@ -22,10 +22,10 @@ const fullZs = {
     module: <Exports extends ZsModuleDecl>(
         exports: ZsModuleDeclarations<Exports>
     ) => {
-        return ZsModuleFragment.create(exports);
+        return ZsModuleFragment.create(exports)
     },
     class: ZsClassFragment.create,
     ...z
-};
+}
 
-export const zs = fullZs as Omit<typeof fullZs, "function">;
+export const zs = fullZs as Omit<typeof fullZs, "function">

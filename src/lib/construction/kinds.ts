@@ -18,8 +18,8 @@ export enum ZsTypeKind {
     ZsEnum = "ZsEnum"
 }
 
-export type AnyKind = ZsTypeKind | ZodTypeKind
-export const AnyKind = {
+export type AnyTypeKind = ZsTypeKind | ZodTypeKind
+export const AnyTypeKind = {
     ...ZodTypeKind,
     ...ZsTypeKind
 } as const
@@ -31,8 +31,6 @@ export enum ZsClassDeclKind {
     ZsIndexer = "ZsIndexer",
     ZsConstructor = "ZsConstructor"
 }
-
-export enum ZsTypeCtorKind {}
 
 export enum ZsModuleDeclKind {
     ZsValue = "ZsValue"

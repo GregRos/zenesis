@@ -1,5 +1,5 @@
 import { TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod"
-import { ZsMonoLike, ZsMonoType } from "../mono-type"
+import { ZsMonoType } from "../mono-type"
 import { ZsTypeKind } from "../kinds"
 import { ZodNamedTypeAny } from "../../zod-walker/types"
 

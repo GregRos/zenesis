@@ -1,11 +1,11 @@
-import { ZodType, ZodTypeAny, ZodTypeDef } from "zod";
-import { ZsTypeKind } from "../construction/kinds";
+import { ZodType, ZodTypeDef } from "zod"
+import { ZsTypeKind } from "../construction/kinds"
 
 export class SchemaInspector<
     T extends ZodType<
         any,
         ZodTypeDef & {
-            typeName: string;
+            typeName: string
         },
         any
     >
@@ -13,11 +13,11 @@ export class SchemaInspector<
     constructor(readonly schema: T) {}
 
     get def(): T["_def"] {
-        return this.schema._def;
+        return this.schema._def
     }
 
     get typeName() {
-        return this.schema._def.typeName;
+        return this.schema._def.typeName
     }
 
     get isDeclared() {
@@ -29,6 +29,6 @@ export class SchemaInspector<
             ZsTypeKind.ZsTypeVar,
             ZsTypeKind.ZsMapVar,
             ZsTypeKind.ZsImportedType
-        ].includes(this.typeName as any);
+        ].includes(this.typeName as any)
     }
 }

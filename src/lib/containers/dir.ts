@@ -1,9 +1,9 @@
-import { ZsWorld } from "./world";
+import { ZsWorld } from "./world"
 import {
     ExportsRecord,
     ZsModuleDeclarations,
     ZsNamedModuleDecl
-} from "../construction/module-declarations/module-fragment";
+} from "../construction/module-declarations/module-fragment"
 
 export class ZsDir {
     constructor(
@@ -15,10 +15,10 @@ export class ZsDir {
         name: string,
         exports: ZsModuleDeclarations<Exports>
     ): ExportsRecord<Exports> {
-        return this._world.file(`${this.name}/${name}`, exports);
+        return this._world.file(`${this.name}/${name}`, exports)
     }
 
     dir<Name extends string>(name: Name) {
-        return new ZsDir(`${this.name}/${name}`, this._world);
+        return new ZsDir(`${this.name}/${name}`, this._world)
     }
 }

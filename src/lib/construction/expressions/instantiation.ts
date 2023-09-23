@@ -1,6 +1,6 @@
 import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsMonoType } from "../mono-type"
-import { ZsDeclaredType, ZsShapedRef } from "../refs"
+import { ZsShapedRef } from "../refs"
 import { ZsTypeKind } from "../kinds"
 import { ZsTypeAlias } from "../module-declarations/alias"
 import { ZsInterface } from "../module-declarations/interface"

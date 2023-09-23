@@ -1,6 +1,6 @@
-import { ZodTypeAny } from "zod";
-import { SchemaSubtypeOf } from "../utils";
-import { ZsTypeVar, ZsTypeVarVariance } from "./type-var";
+import { ZodTypeAny } from "zod"
+import { SchemaSubtypeOf } from "../utils"
+import { ZsTypeVar, ZsTypeVarVariance } from "./type-var"
 
 export class TypeVarBuilder<
     Extends extends ZodTypeAny,
@@ -18,7 +18,7 @@ export class TypeVarBuilder<
                 ...this._var._def,
                 extends: constraint
             })
-        );
+        )
     }
 
     default<Default extends SchemaSubtypeOf<Extends> | null>(
@@ -29,7 +29,7 @@ export class TypeVarBuilder<
                 ...this._var._def,
                 defaultType: defaultValue
             })
-        );
+        )
     }
 
     const(constant: boolean): TypeVarBuilder<Extends, Default> {
@@ -38,7 +38,7 @@ export class TypeVarBuilder<
                 ...this._var._def,
                 const: constant
             })
-        );
+        )
     }
 
     variance(variance: ZsTypeVarVariance): TypeVarBuilder<Extends, Default> {
@@ -47,6 +47,6 @@ export class TypeVarBuilder<
                 ...this._var._def,
                 variance
             })
-        );
+        )
     }
 }

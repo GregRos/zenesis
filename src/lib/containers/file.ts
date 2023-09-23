@@ -2,7 +2,7 @@ import {
     ZsModuleDecl,
     ZsModuleDeclarations,
     ZsModuleFragment
-} from "../construction/module-declarations/module-fragment";
+} from "../construction/module-declarations/module-fragment"
 
 export class ZsFile<Exports extends ZsModuleDecl> {
     constructor(
@@ -11,13 +11,13 @@ export class ZsFile<Exports extends ZsModuleDecl> {
     ) {}
 
     get proxy() {
-        return this._fragment.proxy(this);
+        return this._fragment.proxy(this)
     }
 
     static create<Exports extends ZsModuleDecl>(
         name: string,
         exports: ZsModuleDeclarations<Exports>
     ) {
-        return new ZsFile(name, ZsModuleFragment.create(exports));
+        return new ZsFile(name, ZsModuleFragment.create(exports))
     }
 }

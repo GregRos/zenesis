@@ -1,14 +1,13 @@
-import { ZodNamedTypeAny } from "../zod-walker/types";
-import { QuestionToken, ReadonlyKeyword, SyntaxKind } from "typescript";
-import { matchType } from "../zod-walker/patterns";
-import { AnyKind } from "../construction/kinds";
-import { tf } from "./tf";
-import { getOptional, getReadonly } from "./modifier-tokens";
+import { ZodNamedTypeAny } from "../zod-walker/types"
+import { QuestionToken, ReadonlyKeyword } from "typescript"
+import { matchType } from "../zod-walker/patterns"
+import { AnyTypeKind } from "../construction/kinds"
+import { getOptional, getReadonly } from "./modifier-tokens"
 
 export interface ExtractedType {
-    innerType: ZodNamedTypeAny;
-    readonly?: ReadonlyKeyword;
-    optional?: QuestionToken;
+    innerType: ZodNamedTypeAny
+    readonly?: ReadonlyKeyword
+    optional?: QuestionToken
 }
 
 export enum ExtractModifier {
@@ -22,29 +21,29 @@ export function extractModifiers(
     typeWithModifiers: ZodNamedTypeAny,
     modifiers: ExtractModifier = ExtractModifier.All
 ) {
-    let question: QuestionToken | undefined;
-    let readonly: ReadonlyKeyword | undefined;
-    let innerType = typeWithModifiers;
+    let question: QuestionToken | undefined
+    let readonly: ReadonlyKeyword | undefined
+    let innerType = typeWithModifiers
     for (;;) {
         if (
-            matchType(innerType, AnyKind.ZodOptional) &&
+            matchType(innerType, AnyTypeKind.ZodOptional) &&
             modifiers & ExtractModifier.Optional
         ) {
-            innerType = innerType._def.innerType;
-            question = getOptional("normal");
+            innerType = innerType._def.innerType
+            question = getOptional("normal")
         } else if (
-            matchType(innerType, AnyKind.ZodReadonly) &&
+            matchType(innerType, AnyTypeKind.ZodReadonly) &&
             modifiers & ExtractModifier.Readonly
         ) {
-            readonly = getReadonly("normal");
-            innerType = innerType._def.innerType;
+            readonly = getReadonly("normal")
+            innerType = innerType._def.innerType
         } else {
-            break;
+            break
         }
     }
     return {
         innerType,
         optional: question,
         readonly
-    };
+    }
 }

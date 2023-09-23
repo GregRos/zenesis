@@ -10,7 +10,6 @@ import {
     ZodDiscriminatedUnion,
     ZodEffects,
     ZodEnum,
-    ZodFunction,
     ZodIntersection,
     ZodLazy,
     ZodLiteral,
@@ -31,7 +30,6 @@ import {
     ZodSet,
     ZodString,
     ZodSymbol,
-    ZodTransformer,
     ZodTuple,
     ZodTypeAny,
     ZodTypeDef,
@@ -57,7 +55,6 @@ import {
 } from "../construction/expressions/instantiation"
 import { EnumLike, ZodDiscriminatedUnionOption } from "zod/lib/types"
 import { ZsGenericType } from "../construction/generic/generic-type"
-import { ZsImportedGeneric } from "../construction/external/imported-generic"
 import { ZsLookup } from "../construction/expressions/lookup"
 
 export type ZodNamedTypeDef<K extends string = string> = ZodTypeDef & {

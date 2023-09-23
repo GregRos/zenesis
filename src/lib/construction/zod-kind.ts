@@ -1,3 +1,3 @@
-import { ZodFirstPartyTypeKind } from "zod";
+import { ZodFirstPartyTypeKind } from "zod"
 
-export { ZodFirstPartyTypeKind as ZodTypeKind };
+export { ZodFirstPartyTypeKind as ZodTypeKind }

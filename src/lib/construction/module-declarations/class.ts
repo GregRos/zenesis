@@ -1,17 +1,17 @@
-import { ZodTypeDef } from "zod";
-import { ZsMonoType } from "../mono-type";
-import { getCombinedType } from "../utils";
-import { ZsTypeKind } from "../kinds";
-import { ZsClassFragment } from "../class-declarations/class-fragment";
+import { ZodTypeDef } from "zod"
+import { ZsMonoType } from "../mono-type"
+import { getCombinedType } from "../utils"
+import { ZsTypeKind } from "../kinds"
+import { ZsClassFragment } from "../class-declarations/class-fragment"
 
 export interface ZsClassDef<
     Name extends string,
     Fragment extends ZsClassFragment
 > extends ZodTypeDef {
-    name: Name;
-    typeName: ZsTypeKind.ZsClass;
-    fragment: Fragment;
-    abstract: boolean;
+    name: Name
+    typeName: ZsTypeKind.ZsClass
+    fragment: Fragment
+    abstract: boolean
 }
 
 export class ZsClass<
@@ -21,19 +21,19 @@ export class ZsClass<
     getCombinedType<Fragment["shape"]>,
     ZsClassDef<Name, Fragment>
 > {
-    readonly name = this._def.name;
-    readonly declaration = "class";
-    readonly actsLike = this._def.fragment.schema;
+    readonly name = this._def.name
+    readonly declaration = "class"
+    readonly actsLike = this._def.fragment.schema
 
     get shape() {
-        return this._def.fragment.shape;
+        return this._def.fragment.shape
     }
 
     abstract(yes = true) {
         return new ZsClass({
             ...this._def,
             abstract: yes
-        });
+        })
     }
 
     static create<Name extends string, Fragment extends ZsClassFragment>(
@@ -45,6 +45,6 @@ export class ZsClass<
             typeName: ZsTypeKind.ZsClass,
             abstract: false,
             fragment
-        });
+        })
     }
 }

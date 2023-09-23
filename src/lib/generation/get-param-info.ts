@@ -1,5 +1,3 @@
-import { expect } from "@assertive-ts/core"
-
 const funParamRegex = /^(?<name>[\w_]+)(?:[:,| -]\s*(?<description>.*))?$/
 
 export interface FunParamInfo {

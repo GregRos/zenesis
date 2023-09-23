@@ -1,29 +1,27 @@
-import { QuestionToken, ReadonlyKeyword, SyntaxKind } from "typescript";
-import { tf } from "../generation/tf";
-import { seq } from "lazies";
+import { QuestionToken, ReadonlyKeyword } from "typescript"
 
-export type TypeModifierToken = QuestionToken | ReadonlyKeyword;
+export type TypeModifierToken = QuestionToken | ReadonlyKeyword
 
 export class Box<T> {
     constructor(private value: T | undefined) {}
 
     clone() {
-        return new Box(this.value);
+        return new Box(this.value)
     }
 
     set(value: T) {
-        this.value = value;
+        this.value = value
     }
 
     pull() {
-        const { value } = this;
-        this.value = undefined;
-        return value;
+        const { value } = this
+        this.value = undefined
+        return value
     }
 
     barrier() {
-        const self = this.clone();
-        return {};
+        const self = this.clone()
+        return {}
     }
 }
 
@@ -35,31 +33,31 @@ export class Modifier<Result> {
     ) {}
 
     clone() {
-        return new Modifier(this.name, this._state, this._result);
+        return new Modifier(this.name, this._state, this._result)
     }
 
     set() {
-        this._state = true;
-        return this;
+        this._state = true
+        return this
     }
 
     pull() {
-        const { _state } = this;
-        this._state = false;
-        return _state ? this._result : undefined;
+        const { _state } = this
+        this._state = false
+        return _state ? this._result : undefined
     }
 
     barrier() {
-        const oldSelf = this.clone();
-        this._state = false;
+        const oldSelf = this.clone()
+        this._state = false
         return {
             restore: () => {
-                this._state = oldSelf._state;
+                this._state = oldSelf._state
             }
-        };
+        }
     }
 
     static create<Result>(name: string, result: Result) {
-        return new Modifier(name, false, result);
+        return new Modifier(name, false, result)
     }
 }
