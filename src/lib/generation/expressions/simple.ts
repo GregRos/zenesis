@@ -1,8 +1,9 @@
 import { createHandlers, tf } from "../tf"
 import { AnyTypeKind } from "../../construction/kinds"
-import { SyntaxKind, TypeReferenceNode } from "typescript"
+import ts, { SyntaxKind, TypeReferenceNode } from "typescript"
 import { ExtractModifier, extractModifiers } from "../extract-modifiers"
 import { getParamInfo } from "../get-param-info"
+import { getOptional, getReadonly } from "../modifier-tokens"
 
 function getLiteralNode(value: any) {
     switch (typeof value) {
@@ -18,6 +19,12 @@ function getLiteralNode(value: any) {
 }
 
 export default createHandlers({
+    [AnyTypeKind.ZodPipeline](node, ctx) {
+        throw new Error("Pipelines are not supported")
+    },
+    [AnyTypeKind.ZodEffects](node, ctx) {
+        throw new Error("Effects are not supported")
+    },
     [AnyTypeKind.ZodLiteral](node, ctx) {
         const literalNode = getLiteralNode(node.value)
         return tf.createLiteralTypeNode(literalNode)
@@ -170,7 +177,7 @@ export default createHandlers({
             )
             const info = getParamInfo(i, param.description)
             const paramType = ctx.recurse(innerType)
-            return tf.createParameterDeclaration(
+            const decl = tf.createParameterDeclaration(
                 undefined, // modifiers
                 undefined, // decorators
                 info.name, //name
@@ -178,8 +185,73 @@ export default createHandlers({
                 paramType, // type
                 undefined //initializer
             )
+            return decl
         })
         const returnType = ctx.recurse(node.returns)
         return tf.createFunctionTypeNode(undefined, scalarParams, returnType)
+    },
+    [AnyTypeKind.ZodObject](node, ctx) {
+        const members = node.shape()
+        const properties = Object.entries(members).flatMap(([name, type]) => {
+            const { optional, readonly, innerType } = extractModifiers(type)
+            return tf.createPropertySignature(
+                readonly ? [readonly] : [],
+                name,
+                optional,
+                ctx.recurse(innerType)
+            )
+        })
+        return tf.createTypeLiteralNode(properties)
+    },
+    [AnyTypeKind.ZodOptional](node, ctx) {
+        // convert to T | undefined
+        const innerType = ctx.recurse(node.innerType)
+        return tf.createUnionTypeNode([
+            innerType,
+            tf.createKeywordTypeNode(SyntaxKind.UndefinedKeyword)
+        ])
+    },
+    [AnyTypeKind.ZodReadonly](node, ctx) {
+        // take care of nested readonlies
+        const innerType = ctx.recurse(node.innerType)
+        // Instantiate Readonly
+        return tf.createTypeReferenceNode(tf.createIdentifier("Readonly"), [
+            innerType
+        ])
+    },
+    [AnyTypeKind.ZsMapped](node, ctx) {
+        const typeVar = node.var
+        const typeParamRef = tf.createTypeReferenceNode(
+            typeVar._def.name,
+            undefined
+        )
+        const restore = ctx.scope.set(typeVar, typeParamRef)
+
+        const constraintType = ctx.recurse(typeVar._def.in)
+        const nameType = ctx.recurse(node.nameType)
+        const valueType = ctx.recurse(node.value)
+
+        restore.load()
+        const typeParameter = tf.createTypeParameterDeclaration(
+            undefined,
+            typeVar._def.name,
+            constraintType
+        )
+        return tf.createMappedTypeNode(
+            getReadonly(node.modifiers.readonly),
+            typeParameter,
+            nameType,
+            getOptional(node.modifiers.optional),
+            valueType,
+            undefined
+        )
+    },
+    [AnyTypeKind.ZsConditional](node, ctx) {
+        return tf.createConditionalTypeNode(
+            ctx.recurse(node.what),
+            ctx.recurse(node.extends),
+            ctx.recurse(node.then),
+            ctx.recurse(node.otherwise)
+        )
     }
 })

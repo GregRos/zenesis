@@ -69,7 +69,7 @@ export type ZsTypeSchema =
     | ZsClass
     | ZsInterface
     | ZsTypeAlias
-    | ZsConditional<any, any, any, any>
+    | ZsConditional
     | ZsFunction
     | ZsGenericFunction
     | ZsTypeVar
@@ -78,7 +78,7 @@ export type ZsTypeSchema =
     | ZsMapped
     | ZsImport
     | ZsLookup
-    | ZsInstantiation<ZsTypeCtors>
+    | ZsInstantiation
 export type ZodTypeSchema =
     | ZodString
     | ZodLiteral<unknown>
@@ -116,6 +116,4 @@ export type ZodTypeSchema =
     | ZodEffects<ZodNamedTypeAny>
     | ZodPipeline<ZodNamedTypeAny, ZodNamedTypeAny>
 
-export type GenericZsNode = ZsGenericType | ZsImportedGeneric
 export type AnyTypeSchema = ZsTypeSchema | ZodTypeSchema
-export type AnyTypeNode = AnyTypeSchema | GenericZsNode

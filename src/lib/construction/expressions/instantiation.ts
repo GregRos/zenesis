@@ -17,7 +17,7 @@ export interface ZsInstantiationDef<Instance extends ZodTypeAny>
 }
 
 export class ZsInstantiation<
-    ZDeclaration extends ZsTypeCtors
+    ZDeclaration extends ZsTypeCtors = ZsTypeCtors
 > extends ZsMonoType<TypeOf<ZDeclaration>, ZsInstantiationDef<ZDeclaration>> {
     get declaration(): ZDeclaration extends ZsShapedRef
         ? ZDeclaration["declaration"]
