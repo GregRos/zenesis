@@ -1,20 +1,10 @@
 import { createHandlers, tf } from "../tf"
 import { AnyTypeKind } from "../../construction/kinds"
-import {
-    LiteralTypeNode,
-    SyntaxKind,
-    TypeLiteralNode,
-    TypeNode,
-    TypeReferenceNode
-} from "typescript"
+import { SyntaxKind, TypeReferenceNode } from "typescript"
 import { ExtractModifier, extractModifiers } from "../extract-modifiers"
-import { getParamInfo } from "../get-param-info"
 import { getOptional, getReadonly } from "../modifier-tokens"
-import { convertTypeVarsToDeclarations } from "./convert-type-vars-to-declarations"
 import { convertZodFunctionToZsFunction } from "./zod-function-to-zs-function"
-import { convertParamsToDeclarations } from "./params-into-declarations"
 import { convertZsFunctionToSomething } from "./function-to-call-signature"
-import { matchType } from "../../zod-walker/patterns"
 import { convertMemberList } from "./convert-member-list"
 
 function getLiteralNode(value: any) {

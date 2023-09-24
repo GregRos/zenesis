@@ -15,7 +15,6 @@ import {
     TypeParameterDeclaration
 } from "typescript"
 import { convertZsFunctionToSomething } from "./function-to-call-signature"
-import { getOptional } from "../modifier-tokens"
 
 function createMethodSignature(
     modifiers: Modifier[],

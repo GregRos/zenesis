@@ -26,14 +26,12 @@ import {
     ZodDefault,
     ZodDiscriminatedUnion,
     ZodDiscriminatedUnionOption,
-    ZodEnum,
     ZodFunction,
     ZodIntersection,
     ZodLazy,
     ZodLiteral,
     ZodMap,
     ZodNaN,
-    ZodNativeEnum,
     ZodNever,
     ZodNull,
     ZodNullable,
@@ -47,7 +45,6 @@ import {
     ZodSet,
     ZodString,
     ZodSymbol,
-    ZodTuple,
     ZodUndefined,
     ZodUnion,
     ZodUnknown,
@@ -55,20 +52,20 @@ import {
 } from "zod"
 
 import {
-    ZsClass,
-    ZsInterface,
-    ZsTypeVar,
-    ZsMapVar,
-    ZsInstantiation,
-    ZsTypeAlias,
-    ZsImport,
     ZsAccess,
-    ZsFunction,
-    ZsMapped,
-    ZsKeyof,
+    ZsClass,
     ZsConditional,
+    ZsFunction,
+    ZsImport,
+    ZsInstantiation,
+    ZsInterface,
+    ZsKeyof,
     ZsLookup,
-    ZsOverloads
+    ZsMapped,
+    ZsMapVar,
+    ZsOverloads,
+    ZsTypeAlias,
+    ZsTypeVar
 } from "../construction"
 import { ZodNamedTypeAny } from "./types"
 

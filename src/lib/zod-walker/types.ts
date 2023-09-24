@@ -40,21 +40,23 @@ import {
     ZodUnknown,
     ZodVoid
 } from "zod"
-import { ZsClass } from "../construction"
-import { ZsInterface } from "../construction"
-import { ZsTypeAlias } from "../construction"
-import { ZsConditional } from "../construction"
-import { ZsFunction } from "../construction"
-import { ZsTypeVar } from "../construction"
-import { ZsMapVar } from "../construction"
-import { ZsKeyof } from "../construction"
-import { ZsMapped } from "../construction"
-import { ZsImport } from "../construction"
-import { ZsInstantiation } from "../construction"
+import {
+    ZsAccess,
+    ZsClass,
+    ZsConditional,
+    ZsFunction,
+    ZsImport,
+    ZsInstantiation,
+    ZsInterface,
+    ZsKeyof,
+    ZsLookup,
+    ZsMapped,
+    ZsMapVar,
+    ZsOverloads,
+    ZsTypeAlias,
+    ZsTypeVar
+} from "../construction"
 import { EnumLike, ZodDiscriminatedUnionOption } from "zod/lib/types"
-import { ZsLookup } from "../construction"
-import { ZsOverloads } from "../construction"
-import { ZsAccess } from "../construction"
 
 export type ZodNamedTypeDef<K extends string = string> = ZodTypeDef & {
     typeName: K

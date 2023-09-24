@@ -1,4 +1,4 @@
-import { AnyTypeSchema, ZodNamedTypeAny } from "../../zod-walker/types"
+import { AnyTypeSchema } from "../../zod-walker/types"
 import { ExtractModifier, extractModifiers } from "../extract-modifiers"
 import { getParamInfo } from "../get-param-info"
 import { tf } from "../tf"

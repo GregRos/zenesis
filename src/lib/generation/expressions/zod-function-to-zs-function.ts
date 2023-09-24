@@ -1,4 +1,4 @@
-import { AnyZodTuple, ZodFunction, ZodFunctionDef, ZodTypeAny } from "zod"
+import { AnyZodTuple, ZodFunctionDef, ZodTypeAny } from "zod"
 import { ZsFunction } from "../../construction/expressions/function"
 import { ZsTypeKind } from "../../construction/kinds"
 

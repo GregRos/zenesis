@@ -3,8 +3,6 @@ import { AnyZodTuple, ZodAny, ZodTypeAny } from "zod"
 import { ZsGenericType } from "./generic-type"
 import { TypeVarBuilder } from "./type-var-builder"
 import { ZsFunction } from "../expressions/function"
-import { ZsTypeKind } from "../kinds"
-import { ZsTypeCtors } from "../expressions/instantiation"
 
 export class GenericBuilder<
     Names extends string,
