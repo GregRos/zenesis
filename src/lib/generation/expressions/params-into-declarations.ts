@@ -1,20 +1,17 @@
-import { AnyTypeSchema } from "../../zod-walker/types"
-import { ExtractModifier, extractModifiers } from "../extract-modifiers"
+import { extractModifiers } from "../extract-modifiers"
 import { getParamInfo } from "../get-param-info"
 import { tf } from "../tf"
-import { TypeWalkerCtx } from "../../zod-walker/walker"
 import { SyntaxKind, TypeNode } from "typescript"
 import { AnyZodTuple } from "zod"
 
+import { TypeExprMatcherContext } from "../expression-matcher"
+
 export function convertParamsToDeclarations(
-    ctx: TypeWalkerCtx<AnyTypeSchema, TypeNode>,
-    tuple: AnyZodTuple
+    tuple: AnyZodTuple,
+    ctx: TypeExprMatcherContext
 ) {
     const params = tuple.items.map((param, i) => {
-        const { optional, innerType } = extractModifiers(
-            param,
-            ExtractModifier.Optional
-        )
+        const { optional, innerType } = extractModifiers(param, "ZodOptional")
         const info = getParamInfo(i, param.description)
         const paramType = ctx.recurse(innerType)
         const decl = tf.createParameterDeclaration(

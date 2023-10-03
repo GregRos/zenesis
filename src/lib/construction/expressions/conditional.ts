@@ -1,13 +1,13 @@
 import { TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsMonoType } from "../mono-type"
 import { ZsTypeKind } from "../kinds"
-import { ZodNamedTypeAny } from "../../zod-walker/types"
+import { ZodKindedAny } from "zod-tools"
 
 export class ZsConditional<
-    ZWhat extends ZodTypeAny = ZodNamedTypeAny,
-    ZExtends extends ZodTypeAny = ZodNamedTypeAny,
-    ZThen extends ZodTypeAny = ZodNamedTypeAny,
-    ZElse extends ZodTypeAny = ZodNamedTypeAny
+    ZWhat extends ZodTypeAny = ZodKindedAny,
+    ZExtends extends ZodTypeAny = ZodKindedAny,
+    ZThen extends ZodTypeAny = ZodKindedAny,
+    ZElse extends ZodTypeAny = ZodKindedAny
 > extends ZsMonoType<
     TypeOf<ZThen> | TypeOf<ZElse>,
     ZsConditionalDef<ZWhat, ZExtends, ZThen, ZElse>

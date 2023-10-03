@@ -2,7 +2,7 @@ import { RecordType, TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsMapVar } from "./map-var"
 import { ZsMonoLike, ZsMonoType } from "../mono-type"
 import { ZsTypeKind } from "../kinds"
-import { ZodNamedTypeAny } from "../../zod-walker/types"
+import { ZodKindedAny } from "zod-tools"
 import { ZsMappedTypeModifiers } from "../modifier-states"
 
 export interface ZsMappedDef<
@@ -18,9 +18,9 @@ export interface ZsMappedDef<
 }
 
 export class ZsMapped<
-        ZIn extends ZodTypeAny = ZodNamedTypeAny,
-        ZAs extends ZsMonoLike<PropertyKey> = ZodNamedTypeAny,
-        ZMapping extends ZodTypeAny = ZodNamedTypeAny
+        ZIn extends ZodTypeAny = ZodKindedAny,
+        ZAs extends ZsMonoLike<PropertyKey> = ZodKindedAny,
+        ZMapping extends ZodTypeAny = ZodKindedAny
     >
     extends ZsMonoType<
         RecordType<TypeOf<ZAs>, ZMapping>,

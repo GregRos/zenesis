@@ -1,7 +1,7 @@
 import { TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsMonoLike, ZsMonoType } from "../mono-type"
 import { ZsTypeKind } from "../kinds"
-import { ZodNamedTypeAny } from "../../zod-walker/types"
+import { ZodKindedAny } from "zod-tools"
 
 export interface ZsKeyofDef<Of extends ZodTypeAny> extends ZodTypeDef {
     typeName: ZsTypeKind.ZsKeyof
@@ -10,9 +10,10 @@ export interface ZsKeyofDef<Of extends ZodTypeAny> extends ZodTypeDef {
 
 export const PropertyKey = z.union([z.string(), z.number(), z.symbol()])
 
-export class ZsKeyof<
-    ZOf extends ZodTypeAny = ZodNamedTypeAny
-> extends ZsMonoType<keyof TypeOf<ZOf>, ZsKeyofDef<ZOf>> {
+export class ZsKeyof<ZOf extends ZodTypeAny = ZodKindedAny> extends ZsMonoType<
+    keyof TypeOf<ZOf>,
+    ZsKeyofDef<ZOf>
+> {
     readonly actsLike = PropertyKey as ZsMonoLike<keyof ZOf>
 
     get of() {

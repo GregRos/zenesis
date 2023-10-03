@@ -1,7 +1,7 @@
 import { TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsMonoLike, ZsMonoType } from "../mono-type"
 import { ZsTypeKind } from "../kinds"
-import { ZodNamedTypeAny } from "../../zod-walker/types"
+import { ZodKindedAny } from "zod-tools"
 
 export interface ZsLookupDef<
     ZTarget extends ZodTypeAny,
@@ -13,7 +13,7 @@ export interface ZsLookupDef<
 }
 
 export class ZsLookup<
-    ZTarget extends ZodTypeAny = ZodNamedTypeAny,
+    ZTarget extends ZodTypeAny = ZodKindedAny,
     TKey extends keyof TypeOf<ZTarget> = keyof TypeOf<ZTarget>
 > extends ZsMonoType<TypeOf<ZTarget>[TKey], ZsLookupDef<ZTarget, TKey>> {
     readonly actsLike = z.any()

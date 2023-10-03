@@ -1,16 +1,16 @@
+import { MatcherContext } from "zod-tools"
 import {
     ZsTypeVar,
     ZsTypeVarVariance
 } from "../../construction/generic/type-var"
 import { tf } from "../tf"
-import { TypeWalkerCtx } from "../../zod-walker/walker"
-import { AnyTypeSchema } from "../../zod-walker/types"
 import {
     Modifier,
     SyntaxKind,
     TypeNode,
     TypeParameterDeclaration
 } from "typescript"
+import { TypeExprMatcherContext } from "../expression-matcher"
 
 export function toVarianceToken(variance: ZsTypeVarVariance) {
     switch (variance) {
@@ -32,7 +32,7 @@ export function toVarianceToken(variance: ZsTypeVarVariance) {
 
 export function convertTypeVarsToDeclarations(
     typeVars: ZsTypeVar[],
-    ctx: TypeWalkerCtx<AnyTypeSchema, TypeNode>
+    ctx: TypeExprMatcherContext
 ) {
     const typeVarDefs = typeVars.map(typeVar => typeVar._def)
     const typeVarDeclarations = [] as TypeParameterDeclaration[]

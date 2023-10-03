@@ -1,10 +1,8 @@
 import { ZodRawShape } from "zod"
 import { extractModifiers } from "../extract-modifiers"
-import { matchType } from "../../zod-walker/patterns"
 import { AnyTypeKind } from "../../construction/kinds"
 import { tf } from "../tf"
-import { TypeWalkerCtx } from "../../zod-walker/walker"
-import { AnyTypeSchema } from "../../zod-walker/types"
+
 import {
     MethodSignature,
     Modifier,
@@ -15,6 +13,7 @@ import {
     TypeParameterDeclaration
 } from "typescript"
 import { convertZsFunctionToSomething } from "./function-to-call-signature"
+import { TypeExprMatcherContext, zsInspect } from "../expression-matcher"
 
 function createMethodSignature(
     modifiers: Modifier[],
@@ -39,13 +38,14 @@ function createMethodSignature(
 
 export function convertMemberList(
     shape: ZodRawShape,
-    ctx: TypeWalkerCtx<AnyTypeSchema, TypeNode>
+    ctx: TypeExprMatcherContext
 ) {
     return Object.entries(shape).flatMap(
         ([name, schema]): (MethodSignature | PropertySignature)[] => {
             const { optional, readonly, innerType } = extractModifiers(schema)
-            if (matchType(innerType, AnyTypeKind.ZsOverloads)) {
-                return innerType._def.overloads.map(overload => {
+            const inspected = zsInspect(innerType)
+            if (inspected.is("ZsOverloads")) {
+                return inspected._def.overloads.map(overload => {
                     const decl = convertZsFunctionToSomething(
                         overload._def,
                         ctx,
@@ -54,6 +54,7 @@ export function convertMemberList(
                     return decl
                 })
             }
+
             return [
                 tf.createPropertySignature(
                     readonly ? [readonly] : [],

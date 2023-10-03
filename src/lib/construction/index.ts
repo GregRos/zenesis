@@ -42,6 +42,7 @@ export { ZsAccess } from "./class-declarations/public"
 export { ZsTypeKind } from "./kinds"
 export { ZsMonoType } from "./mono-type"
 export { ZsTypeCtors } from "./expressions/instantiation"
+export { ZsEnum } from "./module-declarations/enum"
 export {
     ZsConditional,
     ZsFunction,

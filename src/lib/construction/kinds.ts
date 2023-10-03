@@ -14,7 +14,8 @@ export enum ZsTypeKind {
     ZsInstantiation = "ZsInstantiation",
     ZsKeyof = "ZsKeyof",
     ZsImportedType = "ZsImportedType",
-    ZsAccess = "ZsAccess"
+    ZsAccess = "ZsAccess",
+    ZsEnum = "ZsEnum"
 }
 
 export type AnyTypeKind = ZsTypeKind | ZodTypeKind

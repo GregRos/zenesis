@@ -1,5 +1,5 @@
 import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod"
-import { ZodNamedTypeAny } from "../../zod-walker/types"
+import { ZodKindedAny } from "zod-tools"
 import { ZsMonoType } from "../mono-type"
 import { ZsTypeKind } from "../kinds"
 
@@ -10,7 +10,7 @@ export interface ZsAccessDef<ZType extends ZodTypeAny> extends ZodTypeDef {
 }
 
 export class ZsAccess<
-    ZType extends ZodTypeAny = ZodNamedTypeAny
+    ZType extends ZodTypeAny = ZodKindedAny
 > extends ZsMonoType<TypeOf<ZType>, ZsAccessDef<ZType>> {
     get actsLike() {
         return this._def.innerType

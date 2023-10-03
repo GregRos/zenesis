@@ -1,49 +1,42 @@
-import { ZodNamedTypeAny } from "../zod-walker/types"
 import { QuestionToken, ReadonlyKeyword } from "typescript"
-import { matchType } from "../zod-walker/patterns"
-import { AnyTypeKind } from "../construction/kinds"
+import { AnyTypeKind, ZsTypeKind } from "../construction/kinds"
 import { getOptional, getReadonly } from "./modifier-tokens"
+import { zodInspect, ZodKindedAny } from "zod-tools"
+import { TypeExprMatcherContext, ztSchemaWorld } from "./expression-matcher"
+import { ZodOptional, ZodReadonly } from "zod"
+import { Seq, seq } from "lazies"
 
 export interface ExtractedType {
-    innerType: ZodNamedTypeAny
+    innerType: ZodKindedAny
     readonly?: ReadonlyKeyword
     optional?: QuestionToken
 }
 
-export enum ExtractModifier {
-    None = 0,
-    Optional = 1,
-    Readonly = 2,
-    All = Optional | Readonly
-}
-
+type ExtractableType = "ZodOptional" | "ZodReadonly"
 export function extractModifiers(
-    typeWithModifiers: ZodNamedTypeAny,
-    modifiers: ExtractModifier = ExtractModifier.All
+    typeWithModifiers: ZodKindedAny,
+    ...modifierTypes: ExtractableType[]
 ) {
-    let question: QuestionToken | undefined
-    let readonly: ReadonlyKeyword | undefined
-    let innerType = typeWithModifiers
-    for (;;) {
-        if (
-            matchType(innerType, AnyTypeKind.ZodOptional) &&
-            modifiers & ExtractModifier.Optional
-        ) {
-            innerType = innerType._def.innerType
-            question = getOptional("normal")
-        } else if (
-            matchType(innerType, AnyTypeKind.ZodReadonly) &&
-            modifiers & ExtractModifier.Readonly
-        ) {
-            readonly = getReadonly("normal")
-            innerType = innerType._def.innerType
+    const onlyTypes = new Set<string>(modifierTypes)
+    const extracted: ExtractedType = {} as any
+    const nodes = ztSchemaWorld.match(typeWithModifiers).cases<{
+        else: Iterable<ZodKindedAny>
+    }>({
+        *else(node, ctx) {
+            yield node._node
+            if ("innerType" in node._def && onlyTypes.has(node.kind)) {
+                yield* ctx.recurse(node._def.innerType as any)
+            }
+        }
+    })
+    for (const node of nodes) {
+        if (node._def.typeName === "ZodOptional") {
+            extracted.optional = getOptional("normal")
+        } else if (node._def.typeName === "ZodReadonly") {
+            extracted.readonly = getReadonly("normal")
         } else {
-            break
+            extracted.innerType = node
         }
     }
-    return {
-        innerType,
-        optional: question,
-        readonly
-    }
+    return extracted
 }

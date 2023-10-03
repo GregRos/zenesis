@@ -1,7 +1,7 @@
 import { ZsMonoLike, ZsMonoType } from "../mono-type"
 import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsTypeKind } from "../kinds"
-import { ZodNamedTypeAny } from "../../zod-walker/types"
+import { ZodKindedAny } from "zod-tools"
 
 export interface ZsMapVarDef<In extends ZsMonoLike<any>> extends ZodTypeDef {
     typeName: ZsTypeKind.ZsMapVar
@@ -9,9 +9,10 @@ export interface ZsMapVarDef<In extends ZsMonoLike<any>> extends ZodTypeDef {
     in: In
 }
 
-export class ZsMapVar<
-    ZIn extends ZodTypeAny = ZodNamedTypeAny
-> extends ZsMonoType<TypeOf<ZIn>, ZsMapVarDef<ZIn>> {
+export class ZsMapVar<ZIn extends ZodTypeAny = ZodKindedAny> extends ZsMonoType<
+    TypeOf<ZIn>,
+    ZsMapVarDef<ZIn>
+> {
     readonly actsLike = this._def.in
     readonly declaration = "mappingVar"
     static create<In extends ZodTypeAny>(name: string, in_: In) {
