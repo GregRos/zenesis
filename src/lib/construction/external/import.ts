@@ -31,6 +31,10 @@ export class ZsImport<As extends ZodTypeAny = ZodKindedAny> extends ZsMonoType<
     TypeOf<As>,
     ZsImportDef<As>
 > {
+    get name() {
+        return this._def.name
+    }
+
     get actsLike() {
         return this._def.typed()
     }

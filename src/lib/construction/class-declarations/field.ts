@@ -1,28 +1,29 @@
 import { ZsClassDeclKind } from "../kinds"
 import { Access } from "../utils"
-import { ZodTypeAny } from "zod"
+import { ZodOptional, ZodTypeAny } from "zod"
 
-export interface ZsClassFieldDef<Name extends string, Type extends ZodTypeAny> {
-    kind: ZsClassDeclKind.ZsField
-    access: Access
-    readonly: boolean
+export interface ZsClassMemberDef<
+    Name extends string,
+    Type extends ZodTypeAny
+> {
+    access?: Access
     name: Name
-    type: Type
+    innerType: Type
 }
 
-export class ZsClassField<
+export class ZsClassMember<
     Name extends string = string,
     Type extends ZodTypeAny = ZodTypeAny
 > {
     readonly scope = "class"
-    constructor(readonly _def: ZsClassFieldDef<Name, Type>) {}
+    constructor(readonly _def: ZsClassMemberDef<Name, Type>) {}
 
     get name() {
         return this._def.name
     }
 
     get schema() {
-        return this._def.type
+        return this._def.innerType
     }
 
     readonly declaration = "field"
@@ -31,33 +32,31 @@ export class ZsClassField<
         name: Name,
         type: Type
     ) {
-        return new ZsClassField({
-            kind: ZsClassDeclKind.ZsField,
+        return new ZsClassMember({
             access: "public",
-            readonly: false,
             name,
-            type
+            innerType: type
         })
     }
 
-    optional(optional: boolean) {
-        return new ZsClassField({
+    optional(): ZsClassMember<Name, ZodOptional<Type>> {
+        return new ZsClassMember({
             ...this._def,
-            type: this._def.type.optional()
+            innerType: this._def.innerType.optional()
         })
     }
 
     access<V extends Access>(access: V) {
-        return new ZsClassField({
+        return new ZsClassMember({
             ...this._def,
             access: access
         })
     }
 
-    readonly(readonly: boolean) {
-        return new ZsClassField({
+    readonly() {
+        return new ZsClassMember({
             ...this._def,
-            readonly
+            innerType: this._def.innerType.readonly()
         })
     }
 }

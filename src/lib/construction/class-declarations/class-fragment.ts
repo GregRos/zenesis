@@ -1,12 +1,11 @@
 import { lazy, seq } from "lazies"
 import { isImplementable, ZsImplementable, ZsImplements } from "./implements"
-import { ZsClassMethod } from "./method"
-import { ZsClassField } from "./field"
+import { ZsClassMember } from "./field"
 import { unpackMemberSchemas, ZsShape } from "../expressions/overloads"
 import { z, ZodTypeAny } from "zod"
 import { ClassDeclarator } from "./declarator"
 
-export type ZsClassDecl = ZsClassMethod | ZsImplements | ZsClassField
+export type ZsClassDecl = ZsImplements | ZsClassMember
 
 export interface ZsClassFragmentDef<Shape extends ZsShape> {
     definition: () => {
@@ -47,7 +46,12 @@ export class ZsClassFragment<Decl extends ZsClassDecl = ZsClassDecl> {
             definition: lazy(() => {
                 const shape: getFullShape<any> = {} as any
 
-                for (const decl of decls.ofTypes(ZsClassField, ZsClassMethod)) {
+                for (const decl of decls.ofTypes(ZsClassMember)) {
+                    if (decl.name in shape) {
+                        throw new Error(
+                            `Duplicate field name ${decl.name} in class`
+                        )
+                    }
                     shape[decl.name] = decl.schema
                 }
                 const parents = decls.filterAs(isImplementable).toArray().pull()
@@ -77,11 +81,7 @@ export type getOwnShape<Decls extends ZsClassDecl> = {
         name: infer Name extends string
     }
         ? Name
-        : never]: Decl extends ZsClassMethod<any, infer F>
-        ? F
-        : Decl extends ZsClassField<any, infer F>
-        ? F
-        : never
+        : never]: Decl extends ZsClassMember<any, infer F> ? F : never
 }
 
 export type getFullShape<Decls extends ZsClassDecl> = getOwnShape<Decls> &

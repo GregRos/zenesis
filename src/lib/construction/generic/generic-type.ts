@@ -36,6 +36,14 @@ export class ZsGenericType<
 > {
     constructor(readonly _def: ZsGenericDef<Vars, Instance>) {}
 
+    get declaration() {
+        return this._def.instance.declaration
+    }
+
+    get name() {
+        return this._def.instance.name
+    }
+
     instantiate<
         TypeArgs extends {
             [Name in keyof Vars as Vars[Name] extends ZsTypeVar<any, null>

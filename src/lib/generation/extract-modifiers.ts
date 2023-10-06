@@ -1,10 +1,10 @@
 import { QuestionToken, ReadonlyKeyword } from "typescript"
 import { AnyTypeKind, ZsTypeKind } from "../construction/kinds"
-import { getOptional, getReadonly } from "./modifier-tokens"
 import { zodInspect, ZodKindedAny } from "zod-tools"
-import { TypeExprMatcherContext, ztSchemaWorld } from "./expression-matcher"
 import { ZodOptional, ZodReadonly } from "zod"
 import { Seq, seq } from "lazies"
+import { ztSchemaWorld } from "./zt-types"
+import { getOptional, getReadonly } from "./expressions/tokens"
 
 export interface ExtractedType {
     innerType: ZodKindedAny
@@ -22,10 +22,10 @@ export function extractModifiers(
     const nodes = ztSchemaWorld.match(typeWithModifiers).cases<{
         else: Iterable<ZodKindedAny>
     }>({
-        *else(node, ctx) {
+        *else(node) {
             yield node._node
             if ("innerType" in node._def && onlyTypes.has(node.kind)) {
-                yield* ctx.recurse(node._def.innerType as any)
+                yield* this.recurse(node._def.innerType as any)
             }
         }
     })

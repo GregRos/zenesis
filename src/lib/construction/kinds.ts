@@ -26,7 +26,7 @@ export const AnyTypeKind = {
 
 export enum ZsClassDeclKind {
     ZsImplements = "ZsImplements",
-    ZsField = "ZsField",
+    ZsClassMember = "ZsClassMember",
     ZsMethod = "ZsMethod",
     ZsIndexer = "ZsIndexer",
     ZsConstructor = "ZsConstructor"

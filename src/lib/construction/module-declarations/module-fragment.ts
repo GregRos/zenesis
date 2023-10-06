@@ -6,9 +6,20 @@ import { ZsTypeAlias } from "./alias"
 import { seq, Seq } from "lazies"
 
 import { ZsModuleDeclarator } from "./declarator"
+import {
+    ZsGenericClass,
+    ZsGenericInterface,
+    ZsGenericTypeAlias
+} from "../generic/generic-type"
 
 export type ZsModuleDecl = ZsNamedModuleDecl | ZsValue
-export type ZsNamedModuleDecl = ZsClass | ZsInterface | ZsTypeAlias
+export type ZsNamedModuleDecl =
+    | ZsClass
+    | ZsInterface
+    | ZsTypeAlias
+    | ZsGenericTypeAlias
+    | ZsGenericClass
+    | ZsGenericInterface
 export type ZsModuleDeclarations<Decl extends ZsModuleDecl> = (
     declarator: ZsModuleDeclarator
 ) => { [Symbol.iterator]: () => Iterator<Decl, void> }
@@ -31,6 +42,7 @@ export class ZsModuleFragment<Decl extends ZsModuleDecl = ZsModuleDecl> {
     [Symbol.iterator]() {
         return this._seq[Symbol.iterator]()
     }
+
     constructor(exports: Iterable<Decl>) {
         this._seq = seq(exports).pull()
     }

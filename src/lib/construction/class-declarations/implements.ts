@@ -15,6 +15,7 @@ export function isImplementable(x: any): x is ZsImplementable {
 export interface ZsImplementsDef<Interface extends ZsImplementable> {
     declName: ZsClassDeclKind.ZsImplements
     interface: Interface
+    impl?: () => Interface["shape"]
 }
 
 export class ZsImplements<Interface extends ZsImplementable = ZsImplementable> {
@@ -30,10 +31,14 @@ export class ZsImplements<Interface extends ZsImplementable = ZsImplementable> {
         return this._def.interface.shape
     }
 
-    static create<Interface extends ZsImplementable>(iface: Interface) {
+    static create<Interface extends ZsImplementable>(
+        iface: Interface,
+        impl?: () => Interface["shape"]
+    ) {
         return new ZsImplements({
             declName: ZsClassDeclKind.ZsImplements,
-            interface: iface
+            interface: iface,
+            impl
         })
     }
 }
