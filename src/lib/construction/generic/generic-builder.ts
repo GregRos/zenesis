@@ -3,6 +3,7 @@ import { AnyZodTuple, ZodAny, ZodTypeAny } from "zod"
 import { ZsGenericType } from "./generic-type"
 import { TypeVarBuilder } from "./type-var-builder"
 import { ZsFunction } from "../expressions/function"
+import { ZsTypeKind } from "../kinds"
 
 export class GenericBuilder<
     Names extends string,
@@ -50,8 +51,8 @@ export class GenericBuilder<
     class(constructor: (reification: Reification<Names, Vars>) => any): any {
         const result = constructor(this._vars)
         return new ZsGenericType({
-            typeName: "ZsGenericType",
-            instance: result,
+            typeName: ZsTypeKind.ZsGenericType,
+            innerType: result,
             ordering: this._names,
             vars: this._vars
         })
@@ -66,7 +67,7 @@ export class GenericBuilder<
         return new ZsFunction<ZParams, ZReturn, Vars>({
             ...instance._def,
             typeVarOrdering: this._names,
-            typeArgs: this._vars
+            typeVars: this._vars
         })
     }
 }

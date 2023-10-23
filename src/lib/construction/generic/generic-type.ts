@@ -13,9 +13,9 @@ export interface ZsGenericDef<
     Vars extends ZsTypeVarsRecord,
     Instance extends ZodTypeAny
 > extends ZodTypeDef {
-    typeName: "ZsGenericType"
+    typeName: ZsTypeKind.ZsGenericType
     vars: Vars
-    instance: Instance
+    innerType: Instance
     ordering: (keyof Vars)[]
 }
 
@@ -37,11 +37,11 @@ export class ZsGenericType<
     constructor(readonly _def: ZsGenericDef<Vars, Instance>) {}
 
     get declaration() {
-        return this._def.instance.declaration
+        return this._def.innerType.declaration
     }
 
     get name() {
-        return this._def.instance.name
+        return this._def.innerType.name
     }
 
     instantiate<
@@ -58,7 +58,7 @@ export class ZsGenericType<
         const typeArgs = this._def.ordering.map(name => args[name])
         return new ZsInstantiation({
             typeArgs: typeArgs as any,
-            instance: this._def.instance,
+            instance: this._def.innerType,
             typeName: ZsTypeKind.ZsInstantiation
         })
     }

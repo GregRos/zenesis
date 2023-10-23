@@ -3,7 +3,7 @@ import { AnyTypeKind, ZsTypeKind } from "../construction/kinds"
 import { zodInspect, ZodKindedAny } from "zod-tools"
 import { ZodOptional, ZodReadonly } from "zod"
 import { Seq, seq } from "lazies"
-import { ztSchemaWorld } from "./zt-types"
+import { zsSchemaDomain } from "./zt-types"
 import { getOptional, getReadonly } from "./expressions/tokens"
 
 export interface ExtractedType {
@@ -19,7 +19,7 @@ export function extractModifiers(
 ) {
     const onlyTypes = new Set<string>(modifierTypes)
     const extracted: ExtractedType = {} as any
-    const nodes = ztSchemaWorld.match(typeWithModifiers).cases<{
+    const nodes = zsSchemaDomain.match(typeWithModifiers).cases<{
         else: Iterable<ZodKindedAny>
     }>({
         *else(node) {

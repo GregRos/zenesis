@@ -7,7 +7,7 @@ import { ZsInterface } from "../module-declarations/interface"
 import { ZsClass } from "../module-declarations/class"
 import { ZsImport } from "../external/import"
 
-export type ZsTypeCtors = ZsTypeAlias | ZsInterface | ZsClass | ZsImport
+export type ZsTypeCtors = ZsTypeAlias | ZsInterface | ZsClass
 
 export interface ZsInstantiationDef<Instance extends ZodTypeAny>
     extends ZodTypeDef {

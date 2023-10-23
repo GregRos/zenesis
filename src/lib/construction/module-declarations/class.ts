@@ -3,23 +3,31 @@ import { ZsMonoType } from "../mono-type"
 import { getCombinedType } from "../utils"
 import { ZsTypeKind } from "../kinds"
 import { ZsClassFragment } from "../class-declarations/class-fragment"
+import { ZsInstantiation } from "../expressions/instantiation"
+import { ZsShapedRef } from "../refs"
 
 export interface ZsClassDef<
     Name extends string,
+    Parent extends ZsShapedRef | null,
     Fragment extends ZsClassFragment
 > extends ZodTypeDef {
     name: Name
     typeName: ZsTypeKind.ZsClass
     fragment: Fragment
+    parent: Parent
     abstract: boolean
 }
 
 export class ZsClass<
     Name extends string = string,
+    Parent extends ZsShapedRef | null = ZsShapedRef | null,
     Fragment extends ZsClassFragment = ZsClassFragment
 > extends ZsMonoType<
-    getCombinedType<Fragment["shape"]>,
-    ZsClassDef<Name, Fragment>
+    getCombinedType<
+        Fragment["shape"],
+        Parent extends { shape: any } ? Parent["shape"] : {}
+    >,
+    ZsClassDef<Name, Parent, Fragment>
 > {
     readonly name = this._def.name
     readonly declaration = "class"
@@ -36,15 +44,17 @@ export class ZsClass<
         })
     }
 
-    static create<Name extends string, Fragment extends ZsClassFragment>(
-        name: Name,
-        fragment: Fragment
-    ) {
+    static create<
+        Name extends string,
+        Parent extends ZsShapedRef | null,
+        Fragment extends ZsClassFragment
+    >(name: Name, parent: Parent, fragment: Fragment) {
         return new ZsClass({
             name,
             typeName: ZsTypeKind.ZsClass,
             abstract: false,
-            fragment
+            fragment,
+            parent
         })
     }
 }

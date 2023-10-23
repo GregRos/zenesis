@@ -12,7 +12,7 @@ export interface ZsFunctionDef<
     typeName: ZsTypeKind.ZsFunction
     args: ZParams
     returns: ZReturns
-    typeArgs: ZTypeArgs
+    typeVars: ZTypeArgs
     typeVarOrdering: (keyof ZTypeArgs)[]
 }
 
@@ -73,7 +73,7 @@ export class ZsFunction<
             typeName: ZsTypeKind.ZsFunction,
             args: z.tuple(args),
             returns: z.unknown(),
-            typeArgs: {},
+            typeVars: {},
             typeVarOrdering: []
         })
     }

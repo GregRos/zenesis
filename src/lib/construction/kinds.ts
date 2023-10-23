@@ -1,4 +1,5 @@
-import { ZodTypeKind } from "./zod-kind"
+import { ZodFirstPartyTypeKind } from "zod"
+import { ZsGenericType } from "./generic/generic-type"
 
 export enum ZsTypeKind {
     ZsIndexedAccess = "ZsIndexedAccess",
@@ -15,12 +16,14 @@ export enum ZsTypeKind {
     ZsKeyof = "ZsKeyof",
     ZsImportedType = "ZsImportedType",
     ZsAccess = "ZsAccess",
-    ZsEnum = "ZsEnum"
+    ZsEnum = "ZsEnum",
+    ZsGenericType = "ZsGenericType",
+    ZsValue = "ZsValue"
 }
 
-export type AnyTypeKind = ZsTypeKind | ZodTypeKind
+export type AnyTypeKind = ZsTypeKind | ZodFirstPartyTypeKind
 export const AnyTypeKind = {
-    ...ZodTypeKind,
+    ...ZodFirstPartyTypeKind,
     ...ZsTypeKind
 } as const
 
@@ -30,8 +33,4 @@ export enum ZsClassDeclKind {
     ZsMethod = "ZsMethod",
     ZsIndexer = "ZsIndexer",
     ZsConstructor = "ZsConstructor"
-}
-
-export enum ZsModuleDeclKind {
-    ZsValue = "ZsValue"
 }

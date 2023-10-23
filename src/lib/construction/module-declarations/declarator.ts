@@ -8,6 +8,7 @@ import {
 } from "../class-declarations/class-fragment"
 import { ZodTypeAny } from "zod"
 import { ZsClass } from "./class"
+import { ZsShapedRef } from "../refs"
 
 export class ZsModuleDeclarator {
     interface<Name extends string, Decl extends ZsClassDecl>(
@@ -17,11 +18,16 @@ export class ZsModuleDeclarator {
         return ZsInterface.create(name, ZsClassFragment.create(declarations))
     }
 
-    class<Name extends string, Decl extends ZsClassDecl>(
-        name: Name,
-        declarations: ClassDeclaration<Decl>
-    ) {
-        return ZsClass.create(name, ZsClassFragment.create(declarations))
+    class<
+        Name extends string,
+        Parent extends ZsShapedRef | null,
+        Decl extends ZsClassDecl
+    >(name: Name, parent: Parent, declarations: ClassDeclaration<Decl>) {
+        return ZsClass.create(
+            name,
+            parent,
+            ZsClassFragment.create(declarations)
+        )
     }
 
     alias<Name extends string, T extends ZodTypeAny>(name: Name, type: T) {

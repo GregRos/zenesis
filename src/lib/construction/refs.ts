@@ -1,5 +1,6 @@
 import { ZsMonoLike } from "./mono-type"
 import { ZsShape } from "./expressions/overloads"
+import { ZodKindedAny } from "../../../../zod-tools"
 
 export type getDeclarationType<Ref> = Ref extends {
     declaration: infer Type
@@ -21,7 +22,7 @@ export interface ZsTypedClassRef<Name extends string, Type>
 export type ZsShapedRef<
     Shape extends ZsShape = ZsShape,
     Kind extends "class" | "interface" = "class" | "interface"
-> = {
+> = ZodKindedAny & {
     readonly shape: Shape
     readonly declaration: Kind
 }
