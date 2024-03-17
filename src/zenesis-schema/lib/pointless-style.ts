@@ -1,0 +1,42 @@
+import { z } from "zod"
+import { ZsClass, ZsInterface, ZsMember, ZsTypeAlias, ZsValue, zs } from "."
+import { ZsFile } from "./containers/file"
+export const string = z.string
+export const number = z.number
+export const boolean = z.boolean
+export const object = z.object
+export const array = z.array
+export const record = z.record
+export const map = z.map
+export const union = z.union
+export const intersection = z.intersection
+export const tuple = z.tuple
+export const literal = z.literal
+export const enum_ = z.enum
+export const function_ = z.function
+export const promise = z.promise
+export const any = z.any
+export const unknown = z.unknown
+export const void_ = z.void
+export const null_ = z.null
+export const undefined_ = z.undefined
+export const bigint = z.bigint
+export const symbol = z.symbol
+export const date = z.date
+export const set = z.set
+export const lazy = z.lazy
+export const effect = z.effect
+export const custom = z.custom
+export const conditional = zs.conditional
+export const fun = zs.fun
+export const keyof = zs.keyof
+export const lookup = zs.lookup
+export const mapped = zs.mapped
+export const ast = zs.ast
+export const World = zs.World
+export const Class = ZsClass.create
+export const Interface = ZsInterface.create
+export const TypeAlias = ZsTypeAlias.create
+export const Member = ZsMember.create
+export const Val = ZsValue.create
+export const File = ZsFile.create

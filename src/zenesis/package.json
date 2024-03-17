@@ -1,0 +1,17 @@
+{
+    "name": "zenesis",
+    "version": "0.1.0",
+    "description": "The best type generation library in the world.",
+    "main": "dist/lib/index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://www.github.com/GregRos/zenesis"
+    },
+    "author": "GregRos",
+    "license": "MIT",
+    "keywords": [],
+    "dependencies": {
+        "@zenesis/generate": "^0.1.0",
+        "@zenesis/schema": "^0.1.0"
+    }
+}

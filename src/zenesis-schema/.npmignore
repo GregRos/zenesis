@@ -1,0 +1,10 @@
+dist/test/
+src/
+tsconfig.*
+.npmignore
+.prettierrc.js
+npm-debug.log
+yarn-error.log
+.nyc_output/
+coverage
+*.svg

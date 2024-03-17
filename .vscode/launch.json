@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "runtimeArgs": [],
+            "name": "Start Example (Debug)",
+            "program": "${workspaceFolder}/dist/test/example.js",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
