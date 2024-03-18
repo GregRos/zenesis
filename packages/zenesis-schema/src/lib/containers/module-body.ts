@@ -1,7 +1,7 @@
 import { lazy, seq, Seq } from "lazies"
 import { ZsValue } from "../declarations/value"
 
-import { ModuleDeclarator } from "../declarations/declarator"
+import { ModuleDeclarator } from "../declarations/module-builder"
 import { ZsExportable, ZsTypeLikeExportable } from "../declarations/unions"
 import { ZsSmartZenesisImport, ZsZenesisImport } from "./zenesis-import"
 import { ZsZenesisModule } from "./zenesis-module"

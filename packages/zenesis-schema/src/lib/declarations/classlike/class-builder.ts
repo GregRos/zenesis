@@ -7,16 +7,16 @@ import { ZsImplementable, ZsImplements } from "./members/implements"
 import { ZsIndexer } from "./members/indexer"
 import { ZsMember } from "./members/member"
 import { ZsOverloads } from "./members/overloads"
+import { MethodDeclarator, MethodsDeclaration } from "./method-builder"
 
 export type UnionFields<Types extends Record<keyof Types, ZodKindedAny>> = {
     [K in keyof Types & string]: [ZsMember<K, Types[K]>]
 }[keyof Types & string][0]
 
-
-export class ClassDeclarator {
-    Fields<
-        Types extends Record<keyof Types, ZodKindedAny>
-    >(stuffs: Types): Iterable<UnionFields<Types>> {
+export class ClassBuilder {
+    Fields<Types extends Record<keyof Types, ZodKindedAny>>(
+        stuffs: Types
+    ): Iterable<UnionFields<Types>> {
         return Object.entries(stuffs).map(([name, type]) =>
             ZsMember.create(name, type as any)
         ) as any
@@ -29,11 +29,19 @@ export class ClassDeclarator {
         return ZsMember.create(name, type)
     }
 
-    Method<Name extends string, Types extends [ZsFunction, ...ZsFunction[]]>(
+    Method<Name extends string, Methods extends ZsFunction>(
         name: Name,
-        overloads: Types
-    ): ZsMember<Name, ZsOverloads<Types>> {
-        return ZsMember.create(name, ZsOverloads.create(...overloads))
+        declarator: MethodsDeclaration<Methods> | [Methods, ...Methods[]]
+    ): Methods extends never
+        ? never
+        : ZsMember<Name, ZsOverloads<[Methods, ...Methods[]]>> {
+        const overloads = [
+            ...(typeof declarator === "function"
+                ? declarator(new MethodDeclarator())
+                : declarator)
+        ] as [Methods, ...Methods[]]
+
+        return ZsMember.create(name, ZsOverloads.create(...overloads)) as any
     }
 
     Implements<Type extends ZsImplementable>(

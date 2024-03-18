@@ -1,7 +1,7 @@
 import { lazy, seq } from "lazies"
 import { ZodTypeAny, z } from "zod"
 import { ZsShape } from "../../core/types"
-import { ClassDeclarator } from "./declarator"
+import { ClassBuilder } from "./class-builder"
 import { ZsConstructor } from "./members/constructor"
 import {
     ZsImplementable,
@@ -10,7 +10,8 @@ import {
 } from "./members/implements"
 import { ZsIndexer } from "./members/indexer"
 import { ZsMember as ZsProperty } from "./members/member"
-import { unpackMemberSchemas } from "./members/overloads"
+import { unpackMemberSchemas } from "./body"
+import { UnpackMemberSchemas } from "./body"
 
 export type ZsMemberable = ZsImplements | ZsProperty | ZsConstructor | ZsIndexer
 
@@ -24,7 +25,7 @@ export interface ZsClassBodyDef<Shape extends ZsShape> {
 }
 
 export type ClassDeclaration<Decl extends ZsMemberable> = (
-    declarator: ClassDeclarator
+    declarator: ClassBuilder
 ) => Generator<Decl>
 
 export class ZsClassBody<Decl extends ZsMemberable = ZsMemberable> {
@@ -47,7 +48,7 @@ export class ZsClassBody<Decl extends ZsMemberable = ZsMemberable> {
     }
 
     static create<Decl extends ZsMemberable>(decl: ClassDeclaration<Decl>) {
-        const input = decl(new ClassDeclarator())
+        const input = decl(new ClassBuilder())
         const decls = seq(seq(input).toArray().pull())
         return new ZsClassBody<Decl>({
             definition: lazy(() => {
@@ -94,4 +95,16 @@ export type getOwnShape<Decls extends ZsMemberable> = {
 // TODO: Implement indexer static typing
 // TODO: Consider constructor static typing
 export type getFullShape<Decls extends ZsMemberable> = getOwnShape<Decls> &
-    (getParentShape<Decls>[""] extends never ? {} : getParentShape<Decls>[""])
+    (getParentShape<Decls>[""] extends never ? {} : getParentShape<Decls>[""])export function unpackMemberSchemas<Shape extends ZsShape>(
+    shape: Shape
+): UnpackMemberSchemas<Shape> {
+    const newShape = {} as any
+    for (const [key, value] of Object.entries(shape)) {
+        newShape[key] = value
+    }
+    return newShape
+}
+export type UnpackMemberSchemas<Shape extends ZsShape> = {
+    [Key in keyof Shape]: Shape[Key]
+}
+

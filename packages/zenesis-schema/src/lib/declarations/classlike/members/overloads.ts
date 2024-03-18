@@ -2,7 +2,6 @@ import { seq } from "lazies"
 import { ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsMonoLike, ZsMonoType } from "../../../core/mono-type"
 import { RecursiveConjunction } from "../../../core/operators"
-import { ZsShape } from "../../../core/types"
 import { ZsFunction } from "../../../expressions/function"
 import { ZsTypeKind } from "../../../kinds"
 
@@ -46,18 +45,4 @@ export class ZsOverloads<
             overloads
         })
     }
-}
-
-export type UnpackMemberSchemas<Shape extends ZsShape> = {
-    [Key in keyof Shape]: Shape[Key]
-}
-
-export function unpackMemberSchemas<Shape extends ZsShape>(
-    shape: Shape
-): UnpackMemberSchemas<Shape> {
-    const newShape = {} as any
-    for (const [key, value] of Object.entries(shape)) {
-        newShape[key] = value
-    }
-    return newShape
 }

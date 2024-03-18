@@ -3,7 +3,7 @@ import { ZsGenericDeclarable } from "../unions"
 import { ZsTypeVar, ZsTypeVarsRecord } from "./type-var"
 
 import { ZsInstantiation } from "../../expressions/instantiation"
-import { ZsMiscNode } from "../../misc-node"
+import { ZsStructural } from "../../misc-node"
 import { ZsDeclKind } from "../kind"
 import { GenericBuilder } from "./generic-builder"
 import { Instantiable } from "./instantiable"
@@ -22,7 +22,7 @@ export class ZsGeneric<
         Vars extends ZsTypeVarsRecord = ZsTypeVarsRecord,
         Instance extends ZsGenericDeclarable = ZsGenericDeclarable
     >
-    extends ZsMiscNode<ZsGenericDef<Vars, Instance>>
+    extends ZsStructural<ZsGenericDef<Vars, Instance>>
     implements Instantiable<Vars, Instance>
 {
     readonly name = this._def.innerType.name

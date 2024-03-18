@@ -1,12 +1,12 @@
 {
-    "references": [{
-        "path": "./packages/zenesis/src/lib/tsconfig.json"
+    "references": [ {
+        "path": "./packages/zenesis-schema/src/lib/tsconfig.json"
     }, {
         "path": "./packages/zenesis-generate/src/lib/tsconfig.json"
+    },{
+        "path": "./packages/zenesis/src/lib/tsconfig.json"
     }, {
         "path": "./packages/demo/src/tsconfig.json"
-    }, {
-        "path": "./packages/zenesis-schema/src/lib/tsconfig.json"
     }],
     "compilerOptions": {
         "composite": true,
@@ -23,7 +23,7 @@
         "sourceMap": true,
         "noEmit": true,
         "strict": true,
-        
     },
+    "files": [],
     "exclude": ["node_modules", "**/node_modules/*"]
 }

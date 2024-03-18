@@ -1,17 +1,23 @@
 import { generateWorld, zs } from "@zenesis/generate"
 import { mkdir, writeFileSync } from "fs"
 import { createPrinter } from "typescript"
+import { TypeOf } from "zod"
 const W = zs.World("example")
 
 const f1 = W.File("hello", function* (_) {
+
     const cl1 = _.Class("Hello", function* (_) {
         yield* _.Fields({
-
+            a: zs.number(),
+            b: zs.string(),
         })
-        yield* _.Fields({
-            value: zs.string()
+
+        yield _.Method("test", function*(_) {
+            yield _.args(zs.string(), zs.number()).returns(zs.string())
+            yield _.args(zs.string(), zs.date()).returns(zs.boolean())
         })
     })
+
     yield cl1
 })
 

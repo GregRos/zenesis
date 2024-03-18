@@ -29,4 +29,8 @@ export class ZsTypeAlias<
             definition
         })
     }
+
+    *[Symbol.iterator]() {
+        yield this
+    }
 }

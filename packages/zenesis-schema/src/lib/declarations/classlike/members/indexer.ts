@@ -1,5 +1,6 @@
 import { ZodOptional, ZodTypeAny } from "zod"
 import { ZsMonoLike } from "../../../core/mono-type"
+import { ZsStructural } from "../../../misc-node"
 import { ZsMemberKind } from "./kind"
 
 export interface ZsIndexerDef<
@@ -20,9 +21,7 @@ export class ZsIndexer<
         | ZodOptional<ZsMonoLike<PropertyKey>>,
     Value extends ZodTypeAny = ZodTypeAny,
     Optional extends boolean = false
-> {
-    constructor(readonly _def: ZsIndexerDef<Key, Value, Optional>) {}
-
+> extends ZsStructural<ZsIndexerDef<Key, Value, Optional>> {
     static create<
         Key extends
             | ZsMonoLike<PropertyKey>

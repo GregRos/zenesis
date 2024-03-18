@@ -22,7 +22,6 @@ export class ZsEnum<
     })
     readonly declaration = "enum"
     readonly refAs = this
-
     static create<Name extends string, Enum extends EnumLike>(
         name: Name,
         definition: Enum
@@ -33,5 +32,9 @@ export class ZsEnum<
             name,
             definition
         })
+    }
+
+    *[Symbol.iterator]() {
+        yield this
     }
 }

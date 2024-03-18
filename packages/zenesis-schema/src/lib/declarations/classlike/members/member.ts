@@ -1,4 +1,5 @@
 import { ZodOptional, ZodTypeAny } from "zod"
+import { ZsStructural } from "../../../misc-node"
 import { ZsMemberKind } from "./kind"
 
 export interface ZsClassMemberDef<
@@ -14,9 +15,8 @@ export interface ZsClassMemberDef<
 export class ZsMember<
     Name extends string = string,
     Type extends ZodTypeAny = ZodTypeAny
-> {
+> extends ZsStructural<ZsClassMemberDef<Name, Type>> {
     readonly scope = "class"
-    constructor(readonly _def: ZsClassMemberDef<Name, Type>) {}
 
     get name() {
         return this._def.name
@@ -25,8 +25,6 @@ export class ZsMember<
     get schema() {
         return this._def.innerType
     }
-
-    readonly declaration = "field"
 
     static create<Name extends string, Type extends ZodTypeAny>(
         name: Name,

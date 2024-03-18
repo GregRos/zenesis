@@ -1,4 +1,5 @@
 import { AnyZodTuple, ZodTuple } from "zod"
+import { ZsStructural } from "../../../misc-node"
 import { ZsMemberKind } from "./kind"
 
 export interface ZsConstructorDef<ZArgs extends AnyZodTuple> {
@@ -6,9 +7,9 @@ export interface ZsConstructorDef<ZArgs extends AnyZodTuple> {
     args: ZArgs
 }
 
-export class ZsConstructor<ZArgs extends AnyZodTuple = ZodTuple<any, any>> {
-    constructor(readonly _def: ZsConstructorDef<ZArgs>) {}
-
+export class ZsConstructor<
+    ZArgs extends AnyZodTuple = ZodTuple<any, any>
+> extends ZsStructural<ZsConstructorDef<ZArgs>> {
     static create<ZTuple extends AnyZodTuple>(params: ZTuple) {
         return new ZsConstructor({
             memberName: ZsMemberKind.ZsConstructor,

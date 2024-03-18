@@ -6,7 +6,7 @@
             "request": "launch",
             "runtimeArgs": [],
             "name": "Start Example (Debug)",
-            "program": "${workspaceFolder}/packages/demo/dist/lib/example.js",
+            "program": "${workspaceFolder}/packages/demo/dist/example.js",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}"
         }

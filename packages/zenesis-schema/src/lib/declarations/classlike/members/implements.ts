@@ -1,5 +1,6 @@
 import { ZsShape, ZsShapedRef } from "../../../core/types"
 import { ZsInstantiation } from "../../../expressions/instantiation"
+import { ZsStructural } from "../../../misc-node"
 import { ZsClass } from "../class"
 import { ZsInterface } from "../interface"
 import { ZsMemberKind } from "./kind"
@@ -25,11 +26,9 @@ export interface ZsImplementsDef<Shape extends ZsShape> {
     implemented: ZsShapedRef<Shape>
 }
 
-export class ZsImplements<Shape extends ZsShape = ZsShape> {
-    readonly scope = "class"
-    readonly declaration = "implements"
-    constructor(readonly _def: ZsImplementsDef<Shape>) {}
-
+export class ZsImplements<Shape extends ZsShape = ZsShape> extends ZsStructural<
+    ZsImplementsDef<Shape>
+> {
     get shape(): Shape {
         return this._def.implemented.shape
     }
