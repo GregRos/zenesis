@@ -1,1 +1,7 @@
-{}
+{
+  "promptDelete": false,
+  "userIgnoreFilters": [
+    "node_modules/",
+    "\"/packages/.*\""
+  ]
+}

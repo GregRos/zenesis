@@ -19,8 +19,8 @@ Zenesis is a new way of generating TypeScript type declarations. `zenesis` is bu
 ```bash
 npm install zenesis
 ```
-## How it works
-First, we need a World. A World contains all generated files, modules, and other entities. You can create one using the `zs` namespaces. `zs` contains all schema nodes, including the basic ones from `zod`, which it just re-exports.
+## Making a world
+First, we need a **World**. A **World** contains all generated files, modules, and other entities. You can create one using the `zs` namespace. `zs` contains all schema nodes, including the basic ones from `zod`, which it just re-exports.
 
 ```typescript
 import {zs} from "zenesis"
@@ -47,7 +47,7 @@ The declarations that can be added to files are available on the context object 
 8. ~~`_.Function`~~ — Not implemented!
 9. ~~`_.Namespace`~~ — Not implemented!
 
- We can *create* an interface declarations using `F.Interface`, but this won’t add it to our file automatically. Remember, while Worlds are mutable, other objects aren’t. We need to export the interface by *yielding* it from the iterator body
+ We can *create* an interface declarations using `F.Interface`, but this won’t add it to our file automatically. Remember, while Worlds are mutable, other objects aren’t. We need to export the interface using the `yield` keyword!
   
 ```typescript
 World.addFile("immutables", function*(_) {
@@ -71,10 +71,12 @@ Let’s use this API to add a `length` property to our interface:
 ```typescript
 World.addFile("immutables", function*(_) {
 	yield _.Interface("Stack", function*(_) {
-		yield _.Field(
-			"length",
-			zs.number()
-		).readonly()
+		yield* _.Fields({
+			length: zs.number().readonly(),
+			name: zs.string()
+		})
+
+		
 	})
 })
 ```

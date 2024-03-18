@@ -4,7 +4,7 @@
     }, {
         "path": "./packages/zenesis-generate/src/lib/tsconfig.json"
     }, {
-        "path": "./packages/demo/src/lib/tsconfig.json"
+        "path": "./packages/demo/src/tsconfig.json"
     }, {
         "path": "./packages/zenesis-schema/src/lib/tsconfig.json"
     }],

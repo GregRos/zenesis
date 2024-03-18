@@ -25,7 +25,7 @@ export interface ZsClassBodyDef<Shape extends ZsShape> {
 
 export type ClassDeclaration<Decl extends ZsMemberable> = (
     declarator: ClassDeclarator
-) => Iterable<Decl>
+) => Generator<Decl>
 
 export class ZsClassBody<Decl extends ZsMemberable = ZsMemberable> {
     constructor(readonly _def: ZsClassBodyDef<getFullShape<Decl>>) {}
