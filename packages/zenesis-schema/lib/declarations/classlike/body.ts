@@ -10,8 +10,6 @@ import {
 } from "./members/implements"
 import { ZsIndexer } from "./members/indexer"
 import { ZsMember as ZsProperty } from "./members/member"
-import { unpackMemberSchemas } from "./body"
-import { UnpackMemberSchemas } from "./body"
 
 export type ZsMemberable = ZsImplements | ZsProperty | ZsConstructor | ZsIndexer
 
@@ -95,7 +93,9 @@ export type getOwnShape<Decls extends ZsMemberable> = {
 // TODO: Implement indexer static typing
 // TODO: Consider constructor static typing
 export type getFullShape<Decls extends ZsMemberable> = getOwnShape<Decls> &
-    (getParentShape<Decls>[""] extends never ? {} : getParentShape<Decls>[""])export function unpackMemberSchemas<Shape extends ZsShape>(
+    (getParentShape<Decls>[""] extends never ? {} : getParentShape<Decls>[""])
+
+export function unpackMemberSchemas<Shape extends ZsShape>(
     shape: Shape
 ): UnpackMemberSchemas<Shape> {
     const newShape = {} as any
@@ -107,4 +107,3 @@ export type getFullShape<Decls extends ZsMemberable> = getOwnShape<Decls> &
 export type UnpackMemberSchemas<Shape extends ZsShape> = {
     [Key in keyof Shape]: Shape[Key]
 }
-

@@ -3,11 +3,19 @@ import { mkdir, writeFileSync } from "fs"
 import { createPrinter } from "typescript"
 const W = zs.World("example")
 
-const f1 = W.File("hello", function* (hello) {
-    const cl1 = hello.Class("Hello", function* (c) {
-        yield c.Field("value", zs.string())
-        yield c.Field("value2", zs.number())
+const f1 = W.File("hello", function* (_) {
+    const cl1 = _.Class("Hello", function* (_) {
+        yield* _.Fields({
+            a: zs.number(),
+            b: zs.string()
+        })
+
+        yield _.Method("test", function* (_) {
+            yield _.args(zs.string(), zs.number()).returns(zs.string())
+            yield _.args(zs.string(), zs.date()).returns(zs.boolean())
+        })
     })
+
     yield cl1
 })
 

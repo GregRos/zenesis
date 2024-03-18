@@ -1,12 +1,12 @@
 {
     "references": [ {
-        "path": "./packages/zenesis-schema/src/lib/tsconfig.json"
+        "path": "./packages/zenesis-schema/lib/tsconfig.json"
     }, {
-        "path": "./packages/zenesis-generate/src/lib/tsconfig.json"
+        "path": "./packages/zenesis-generate/lib/tsconfig.json"
     },{
-        "path": "./packages/zenesis/src/lib/tsconfig.json"
+        "path": "./packages/zenesis/lib/tsconfig.json"
     }, {
-        "path": "./packages/demo/src/tsconfig.json"
+        "path": "./packages/demo/tsconfig.json"
     }],
     "compilerOptions": {
         "composite": true,

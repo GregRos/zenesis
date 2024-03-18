@@ -1,8 +1,6 @@
-import "source-map-support/register"
-
-import { generateWorld, zs } from "../lib"
-import { createPrinter } from "typescript"
+import { generateWorld, zs } from "@zenesis/generate/lib"
 import { mkdir, writeFileSync } from "fs"
+import { createPrinter } from "typescript"
 const W = zs.World("example")
 
 const f1 = W.File("hello", function* (hello) {
