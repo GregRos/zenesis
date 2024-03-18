@@ -1,20 +1,28 @@
 {
     "workspaces": [
-        "src/*"
+        "packages/*"
     ],
+    "main": "packages/dist/demo/index.js",
     "private": true,
     "scripts": {
-        "build:generate": "tsc -b src/zenesis-generate/lib/tsconfig.json",
-        "build:schema": "tsc -b src/zenesis-schema/lib/tsconfig.json",
-        "build:main": "tsc -b src/zenesis/zenesis/tsconfig.json",
-        "build:all": "run-s build:schema build:generate build:main",
-        "clean": "shx rm -rf dist",
-        "rebuild": "run-s clean build:all",
-        "lint": "eslint --ext .ts src && prettier --write src",
-        "test:generate": "jest src/zenesis-generate/jest.config.mjs",
-        "test:generate:watch": "jest --watch src/zenesis-generate/jest.config.mjs",
-        "test:schema": "jest src/zenesis-schema/jest.config.mjs",
-        "test:schema:watch": "jest --watch src/zenesis-schema/jest.config.mjs"
+        "demo": "node packages/demo/dist/example.js",
+        "build:generate": "tsc -b packages/zenesis-generate/src/lib/tsconfig.json",
+        "build:schema": "tsc -b packages/zenesis-schema/src/lib/tsconfig.json",
+        "build:main": "tsc -b packages/zenesis/src/lib/tsconfig.json",
+        "build:demo": "tsc -b packages/demo/src/tsconfig.json",
+        "watch:generate": "tsc -b packages/zenesis-generate/src/lib/tsconfig.json --watch",
+        "watch:schema": "tsc -b packages/zenesis-schema/src/lib/tsconfig.json --watch",
+        "watch:main": "tsc -b packages/zenesis/src/lib/tsconfig.json --watch",
+        "watch:demo": "tsc -b packages/demo/src/lib/tsconfig.json --watch",
+        "watch": "run-p watch:generate watch:schema watch:main watch:demo",
+        "build": "run-s build:schema build:generate build:main build:demo",
+        "clean": "shx rm -rf packages/*/dist",
+        "rebuild": "run-s clean build",
+        "lint": "eslint --ext .ts packages && prettier --write packages",
+        "test:generate": "jest packages/zenesis-generate/jest.config.mjs",
+        "test:generate:watch": "jest --watch packages/zenesis-generate/jest.config.mjs",
+        "test:schema": "jest packages/zenesis-schema/jest.config.mjs",
+        "test:schema:watch": "jest --watch packages/zenesis-schema/jest.config.mjs"
     },
     "devDependencies": {
         "@gregros/eslint-config": "^0.5.0",

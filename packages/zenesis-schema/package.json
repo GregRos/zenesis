@@ -1,0 +1,24 @@
+{
+  "name": "@zenesis/schema",
+  "exports": {
+    ".": {
+      "require": "./dist/lib/index.js",
+      "import": "./dist/lib/index.js",
+      "default": "./dist/lib/index.js",
+      "types": "./dist/lib/index.d.ts"
+    }
+  },
+  "typings": "./dist/lib/index",
+  "description": "zenesis",
+  "version": "0.1.0",
+  "repository": "github:gregros/zenesis-schema",
+  "keywords": [
+    "zenesis"
+  ],
+  "author": "GregRos",
+  "license": "MIT",
+  "dependencies": {
+    "lazies": "^0.6.0",
+    "zod": "^3.22.4"
+  }
+}

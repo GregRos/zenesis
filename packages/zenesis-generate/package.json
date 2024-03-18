@@ -1,0 +1,27 @@
+{
+    "name": "@zenesis/generate",
+    "version": "0.1.0",
+    "description": "The best type generation library in the world.",
+    "repository": {
+        "type": "git",
+        "url": "https://www.github.com/GregRos/zenesis"
+    },
+    "exports": {
+        ".": {
+            "require": "./dist/lib/index.js",
+            "import": "./dist/lib/index.js",
+            "default": "./dist/lib/index.js",
+            "types": "./dist/lib/index.d.ts"
+        }
+    },
+    "typings": "./dist/lib/index",
+    "author": "GregRos",
+    "license": "MIT",
+    "keywords": [],
+    "dependencies": {
+        "@zenesis/schema": "^0.1.0",
+        "immutable": "^5.0.0-beta.4",
+        "lazies": "^0.6.0",
+        "zod": "^3.22.2"
+    }
+}

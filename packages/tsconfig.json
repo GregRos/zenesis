@@ -1,13 +1,4 @@
 {
-    "references": [{
-        "path": "./packages/zenesis/src/lib/tsconfig.json"
-    }, {
-        "path": "./packages/zenesis-generate/src/lib/tsconfig.json"
-    }, {
-        "path": "./packages/demo/src/lib/tsconfig.json"
-    }, {
-        "path": "./packages/zenesis-schema/src/lib/tsconfig.json"
-    }],
     "compilerOptions": {
         "composite": true,
         "module": "CommonJS",
