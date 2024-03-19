@@ -1,5 +1,5 @@
 import { ZsShape, ZsShapedRef } from "../../../core/types"
-import { ZsInstantiation } from "../../../expressions/instantiation"
+import { ZsInstantiation } from "../../../generics/instantiation"
 import { ZsStructural } from "../../../misc-node"
 import { ZsClass } from "../class"
 import { ZsInterface } from "../interface"

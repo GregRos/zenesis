@@ -43,6 +43,8 @@ export class ZsInterface<
             body: ZsClassBody.create(body)
         })
     }
-}
 
-let a: 1[]
+    *[Symbol.iterator]() {
+        yield this
+    }
+}

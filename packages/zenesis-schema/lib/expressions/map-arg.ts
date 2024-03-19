@@ -4,12 +4,12 @@ import { ZodKindedAny } from "../core/types"
 import { ZsTypeKind } from "../kinds"
 
 export interface ZsMapVarDef<In extends ZsMonoLike<any>> extends ZodTypeDef {
-    typeName: ZsTypeKind.ZsMapVar
+    typeName: ZsTypeKind.ZsMapArg
     name: string
     in: In
 }
 
-export class ZsMapVar<ZIn extends ZodTypeAny = ZodKindedAny> extends ZsMonoType<
+export class ZsMapArg<ZIn extends ZodTypeAny = ZodKindedAny> extends ZsMonoType<
     TypeOf<ZIn>,
     ZsMapVarDef<ZIn>
 > {
@@ -17,8 +17,8 @@ export class ZsMapVar<ZIn extends ZodTypeAny = ZodKindedAny> extends ZsMonoType<
     readonly declaration = "mappingVar"
     readonly name = this._def.name
     static create<In extends ZodTypeAny>(name: string, in_: In) {
-        return new ZsMapVar<In>({
-            typeName: ZsTypeKind.ZsMapVar,
+        return new ZsMapArg<In>({
+            typeName: ZsTypeKind.ZsMapArg,
             name,
             in: in_
         })

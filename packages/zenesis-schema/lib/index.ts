@@ -1,12 +1,12 @@
 import { z } from "zod"
 import { ZsWorld } from "./containers/world"
-import { ZsTypeVar } from "./declarations/generics/type-var"
 import { ZsAstExpr } from "./expressions/ast-expr"
 import { ZsConditional } from "./expressions/conditional"
 import { ZsFunction } from "./expressions/function"
 import { ZsKeyof } from "./expressions/keyof"
 import { ZsLookup } from "./expressions/lookup"
 import { ZsMapped } from "./expressions/mapped"
+import { ZsTypeVar } from "./generics/type-var"
 
 export { ZsClassBody } from "./declarations/classlike/body"
 export {
@@ -45,26 +45,23 @@ export {
     ZsOverloadsDef
 } from "./declarations/classlike/members/overloads"
 export { ZsEnum, ZsEnumDef } from "./declarations/enum"
-export { ZsGeneric } from "./declarations/generics/generic"
-export {
-    Reification,
-    ZsTypeVar,
-    ZsTypeVarDef,
-    ZsTypeVarVariance,
-    ZsTypeVarsRecord
-} from "./declarations/generics/type-var"
 export { ZsValue, ZsValueDef } from "./declarations/value"
 export { ZsAstExpr, ZsAstExprDef } from "./expressions/ast-expr"
 export { ZsConditional, ZsConditionalDef } from "./expressions/conditional"
 export { ZsFunction, ZsFunctionDef } from "./expressions/function"
-export {
-    ZsInstantiation,
-    ZsInstantiationDef
-} from "./expressions/instantiation"
 export { ZsKeyof, ZsKeyofDef } from "./expressions/keyof"
 export { ZsLookup, ZsLookupDef } from "./expressions/lookup"
-export { ZsMapVar, ZsMapVarDef } from "./expressions/map-var"
+export { ZsMapArg, ZsMapVarDef } from "./expressions/map-arg"
 export { ZsMapped, ZsMappedDef } from "./expressions/mapped"
+export { ZsForallType, ZsForallTypeDef } from "./generics/forall-type"
+export { ZsInstantiation, ZsInstantiationDef } from "./generics/instantiation"
+export { ZsTypeArg, ZsTypeArgDef, ZsTypeArgTuple } from "./generics/type-arg"
+export {
+    ZsTypeVar,
+    ZsTypeVarDef,
+    ZsTypeVarTuple,
+    ZsTypeVarVariance
+} from "./generics/type-var"
 export { AnyTypeKind, ZsTypeKind } from "./kinds"
 export { ZodSchemaTable, ZsSchemaTable } from "./table"
 export { zs }
@@ -80,6 +77,7 @@ function pick<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K> {
 const zs = {
     ...pick(
         z,
+        "literal",
         "void",
         "tuple",
         "unknown",

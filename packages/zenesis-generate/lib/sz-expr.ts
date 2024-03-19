@@ -30,8 +30,8 @@ export abstract class ZsTsTable {
     [AnyTypeKind.ZsEnum]!: TypeReferenceType;
     [AnyTypeKind.ZsClass]!: TypeReferenceNode;
     [AnyTypeKind.ZsInterface]!: TypeReferenceNode;
-    [AnyTypeKind.ZsTypeVar]!: TypeReferenceNode;
-    [AnyTypeKind.ZsMapVar]!: TypeReferenceNode;
+    [AnyTypeKind.ZsTypeArg]!: TypeReferenceNode;
+    [AnyTypeKind.ZsMapArg]!: TypeReferenceNode;
     [AnyTypeKind.ZsInstantiation]!: TypeReferenceNode;
     [AnyTypeKind.ZsTypeAlias]!: TypeReferenceNode;
     [AnyTypeKind.ZsForeignImport]!: TypeReferenceNode;

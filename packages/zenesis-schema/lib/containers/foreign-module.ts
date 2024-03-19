@@ -1,7 +1,6 @@
 import { ZsModuleKind } from "../kinds"
 import { ZsModule, ZsModuleDef } from "./base-module"
 import { ZsForeignImport } from "./foreign-import"
-import { GenericConstraintBuilder } from "./generic-builder"
 
 export interface ZsForeignModuleDef extends ZsModuleDef {
     readonly moduleName: ZsModuleKind.ZsForeign
@@ -23,9 +22,5 @@ export class ZsForeignModule extends ZsModule<ZsForeignModuleDef> {
 
     import<As = any>(name: string): ZsForeignImport<As> {
         return ZsForeignImport.create(this, name)
-    }
-
-    generic<Names extends string>(...names: [Names, ...Names[]]) {
-        return GenericConstraintBuilder.create(this, ...names)
     }
 }

@@ -1,6 +1,6 @@
-import { ZodAny, ZodTypeDef } from "zod"
+import { ZodAny, ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsMonoType } from "../core/mono-type"
-import { ZsInstantiation } from "../expressions/instantiation"
+import { ZsInstantiation } from "../generics/instantiation"
 import { ZsTypeKind } from "../kinds"
 import { ZsForeignModule } from "./foreign-module"
 
@@ -11,6 +11,10 @@ export interface ZsForeignDef<As extends any> extends ZodTypeDef {
     staticType(): As
 }
 
+/**
+ * Represents a type imported from a non-Zenesis module. Because it's external,
+ * nothing is known about it, so you're not going to get any type checking.
+ */
 export class ZsForeignImport<As = any> extends ZsMonoType<
     As,
     ZsForeignDef<As>
@@ -18,8 +22,15 @@ export class ZsForeignImport<As = any> extends ZsMonoType<
     readonly actsLike = ZodAny.create()
     readonly name = this._def.name
     readonly origin = this._def.origin
-    instantiate(args: any) {
-        const values = Object.values(args) as any[]
+
+    /**
+     * Assuming this import is generic, will instantiate it with the given
+     * type arguments. Produces invalid code if the import is not generic.
+     * @param typeArgs The type arguments to instantiate with.
+     * @throws If no type arguments are provided.
+     */
+    instantiate(...typeArgs: [ZodTypeAny, ...ZodTypeAny[]]) {
+        const values = Object.values(typeArgs) as any[]
         if (values.length === 0) {
             throw new Error("Empty type arguments provided.")
         }

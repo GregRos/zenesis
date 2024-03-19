@@ -3,6 +3,6 @@ export enum ZsDeclKind {
     ZsInterface = "ZsInterface",
     ZsEnum = "ZsEnum",
     ZsTypeAlias = "ZsTypeAlias",
-    ZsGeneric = "ZsGeneric",
+    ZsForallType = "ZsForallType",
     ZsValue = "ZsValue"
 }

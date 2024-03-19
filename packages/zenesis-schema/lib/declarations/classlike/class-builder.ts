@@ -1,7 +1,7 @@
 import { AnyZodTuple, ZodOptional, ZodTypeAny } from "zod"
 import { ZsMonoLike } from "../../core/mono-type"
 import { ZodKindedAny } from "../../core/types"
-import { ZsFunction } from "../../expressions/function"
+import { ZsFunctionLike } from "../unions"
 import { ZsConstructor } from "./members/constructor"
 import { ZsImplementable, ZsImplements } from "./members/implements"
 import { ZsIndexer } from "./members/indexer"
@@ -29,7 +29,7 @@ export class ClassBuilder {
         return ZsMember.create(name, type)
     }
 
-    Method<Name extends string, Methods extends ZsFunction>(
+    Overloads<Name extends string, Methods extends ZsFunctionLike>(
         name: Name,
         declarator: MethodsDeclaration<Methods> | [Methods, ...Methods[]]
     ): Methods extends never

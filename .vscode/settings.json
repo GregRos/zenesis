@@ -1,5 +1,5 @@
 {
-    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "typescript.preferences.useAliasesForRenames": false,
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,
@@ -7,9 +7,20 @@
         "**/CVS": true,
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
+        "**/__pycache__": true,
+        "**/.idea": true,
+        "**/.mypy_cache": true,
+        "**/*.aux": true,
+        "**/*.bbl": true,
+        "**/*.fdb_latexmk": true,
+        "**/*.fls": true,
+        "**/*.log": true,
+        "**/*.out": true,
+        "**/*.synctex.gz": true,
+        "**/dist_aux": true,
         "**/dist": true,
-        ".obsidian/" : true,
+        ".obsidian/": true,
         ".gitattributes": true,
-        "LICENSE.md": true,
+        "LICENSE.md": true
     }
 }

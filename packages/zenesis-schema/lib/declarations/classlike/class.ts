@@ -45,16 +45,16 @@ export class ZsClass<
         })
     }
 
-    child<Name2 extends string, Fragment2 extends ZsClassBody>(
+    child<Name2 extends string, Body2 extends ZsClassBody>(
         name: Name2,
-        fragment: Fragment2
+        body: Body2
     ) {
         return new ZsClass({
             name: name,
             declName: ZsDeclKind.ZsClass,
             typeName: ZsTypeKind.ZsClass,
             abstract: false,
-            body: fragment,
+            body: body,
             parent: this
         })
     }
@@ -72,5 +72,9 @@ export class ZsClass<
             body: ZsClassBody.create(body),
             parent: null
         })
+    }
+
+    *[Symbol.iterator]() {
+        yield this
     }
 }

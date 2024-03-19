@@ -7,12 +7,17 @@ import { ZsTypeKind } from "../kinds"
 export interface ZsInstantiationDef<Instance extends ZsInstantiable>
     extends ZodTypeDef {
     typeName: ZsTypeKind.ZsInstantiation
-    typeArgs: [ZodTypeAny, ...ZodTypeAny[]] | []
+    typeArgs: [ZodTypeAny, ...ZodTypeAny[]]
     instance: Instance
 }
 export class ZsInstantiation<
     ZDeclaration extends ZsInstantiable = ZsInstantiable
 > extends ZsMonoType<TypeOf<ZDeclaration>, ZsInstantiationDef<ZDeclaration>> {
+    isDeclarationType<ZDecl extends ZsInstantiable>(ctor: {
+        new (): ZDecl
+    }): this is ZsInstantiation<ZDecl> {
+        return this._def.instance instanceof ctor
+    }
     get declaration(): ZDeclaration extends ZsShapedRef
         ? ZDeclaration["declaration"]
         : undefined {
@@ -21,16 +26,9 @@ export class ZsInstantiation<
         }
         return undefined as any
     }
-
-    isDeclarationType<ZDecl extends ZsInstantiable>(ctor: {
-        new (): ZDecl
-    }): this is ZsInstantiation<ZDecl> {
-        return this._def.instance instanceof ctor
-    }
-
     static create<ZDecl extends ZsInstantiable>(
         instance: ZDecl,
-        typeArgs: [ZodTypeAny, ...ZodTypeAny[]] | []
+        typeArgs: [ZodTypeAny, ...ZodTypeAny[]]
     ): ZsInstantiation<ZDecl> {
         return new ZsInstantiation({
             typeName: ZsTypeKind.ZsInstantiation,

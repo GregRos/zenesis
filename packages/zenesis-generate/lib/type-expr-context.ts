@@ -29,23 +29,22 @@ import {
     ZsClassBody,
     ZsDeclarable,
     ZsEnum,
+    ZsForallType,
     ZsFunction,
-    ZsGeneric,
     ZsImplements,
     ZsInterface,
-    ZsMapVar,
     ZsMember,
     ZsOverloads,
     ZsReferable,
     ZsSchemaTable,
     ZsTypeAlias,
     ZsTypeVar,
-    ZsTypeVarsRecord,
-    ZsValue
+    ZsValue,
+    isForallFunction
 } from "@zenesis/schema"
+import { ZsForallFunction } from "@zenesis/schema/dist/lib/expressions/forall-function"
 import { seq } from "lazies"
 import { cases } from "./cases"
-import { ScopeEscapeError } from "./module"
 import { NodeMap } from "./node-map"
 function createMethodSignature(
     modifiers: Modifier[],
@@ -214,13 +213,10 @@ export class TypeExprContext {
     }
     convertGenericTypeToDeclaration(
         explicit: boolean,
-        generic: ZsGeneric
+        generic: ZsForallType
     ): TypeAliasDeclaration | InterfaceDeclaration | ClassDeclaration {
         const scoped = this.withTypeVars(generic._def.vars)
-        const typeVars = scoped.convertTypeVarsToDeclarations(
-            generic._def.ordering,
-            generic._def.vars
-        )
+        const typeVars = scoped.convertTypeVarsToDeclarations(generic._def.vars)
         return scoped.convertDeclaration(
             explicit,
             generic._def.innerType,
@@ -232,16 +228,13 @@ export class TypeExprContext {
         schema: ZsDeclarable,
         typeVars?: TypeParameterDeclaration[] | undefined
     ) {
-        if (schema instanceof ZsTypeVar || schema instanceof ZsMapVar) {
-            throw new ScopeEscapeError(schema)
-        }
         if (schema instanceof ZsTypeAlias) {
             return this.convertTypeAliasDeclaration(explicit, schema, typeVars)
         } else if (schema instanceof ZsInterface) {
             return this.convertInterfaceDeclaration(explicit, schema, typeVars)
         } else if (schema instanceof ZsClass) {
             return this.convertClassDeclaration(explicit, schema, typeVars)
-        } else if (schema instanceof ZsGeneric) {
+        } else if (schema instanceof ZsForallType) {
             return this.convertGenericTypeToDeclaration(explicit, schema)
         } else if (schema instanceof ZsValue) {
             throw new Error("Values not implemented")
@@ -273,27 +266,36 @@ export class TypeExprContext {
         )
     }
     convertZsFunctionToSomething<T>(
-        signature: ZsFunction["_def"],
+        signature: ZsFunction | ZsForallFunction,
         mapper: (
             typeVars: TypeParameterDeclaration[] | undefined,
             args: ParameterDeclaration[],
             returns: TypeNode
         ) => T
     ) {
-        const nested = this.withTypeVars(signature.typeVars)
-        const typeArgs = nested.convertTypeVarsToDeclarations(
-            signature.typeVarOrdering,
-            signature.typeVars
-        )
-        const args = nested.convertParamsToDeclarations(signature.args)
-        const returns = nested.recurse(signature.returns)
+        let typeVars: ZsTypeVar[]
+        let f: ZsFunction
+        if (isForallFunction(signature)) {
+            typeVars = signature._def.vars
+            f = signature._def.innerType
+        } else {
+            typeVars = []
+            f = signature
+        }
+        const nested = this.withTypeVars(typeVars)
+        const typeArgs = nested.convertTypeVarsToDeclarations(typeVars)
+        const args = nested.convertParamsToDeclarations(f._def.args)
+        const returns = nested.recurse(f._def.returns)
         return mapper(typeArgs, args, returns)
     }
 
-    withTypeVars(typeVars: ZsTypeVarsRecord) {
+    withTypeVars(typeVars: ZsTypeVar[]) {
         let refs = this._refs
-        for (const [name, typeVar] of Object.entries(typeVars)) {
-            refs = refs.set(typeVar, tf.createTypeReferenceNode(name))
+        for (const typeVar of typeVars) {
+            refs = refs.set(
+                typeVar.arg,
+                tf.createTypeReferenceNode(typeVar.name)
+            )
         }
         return new TypeExprContext(refs)
     }
@@ -302,8 +304,8 @@ export class TypeExprContext {
         const constraint = typeVar.extends
             ? this.recurse(typeVar.extends)
             : undefined
-        const defaultType = typeVar.defaultType
-            ? this.recurse(typeVar.defaultType)
+        const defaultType = typeVar.default
+            ? this.recurse(typeVar.default)
             : undefined
         const modifiers = [] as Modifier[]
         if (typeVar.const) {
@@ -314,20 +316,16 @@ export class TypeExprContext {
         }
         const typeParameter = tf.createTypeParameterDeclaration(
             modifiers,
-            typeVar.name,
+            typeVar.arg.name,
             constraint,
             defaultType
         )
         return typeParameter
     }
 
-    convertTypeVarsToDeclarations(
-        typeVarOrdering: string[],
-        typeVars: ZsTypeVarsRecord
-    ) {
-        const typeVarDefs = typeVarOrdering.map(name => typeVars[name])
+    convertTypeVarsToDeclarations(typeVars: ZsTypeVar[]) {
         const typeVarDeclarations = [] as TypeParameterDeclaration[]
-        for (const typeVar of typeVarDefs) {
+        for (const typeVar of typeVars) {
             typeVarDeclarations.push(
                 this.convertTypeVarToDeclaration(typeVar._def)
             )
@@ -343,9 +341,7 @@ export class TypeExprContext {
             args: zodFunction.args,
             returns: zodFunction.returns,
             description: zodFunction.description,
-            errorMap: zodFunction.errorMap,
-            typeVars: {},
-            typeVarOrdering: []
+            errorMap: zodFunction.errorMap
         })
         return zsFunction
     }
@@ -401,7 +397,7 @@ export class TypeExprContext {
         if (memberType instanceof ZsOverloads) {
             return memberType._def.overloads.map(overload => {
                 const decl = this.convertZsFunctionToSomething(
-                    overload._def,
+                    overload,
                     createMethodSignature(modifiers, optional, name)
                 )
                 return decl

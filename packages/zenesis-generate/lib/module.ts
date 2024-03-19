@@ -1,7 +1,7 @@
 import {
     ZsDeclarable,
     ZsForeignImport,
-    ZsMapVar,
+    ZsMapArg,
     ZsModuleBody,
     ZsReferable,
     ZsTypeVar,
@@ -28,7 +28,7 @@ import { tf } from "./tf"
 import { TypeExprContext } from "./type-expr-context"
 
 export class ScopeEscapeError extends Error {
-    constructor(node: ZsMapVar | ZsTypeVar) {
+    constructor(node: ZsMapArg | ZsTypeVar) {
         super(`${node.constructor.name}(${node.name}) has escaped its scope!`)
     }
 }

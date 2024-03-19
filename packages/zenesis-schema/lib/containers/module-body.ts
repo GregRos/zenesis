@@ -20,6 +20,10 @@ export type ExportsRecord<Exports extends ZsExportable> = {
 
 export const symActual = Symbol("actual")
 
+/**
+ * A module body is a collection of exports backed by an iterable. It's used by
+ * Files and other modules.
+ */
 export class ZsModuleBody<
     Exports extends ZsTypeLikeExportable = ZsTypeLikeExportable
 > implements Iterable<ZsTypeLikeExportable>
@@ -35,6 +39,12 @@ export class ZsModuleBody<
         this._seq = seq(exports).pull()
     }
 
+    /**
+     * Pulls an export out of the module body, evaluating the body as it does so. This
+     * returns the actual exported type, not a proxy.
+     * @param name
+     * @returns
+     */
     pull<Name extends getExportName<Exports>>(name: Name) {
         if (this._last[name]) {
             return this._last[name]
@@ -51,6 +61,10 @@ export class ZsModuleBody<
         throw new Error(`No export named ${name}`)
     }
 
+    /**
+     * Returns a lazy reference to one of this module body's exports. It will be said to
+     * come from the given `origin`.
+     */
     ref<Name extends keyof typeof this._last & string>(
         origin: ZsZenesisModule,
         name: Name
@@ -59,8 +73,14 @@ export class ZsModuleBody<
         return ZsZenesisImport.create(name, resolved, origin) as any
     }
 
-    proxy<Actual extends ZsZenesisModule>(
-        actual: Actual
+    /**
+     * Returns a proxy that allows lazy access to this module's body exports. The proxy
+     * is checked during compile time.
+     * @param actual The module being proxied.
+     * @returns
+     */
+    proxy<Module extends ZsZenesisModule>(
+        actual: Module
     ): ExportsRecord<Exports> {
         return new Proxy(actual, {
             get: (target, prop) => {

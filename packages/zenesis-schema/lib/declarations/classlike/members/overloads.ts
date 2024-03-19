@@ -2,21 +2,21 @@ import { seq } from "lazies"
 import { ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsMonoLike, ZsMonoType } from "../../../core/mono-type"
 import { RecursiveConjunction } from "../../../core/operators"
-import { ZsFunction } from "../../../expressions/function"
 import { ZsTypeKind } from "../../../kinds"
+import { ZsFunctionLike } from "../../unions"
 
 export interface ZsOverloadsDef<
-    Overloads extends readonly [ZsFunction, ...ZsFunction[]]
+    Overloads extends readonly [ZsFunctionLike, ...ZsFunctionLike[]]
 > extends ZodTypeDef {
     typeName: ZsTypeKind.ZsOverloads
     overloads: Overloads
 }
 
 export class ZsOverloads<
-    ZOverloads extends readonly [ZsFunction, ...ZsFunction[]] = readonly [
-        ZsFunction,
-        ...ZsFunction[]
-    ]
+    ZOverloads extends readonly [
+        ZsFunctionLike,
+        ...ZsFunctionLike[]
+    ] = readonly [ZsFunctionLike, ...ZsFunctionLike[]]
 > extends ZsMonoType<
     RecursiveConjunction<ZOverloads>,
     ZsOverloadsDef<ZOverloads>
@@ -30,14 +30,7 @@ export class ZsOverloads<
             .reduce((a: ZodTypeAny, b: ZodTypeAny) => a.and(b)) as any
     }
 
-    add<NewOverload extends ZsFunction>(overload: NewOverload) {
-        return new ZsOverloads<[...ZOverloads, NewOverload]>({
-            typeName: ZsTypeKind.ZsOverloads,
-            overloads: [...this._def.overloads, overload]
-        })
-    }
-
-    static create<Overloads extends [ZsFunction, ...ZsFunction[]]>(
+    static create<Overloads extends [ZsFunctionLike, ...ZsFunctionLike[]]>(
         ...overloads: Overloads
     ) {
         return new ZsOverloads<Overloads>({

@@ -10,8 +10,6 @@ import { ZsImplements } from "./declarations/classlike/members/implements"
 import { ZsIndexer } from "./declarations/classlike/members/indexer"
 import { ZsMember } from "./declarations/classlike/members/member"
 import { ZsEnum } from "./declarations/enum"
-import { ZsGeneric } from "./declarations/generics/generic"
-import { ZsTypeVar } from "./declarations/generics/type-var"
 import {
     ZsDeclarable,
     ZsExportable,
@@ -20,10 +18,13 @@ import {
 } from "./declarations/unions"
 import { ZsValue } from "./declarations/value"
 import { ZsAstExpr } from "./expressions/ast-expr"
-import { ZsMapVar } from "./expressions/map-var"
+import { ZsForallFunction } from "./expressions/forall-function"
+import { ZsMapArg } from "./expressions/map-arg"
+import { ZsForallType } from "./generics/forall-type"
+import { ZsTypeVar } from "./generics/type-var"
 
 export function isExportable(node: object): node is ZsExportable {
-    return [ZsClass, ZsInterface, ZsEnum, ZsValue, ZsGeneric].some(
+    return [ZsClass, ZsInterface, ZsEnum, ZsValue, ZsForallType].some(
         c => node instanceof c
     )
 }
@@ -32,7 +33,7 @@ export function isDeclarable(node: object): node is ZsDeclarable {
     return (
         isExportable(node) ||
         node instanceof ZsTypeVar ||
-        node instanceof ZsMapVar
+        node instanceof ZsMapArg
     )
 }
 
@@ -50,12 +51,12 @@ export function isValue(node: object): node is ZsValue {
     return node instanceof ZsValue
 }
 
-export function isType(node: object): node is ZsGeneric | ZsMonoType {
-    return node instanceof ZsGeneric || node instanceof ZsMonoType
+export function isType(node: object): node is ZsForallType | ZsMonoType {
+    return node instanceof ZsForallType || node instanceof ZsMonoType
 }
 
 export function isTypeVar(node: object): node is ZsTypeVar {
-    return node instanceof ZsGeneric
+    return node instanceof ZsForallType
 }
 
 export function isAstExpr(node: object): node is ZsAstExpr {
@@ -72,6 +73,10 @@ export function isForeignImport(node: object): node is ZsForeignImport {
 
 export function isZenesisImport(node: object): node is ZsZenesisImport {
     return node instanceof ZsZenesisImport
+}
+
+export function isForallFunction(node: object): node is ZsForallFunction {
+    return node instanceof ZsForallFunction
 }
 
 export function isTypeLikeExportable(

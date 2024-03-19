@@ -1,28 +1,23 @@
 import { AnyZodTuple, z, ZodTuple, ZodTypeAny, ZodTypeDef } from "zod"
 import { InnerTypeOfFunction } from "zod/lib/types"
 import { ZsMonoType } from "../core/mono-type"
-import { ZsTypeVarsRecord } from "../declarations/generics/type-var"
 import { ZsTypeKind } from "../kinds"
 
 export interface ZsFunctionDef<
     ZParams extends AnyZodTuple,
-    ZReturns extends ZodTypeAny,
-    ZTypeArgs extends ZsTypeVarsRecord
+    ZReturns extends ZodTypeAny
 > extends ZodTypeDef {
     typeName: ZsTypeKind.ZsFunction
     args: ZParams
     returns: ZReturns
-    typeVars: ZTypeArgs
-    typeVarOrdering: (keyof ZTypeArgs)[]
 }
 
 export class ZsFunction<
     ZTuple extends AnyZodTuple = ZodTuple<any, any>,
-    ZReturns extends ZodTypeAny = ZodTypeAny,
-    ZTypeArgs extends ZsTypeVarsRecord = ZsTypeVarsRecord
+    ZReturns extends ZodTypeAny = ZodTypeAny
 > extends ZsMonoType<
     InnerTypeOfFunction<ZTuple, ZReturns>,
-    ZsFunctionDef<ZTuple, ZReturns, ZTypeArgs>
+    ZsFunctionDef<ZTuple, ZReturns>
 > {
     readonly actsLike = z.function(this._def.args, this._def.returns)
 
@@ -34,8 +29,7 @@ export class ZsFunction<
         ...params: Args
     ): ZsFunction<
         ZodTuple<Args, this["_def"]["args"]["_def"]["rest"]>,
-        ZReturns,
-        ZTypeArgs
+        ZReturns
     > {
         const args = z.tuple(params)
         return new ZsFunction({
@@ -48,8 +42,7 @@ export class ZsFunction<
         rest: Rest
     ): ZsFunction<
         ZodTuple<this["_def"]["args"]["_def"]["items"], Rest>,
-        ZReturns,
-        ZTypeArgs
+        ZReturns
     > {
         return new ZsFunction({
             ...this._def,
@@ -59,7 +52,7 @@ export class ZsFunction<
 
     returns<Return2 extends ZodTypeAny>(
         returns: Return2
-    ): ZsFunction<ZTuple, Return2, ZTypeArgs> {
+    ): ZsFunction<ZTuple, Return2> {
         return new ZsFunction({
             ...this._def,
             returns
@@ -72,9 +65,7 @@ export class ZsFunction<
         return new ZsFunction({
             typeName: ZsTypeKind.ZsFunction,
             args: z.tuple(args),
-            returns: z.unknown(),
-            typeVars: {},
-            typeVarOrdering: []
+            returns: z.unknown()
         })
     }
 }

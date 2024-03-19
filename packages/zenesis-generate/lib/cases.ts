@@ -172,10 +172,10 @@ export const cases: {
     [AnyTypeKind.ZsTypeAlias](node) {
         return this.get(node)
     },
-    [AnyTypeKind.ZsTypeVar](node) {
+    [AnyTypeKind.ZsTypeArg](node) {
         return this.get(node)
     },
-    [AnyTypeKind.ZsMapVar](node) {
+    [AnyTypeKind.ZsMapArg](node) {
         return this.get(node)
     },
     [AnyTypeKind.ZsKeyof](node) {
@@ -221,7 +221,7 @@ export const cases: {
         // Parents will unpack it and do with the contents whatever they want.
         const signatures = node._def.overloads.map(overload => {
             const decl = this.convertZsFunctionToSomething(
-                overload._def,
+                overload,
                 tf.createCallSignature
             )
             return decl
@@ -230,7 +230,7 @@ export const cases: {
     },
     [AnyTypeKind.ZsFunction](node) {
         const func = this.convertZsFunctionToSomething(
-            node._def,
+            node,
             tf.createFunctionTypeNode
         )
         return func

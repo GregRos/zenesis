@@ -48,15 +48,16 @@ import { ZsClass } from "./declarations/classlike/class"
 import { ZsInterface } from "./declarations/classlike/interface"
 import { ZsOverloads } from "./declarations/classlike/members/overloads"
 import { ZsEnum } from "./declarations/enum"
-import { ZsTypeVar } from "./declarations/generics/type-var"
 import { ZsAstExpr } from "./expressions/ast-expr"
 import { ZsConditional } from "./expressions/conditional"
+import { ZsForallFunction } from "./expressions/forall-function"
 import { ZsFunction } from "./expressions/function"
-import { ZsInstantiation } from "./expressions/instantiation"
 import { ZsKeyof } from "./expressions/keyof"
 import { ZsLookup } from "./expressions/lookup"
-import { ZsMapVar } from "./expressions/map-var"
+import { ZsMapArg } from "./expressions/map-arg"
 import { ZsMapped } from "./expressions/mapped"
+import { ZsInstantiation } from "./generics/instantiation"
+import { ZsTypeArg } from "./generics/type-arg"
 import { ZsTypeKind } from "./kinds"
 
 /**
@@ -123,8 +124,9 @@ export abstract class ZsSchemaTable extends ZodSchemaTable {
     [ZsTypeKind.ZsClass]!: ZsClass;
     [ZsTypeKind.ZsInterface]!: ZsInterface;
     [ZsTypeKind.ZsTypeAlias]!: ZsTypeAlias;
-    [ZsTypeKind.ZsTypeVar]!: ZsTypeVar;
-    [ZsTypeKind.ZsMapVar]!: ZsMapVar;
+    [ZsTypeKind.ZsForallFunction]!: ZsForallFunction;
+    [ZsTypeKind.ZsTypeArg]!: ZsTypeArg;
+    [ZsTypeKind.ZsMapArg]!: ZsMapArg;
     [ZsTypeKind.ZsInstantiation]!: ZsInstantiation;
     [ZsTypeKind.ZsAstExpr]!: ZsAstExpr;
     [ZsTypeKind.ZsZenesisImport]!: ZsZenesisImport;

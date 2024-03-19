@@ -14,7 +14,7 @@ const f1 = W.File("hello", function* (hello) {
 const f2 = W.File("hello2", function* (hello2) {
     const cl1 = hello2.Class("Goodbye", function* (c) {
         yield c.Constructor(zs.tuple([zs.string(), zs.number()]))
-        const m = c.Method("hello", [
+        const m = c.Overloads("hello", [
             zs.function(zs.string()).returns(zs.string())
         ])
         yield c.Indexer(zs.string().optional(), zs.number())
