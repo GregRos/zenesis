@@ -1,5 +1,6 @@
 import {
     ClassDeclaration,
+    Identifier,
     InterfaceDeclaration,
     MethodDeclaration,
     MethodSignature,
@@ -16,7 +17,14 @@ import {
 } from "typescript"
 import { tf } from "./tf"
 
-import { AnyZodTuple, ZodFunctionDef, ZodRawShape, ZodTypeAny } from "zod"
+import {
+    AnyZodTuple,
+    ZodFunctionDef,
+    ZodRawShape,
+    ZodTuple,
+    ZodTypeAny,
+    ZodUnknown
+} from "zod"
 
 import { extractModifiers } from "./extract-modifiers"
 import { getParamInfo } from "./get-param-info"
@@ -27,14 +35,17 @@ import {
     ZodKindedAny,
     ZsClass,
     ZsClassBody,
+    ZsConstructor,
     ZsDeclarable,
     ZsEnum,
     ZsForallType,
     ZsFunction,
     ZsImplements,
+    ZsIndexer,
     ZsInterface,
     ZsMember,
     ZsOverloads,
+    ZsProperty,
     ZsReferable,
     ZsSchemaTable,
     ZsTypeAlias,
@@ -43,9 +54,11 @@ import {
     isForallFunction
 } from "@zenesis/schema"
 import { ZsForallFunction } from "@zenesis/schema/dist/lib/expressions/forall-function"
+
 import { seq } from "lazies"
 import { cases } from "./cases"
 import { NodeMap } from "./node-map"
+import { ZsTsTable } from "./table"
 function createMethodSignature(
     modifiers: Modifier[],
     questionToken: QuestionToken | undefined,
@@ -73,7 +86,11 @@ export class TypeExprContext {
     get(node: ZsReferable) {
         return this._refs.get(node)
     }
-    recurse<Node extends ZodKindedAny>(node: Node) {
+    recurse<Node extends ZodKindedAny>(
+        node: Node
+    ): Node["_def"]["typeName"] extends keyof ZsTsTable
+        ? ZsTsTable[Node["_def"]["typeName"]]
+        : ZsTsTable[keyof ZsTsTable] {
         if (node._def.typeName in cases) {
             return (cases as any)[node._def.typeName].call(this, node) as any
         }
@@ -90,7 +107,7 @@ export class TypeExprContext {
     }
 
     convertTypeRefToExpr(node: TypeReferenceNode) {
-        const expr = tf.createIdentifier(node.typeName.getText())
+        const expr = node.typeName as Identifier
         const typeArgs = node.typeArguments
         return tf.createExpressionWithTypeArguments(expr, typeArgs)
     }
@@ -100,20 +117,51 @@ export class TypeExprContext {
     }
 
     getTypeExprForHeritageClause(subject: ZsImplements) {
-        const typeRefNode = this.recurse(subject._def.implemented)
+        const typeRefNode = this.recurse(
+            subject._def.implemented as ZsInterface | ZsClass
+        )
         return this.convertTypeRefToExpr(typeRefNode)
     }
     convertClassBody(fragment: ZsClassBody) {
-        const decls = seq(seq(fragment._def.decls).toArray().pull())
-        const impls = decls
-            .ofTypes(ZsImplements)
+        const wrapped = seq(fragment._def.decls).cache()
+        const properties = wrapped.ofTypes(ZsProperty)
+        const impls = wrapped.ofTypes(ZsImplements)
+        const implicitProperties = seq(impls)
+            .map(x => x._def.implemented as ZsInterface | ZsClass)
+            .concatMap(x => {
+                return x.body.requiredDeclarations()
+            })
+            .ofTypes(ZsMember, ZsIndexer)
+            .toArray()
+            .pull()
+
+        const heritageClauses = seq(impls)
             .map(x => this.getTypeExprForHeritageClause(x))
-        const members = decls
+            .toArray()
+            .pull()
+        const membersx = properties.concat(implicitProperties).uniq()
+
+        const members = membersx
             .ofTypes(ZsMember)
             .concatMap(x => this.convertMember(x))
+            .toArray()
+            .pull()
+        const indexers = membersx
+            .ofTypes(ZsIndexer)
+            .map(x => this.convertIndexer(x))
+            .toArray()
+            .pull()
+
+        const ctors = decls
+            .ofTypes(ZsConstructor)
+            .map(x => this.convertConstructor(x))
+            .toArray()
+            .pull()
         return {
-            implements: impls.toArray().pull(),
-            members: members.toArray().pull()
+            implements: heritageClauses,
+            members: members,
+            indexers,
+            ctors
         }
     }
     convertClassDeclaration(
@@ -155,7 +203,13 @@ export class TypeExprContext {
             clss.name,
             typeVars,
             [...extendsClause, ...implClause],
-            parts.members.map(x => this.convertSignatureToEmptyDeclaration(x))
+            [
+                ...parts.members.map(x =>
+                    this.convertSignatureToEmptyDeclaration(x)
+                ),
+                ...parts.ctors,
+                ...parts.indexers
+            ]
         )
     }
     convertSignatureToEmptyDeclaration(
@@ -208,7 +262,7 @@ export class TypeExprContext {
             iface.name,
             typeVars,
             [...extendsClause],
-            parts.members
+            [...parts.members, ...parts.indexers]
         )
     }
     convertGenericTypeToDeclaration(
@@ -301,9 +355,10 @@ export class TypeExprContext {
     }
 
     convertTypeVarToDeclaration(typeVar: ZsTypeVar["_def"]) {
-        const constraint = typeVar.extends
-            ? this.recurse(typeVar.extends)
-            : undefined
+        const constraint =
+            typeVar.extends && !(typeVar.extends instanceof ZodUnknown)
+                ? this.recurse(typeVar.extends)
+                : undefined
         const defaultType = typeVar.default
             ? this.recurse(typeVar.default)
             : undefined
@@ -378,6 +433,19 @@ export class TypeExprContext {
             params.push(restDecl)
         }
         return params
+    }
+
+    convertConstructor(constructor: ZsConstructor) {
+        const params = this.convertParamsToDeclarations(constructor._def.args)
+        return tf.createConstructorDeclaration(undefined, params, undefined)
+    }
+
+    convertIndexer(indexer: ZsIndexer) {
+        const keyParams = this.convertParamsToDeclarations(
+            ZodTuple.create([indexer._def.keyType])
+        )
+        const valueType = this.recurse(indexer._def.valueType)
+        return tf.createIndexSignature(undefined, keyParams, valueType)
     }
 
     convertMember(member: ZsMember): (MethodSignature | PropertySignature)[] {

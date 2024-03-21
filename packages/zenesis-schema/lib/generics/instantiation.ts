@@ -1,45 +1,41 @@
 import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod"
+import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
 import { ZsShapedRef } from "../core/types"
-import { ZsInstantiable } from "../declarations/unions"
-import { ZsTypeKind } from "../kinds"
+import { ZsMakable, ZsMakeResultType } from "../utils/unions"
 
-export interface ZsInstantiationDef<Instance extends ZsInstantiable>
+export interface ZsInstantiationDef<Instance extends ZsMakeResultType>
     extends ZodTypeDef {
     typeName: ZsTypeKind.ZsInstantiation
     typeArgs: [ZodTypeAny, ...ZodTypeAny[]]
     instance: Instance
+    makable: ZsMakable
 }
-export class ZsInstantiation<
-    ZDeclaration extends ZsInstantiable = ZsInstantiable
-> extends ZsMonoType<TypeOf<ZDeclaration>, ZsInstantiationDef<ZDeclaration>> {
-    isDeclarationType<ZDecl extends ZsInstantiable>(ctor: {
-        new (): ZDecl
-    }): this is ZsInstantiation<ZDecl> {
-        return this._def.instance instanceof ctor
-    }
-    get declaration(): ZDeclaration extends ZsShapedRef
-        ? ZDeclaration["declaration"]
+export class ZsMade<
+    Ref extends ZsMakeResultType = ZsMakeResultType
+> extends ZsMonoType<TypeOf<Ref>, ZsInstantiationDef<Ref>> {
+    get declaration(): Ref extends ZsShapedRef
+        ? Ref["declaration"]
         : undefined {
         if ("declaration" in this.actsLike) {
             return this.actsLike.declaration as any
         }
         return undefined as any
     }
-    static create<ZDecl extends ZsInstantiable>(
-        instance: ZDecl,
+    static create<Made extends ZsMakeResultType>(
+        instance: Made,
+        makable: ZsMakable,
         typeArgs: [ZodTypeAny, ...ZodTypeAny[]]
-    ): ZsInstantiation<ZDecl> {
-        return new ZsInstantiation({
+    ): ZsMade<Made> {
+        return new ZsMade({
             typeName: ZsTypeKind.ZsInstantiation,
             typeArgs,
-            instance
-        }) as any
+            instance,
+            makable
+        })
     }
 
-    get shape(): ZDeclaration extends ZsShapedRef
-        ? ZDeclaration["shape"]
-        : undefined {
+    get shape(): Ref extends ZsShapedRef ? Ref["shape"] : undefined {
         if ("shape" in this.actsLike) {
             return this.actsLike.shape as any
         }

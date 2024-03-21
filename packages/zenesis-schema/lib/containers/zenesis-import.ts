@@ -1,15 +1,15 @@
 import { Lazy } from "lazies"
 import { TypeOf, ZodTypeDef } from "zod"
+import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoLike, ZsMonoType } from "../core/mono-type"
-import { ZsTypeExportable, ZsTypeLikeExportable } from "../declarations/unions"
-import { ZsForallType } from "../generics/forall-type"
-import { ZsTypeKind } from "../kinds"
+import { ZsGeneric } from "../generics/forall-type"
+import { ZsExportableType, ZsExportableTypeLike } from "../utils/unions"
 import { ZsZenesisModule } from "./zenesis-module"
 
 export interface ZsZenesisImportDef extends ZodTypeDef {
     typeName: ZsTypeKind.ZsZenesisImport
     name: string
-    inner: Lazy<ZsTypeLikeExportable>
+    inner: Lazy<ZsExportableTypeLike>
     origin: ZsZenesisModule
 }
 /**
@@ -21,7 +21,7 @@ export interface ZsZenesisImportDef extends ZodTypeDef {
  * when it's used using `ZsSmartZenesisImport`.
 
  */
-export class ZsZenesisImport extends ZsMonoType<any, ZsZenesisImportDef> {
+export class ZsZenesisAnyImport extends ZsMonoType<any, ZsZenesisImportDef> {
     get origin() {
         return this._def.origin
     }
@@ -29,7 +29,7 @@ export class ZsZenesisImport extends ZsMonoType<any, ZsZenesisImportDef> {
         return this._def.name
     }
     get isType() {
-        return !(this.inner instanceof ZsForallType)
+        return !(this.inner instanceof ZsGeneric)
     }
 
     get inner() {
@@ -38,18 +38,18 @@ export class ZsZenesisImport extends ZsMonoType<any, ZsZenesisImportDef> {
 
     get actsLike(): any {
         const inner = this.inner
-        if (inner instanceof ZsForallType) {
+        if (inner instanceof ZsGeneric) {
             throw new Error("Uninstantiated generic import!")
         }
         return inner
     }
 
-    static create<ZType extends ZsTypeLikeExportable>(
+    static create<ZType extends ZsExportableTypeLike>(
         name: string,
-        innerType: Lazy<ZsTypeLikeExportable>,
+        innerType: Lazy<ZsExportableTypeLike>,
         origin: ZsZenesisModule
     ): ZsSmartZenesisImport<ZType> {
-        return new ZsZenesisImport({
+        return new ZsZenesisAnyImport({
             typeName: ZsTypeKind.ZsZenesisImport,
             name,
             inner: innerType,
@@ -57,10 +57,10 @@ export class ZsZenesisImport extends ZsMonoType<any, ZsZenesisImportDef> {
         }) as any
     }
 
-    instantiate(args: any) {
+    make(args: any) {
         const inner = this._def.inner.pull()
-        if (inner instanceof ZsForallType) {
-            return inner.instantiate(args)
+        if (inner instanceof ZsGeneric) {
+            return inner.make(args)
         }
         throw new Error("Cannot instantiate non-generic import!")
     }
@@ -69,7 +69,7 @@ export class ZsZenesisImport extends ZsMonoType<any, ZsZenesisImportDef> {
  * Represents an imported Type from another Zenesis module.
  */
 export interface ZsZenesisTypeImport<
-    ZType extends ZsTypeExportable = ZsTypeExportable
+    ZType extends ZsExportableType = ZsExportableType
 > extends ZsMonoLike<TypeOf<ZType>> {
     readonly name: string
     readonly isType: true
@@ -80,20 +80,20 @@ export interface ZsZenesisTypeImport<
  * Represents an imported Generic from another Zenesis module.
  */
 export interface ZsZenesisGenericImport<
-    ZGenType extends ZsForallType = ZsForallType
+    ZGenType extends ZsGeneric = ZsGeneric
 > {
     readonly name: string
     readonly inner: ZGenType
     readonly isType: false
-    instantiate: ZGenType["instantiate"]
+    make: ZGenType["make"]
 }
 
 /**
  * Represents an imported Type or Generic from another Zenesis module. The type
  * of the import is known at compile time.
  */
-export type ZsSmartZenesisImport<ZType> = ZType extends ZsForallType
+export type ZsSmartZenesisImport<ZType> = ZType extends ZsGeneric
     ? ZsZenesisGenericImport<ZType>
-    : ZType extends ZsTypeExportable
+    : ZType extends ZsExportableType
       ? ZsZenesisTypeImport<ZType>
       : never

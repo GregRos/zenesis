@@ -21,7 +21,7 @@
     "dependencies": {
         "@zenesis/schema": "^0.1.0",
         "immutable": "^5.0.0-beta.4",
-        "lazies": "^0.6.0",
+        "lazies": "^0.6.2",
         "zod": "^3.22.2"
     }
 }

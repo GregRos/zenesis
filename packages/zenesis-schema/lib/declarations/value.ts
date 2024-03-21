@@ -1,5 +1,5 @@
 import { ZodTypeAny } from "zod"
-import { ZsStructural } from "../misc-node"
+import { ZsStructural } from "../core/misc-node"
 import { ZsDeclKind } from "./kind"
 
 export enum ZsValueKind {

@@ -19,7 +19,10 @@ export enum ZsTypeKind {
     ZsZenesisImport = "ZsZenesisImport",
     ZsZenesisGenericImport = "ZsZenesisGenericImport",
     ZsForeignImport = "ZsZoreignImport",
-    ZsForallFunction = "ZsForallFunction"
+    ZsForallFunction = "ZsForallFunction",
+    ZsThis = "ZsThis",
+    ZsZenesisSelf = "ZsZenesisSelf",
+    ZsScopedObject = "ZsScopedObject"
 }
 
 export type AnyTypeKind = ZsTypeKind | ZodFirstPartyTypeKind

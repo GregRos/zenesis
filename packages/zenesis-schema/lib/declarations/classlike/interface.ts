@@ -1,9 +1,11 @@
+import { Lazy, lazy } from "lazies"
 import { ZodTypeDef } from "zod"
+import { ZsTypeKind } from "../../core/kinds"
 import { ZsMonoType } from "../../core/mono-type"
 import { getCombinedType } from "../../core/operators"
-import { ZsTypeKind } from "../../kinds"
 import { ZsDeclKind } from "../kind"
-import { ClassDeclaration, ZsClassBody, ZsMemberable } from "./body"
+import { ZsClassBody, ZsClassItems } from "./body"
+import { ClassScope, ClassScopedFactory } from "./class-builder"
 
 export interface ZsInterfaceDef<Name extends string, Body extends ZsClassBody>
     extends ZodTypeDef {
@@ -23,7 +25,7 @@ export class ZsInterface<
     readonly declaration = "interface"
     readonly name = this._def.name
     readonly refAs = this
-
+    readonly body = this._def.body
     get actsLike() {
         return this._def.body.schema
     }
@@ -32,19 +34,17 @@ export class ZsInterface<
         return this._def.body.shape
     }
 
-    static create<Name extends string, Memberable extends ZsMemberable>(
+    static create<Name extends string, Memberable extends ZsClassItems>(
         name: Name,
-        body: ClassDeclaration<Memberable>
+        body: ClassScope<ZsInterface, Memberable>
     ) {
-        return new ZsInterface({
+        const delayed = lazy(() => result) as Lazy<ZsInterface>
+        const decls = body.bind(new ClassScopedFactory(delayed))
+        const result = new ZsInterface({
             name,
             declName: ZsDeclKind.ZsInterface,
             typeName: ZsTypeKind.ZsInterface,
-            body: ZsClassBody.create(body)
+            body: ZsClassBody.create(decls)
         })
-    }
-
-    *[Symbol.iterator]() {
-        yield this
     }
 }

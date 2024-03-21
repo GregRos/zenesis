@@ -6,9 +6,8 @@ import {
     ZsReferable,
     ZsTypeVar,
     ZsZenesisImport,
-    isDeclarable,
+    isDeclarableType,
     isForeignImport,
-    isTypeLikeExportable,
     isValue,
     isZenesisImport
 } from "@zenesis/schema"
@@ -81,7 +80,7 @@ export class ImportContext {
                 typeReferenceNode
             )
             const newNamespace = namespace.add(node.name)
-            if (isDeclarable(node)) {
+            if (isDeclarableType(node)) {
                 addDeclaration(node, false)
             } else if (isZenesisImport(node) || isForeignImport(node)) {
                 addImport(node)
@@ -124,7 +123,7 @@ export class ImportContext {
         }
 
         for (const node of body) {
-            if (isTypeLikeExportable(node)) {
+            if (isDeclarableType(node)) {
                 addDeclaration(node, true)
             } else if (isValue(node)) {
                 throw new Error("Values are not supported")

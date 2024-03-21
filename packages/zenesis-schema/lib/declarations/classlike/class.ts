@@ -1,10 +1,12 @@
+import { lazy } from "lazies"
 import { ZodTypeDef } from "zod"
+import { ZsTypeKind } from "../../core/kinds"
 import { ZsMonoType } from "../../core/mono-type"
 import { getCombinedType } from "../../core/operators"
 import { ZsShapedRef } from "../../core/types"
-import { ZsTypeKind } from "../../kinds"
 import { ZsDeclKind } from "../kind"
-import { ClassDeclaration, ZsClassBody, ZsMemberable } from "./body"
+import { ZsClassBody, ZsClassItems } from "./body"
+import { ClassScope, ClassScopedFactory } from "./class-builder"
 
 export interface ZsClassDef<
     Name extends string,
@@ -34,6 +36,7 @@ export class ZsClass<
     readonly declaration = "class"
     readonly actsLike = this._def.body.schema
     readonly refAs = this
+    readonly body = this._def.body
     get shape() {
         return this._def.body.shape
     }
@@ -62,9 +65,10 @@ export class ZsClass<
     static create<
         Name extends string,
         Parent extends ZsShapedRef | null,
-        Memberable extends ZsMemberable
-    >(name: Name, body: ClassDeclaration<Memberable>) {
-        return new ZsClass({
+        Memberable extends ZsClassItems
+    >(name: Name, body: ClassScope<ZsClass, Memberable>) {
+        const factory = new ClassScopedFactory(lazy(() => result))
+        const result = new ZsClass({
             name,
             declName: ZsDeclKind.ZsClass,
             typeName: ZsTypeKind.ZsClass,
@@ -72,9 +76,5 @@ export class ZsClass<
             body: ZsClassBody.create(body),
             parent: null
         })
-    }
-
-    *[Symbol.iterator]() {
-        yield this
     }
 }

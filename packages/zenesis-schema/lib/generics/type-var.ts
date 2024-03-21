@@ -1,6 +1,6 @@
-import { ZodAny, ZodTypeAny, ZodTypeDef } from "zod"
+import { ZodTypeAny, ZodTypeDef, ZodUnknown } from "zod"
+import { ZsStructural } from "../core/misc-node"
 import { SchemaSubtypeOf } from "../core/operators"
-import { ZsStructural } from "../misc-node"
 import { ZsTypeArg } from "./type-arg"
 ;``
 export interface ZsTypeVarDef<
@@ -43,7 +43,7 @@ export class ZsTypeVar<
     static create<Name extends string>(name: Name) {
         return new ZsTypeVar({
             arg: ZsTypeArg.create(name),
-            extends: ZodAny.create(),
+            extends: ZodUnknown.create(),
             default: null,
             const: false,
             variance: ""

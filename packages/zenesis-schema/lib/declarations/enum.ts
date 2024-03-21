@@ -1,6 +1,6 @@
 import { EnumLike, ZodFirstPartyTypeKind, ZodNativeEnum, ZodTypeDef } from "zod"
+import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
-import { ZsTypeKind } from "../kinds"
 import { ZsDeclKind } from "./kind"
 
 export interface ZsEnumDef<Name extends string, Type extends EnumLike>
@@ -32,9 +32,5 @@ export class ZsEnum<
             name,
             definition
         })
-    }
-
-    *[Symbol.iterator]() {
-        yield this
     }
 }

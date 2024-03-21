@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { ZsClass, ZsInterface, ZsMember, ZsTypeAlias, ZsValue, zs } from "."
+import { ZsClass, ZsInterface, ZsProperty, ZsTypeAlias, ZsValue, zs } from "."
 import { ZsFile } from "./containers/file"
 export const string = z.string
 export const number = z.number
@@ -37,6 +37,6 @@ export const World = zs.World
 export const Class = ZsClass.create
 export const Interface = ZsInterface.create
 export const TypeAlias = ZsTypeAlias.create
-export const Member = ZsMember.create
+export const Member = ZsProperty.create
 export const Val = ZsValue.create
 export const File = ZsFile.create

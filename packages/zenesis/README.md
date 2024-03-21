@@ -7,7 +7,7 @@ Zenesis is a new way of generating TypeScript type declarations. `zenesis` is bu
 
 😌 You don’t have to look at a syntax tree ever again!
 
-🧠 The types you’re generating **are validated as you type!**
+🧠 The types you’re generating **are validated as you type!** <sup>to a reasonable extent</sup>
 
 🛠️ Supports almost every single type system construct!
 
@@ -20,14 +20,22 @@ Zenesis is a new way of generating TypeScript type declarations. `zenesis` is bu
 npm install zenesis
 ```
 ## Making a world
-First, we need a **World**. A **World** contains all generated files, modules, and other entities. You can create one using the `zs` namespace. `zs` contains all schema nodes, including the basic ones from `zod`, which it just re-exports.
+First, we need a **World**. A **World** contains all generated files, modules, and other entities. You can create one using the `zs` namespace.
+
+The `zs` namespace contains all *detached* schema nodes. These are nodes can be used in all kinds of contexts and aren’t related to a specific scope, like a class or a file.
+
+
 
 ```typescript
 import {zs} from "zenesis"
 const World = zs.World("my-world")
 ```
 
-Worlds are mutable. They’re actually one of the few mutable objects `zenesis` uses. Each World is divided into Files. A file is a module and a container for declarations. In `zenesis`, all such containers are built using *iterators*. Here is an empty file, for example:
+Worlds are mutable. They’re actually one of the few mutable objects `zenesis` uses. Each World is divided into Files. A File is a module and a container for declarations.
+
+A File, like many other things, has a *scope*. 
+
+Here is an empty file, for example:
 
 ```typescript
 World.addFile("immutables", function*(_) {})
@@ -36,6 +44,7 @@ World.addFile("immutables", function*(_) {})
 
 Files are Modules, which can contain declarations. These can be either type or value declarations, but right now only type declarations are implemented. 
 
+The declarations that can be created in a given scope 
 The declarations that can be added to files are available on the context object which we bound to the parameter `_`. We have the following options:
 
 1. `_.Class`
@@ -47,7 +56,12 @@ The declarations that can be added to files are available on the context object 
 8. ~~`_.Function`~~ — Not implemented!
 9. ~~`_.Namespace`~~ — Not implemented!
 
- We can *create* an interface declarations using `F.Interface`, but this won’t add it to our file automatically. Remember, while Worlds are mutable, other objects aren’t. We need to export the interface using the `yield` keyword!
+ We can *create* an interface declarations using `_.Interface`. This won’t export it, but if we reference it somewhere in something we do export, it will be added to the file. 
+
+
+Actually, you can   
+
+This can sometimes end up exporting more than one declaration.
   
 ```typescript
 World.addFile("immutables", function*(_) {
@@ -70,7 +84,7 @@ The interface is also a container, and so it too is defined using an iterator. W
 Let’s use this API to add a `length` property to our interface:
 ```typescript
 World.addFile("immutables", function*(_) {
-	yield _.Interface("Stack", function*(_) {
+	yield* _.Interface("Stack", function*(_) {
 		yield* _.Fields({
 			length: zs.number().readonly(),
 			name: zs.string()

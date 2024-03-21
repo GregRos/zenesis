@@ -1,6 +1,7 @@
-import { ZsExportable } from "../declarations/unions"
-import { ZsModuleKind } from "../kinds"
-import { ZsModuleBody, ZsModuleDeclarations } from "./module-body"
+import { ZsModuleKind } from "../core/kinds"
+import { ZsExportable } from "../utils/unions"
+import { ZsModuleBody, ZsModuleScope } from "./module-body"
+import { ModuleScopedFactory } from "./module-builder"
 import { ZsZenesisModule } from "./zenesis-module"
 
 export interface ZsFileDef<Exports extends ZsExportable> {
@@ -18,12 +19,13 @@ export class ZsFile<
 
     static create<Exports extends ZsExportable>(
         name: string,
-        body: ZsModuleDeclarations<Exports>
+        body: ZsModuleScope<Exports>
     ): ZsFile<Exports> {
-        return new ZsFile<Exports>({
+        const factory = new ModuleScopedFactory()
+        return new ZsFile({
             moduleName: ZsModuleKind.ZsFile,
             name,
-            body: ZsModuleBody.create(body)
+            body: ZsModuleBody.create(body.bind(factory))
         })
     }
 

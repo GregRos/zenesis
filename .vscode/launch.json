@@ -4,7 +4,7 @@
         {
             "type": "node",
             "request": "launch",
-            "runtimeArgs": [],
+            "runtimeArgs": ["--enable-source-maps"],
             "name": "Start Example (Debug)",
             "program": "${workspaceFolder}/packages/demo/dist/example.js",
             "console": "integratedTerminal",

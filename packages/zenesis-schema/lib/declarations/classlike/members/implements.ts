@@ -1,22 +1,21 @@
+import { ZsStructural } from "../../../core/misc-node"
 import { ZsShape, ZsShapedRef } from "../../../core/types"
-import { ZsInstantiation } from "../../../generics/instantiation"
-import { ZsStructural } from "../../../misc-node"
+import { ZsMade } from "../../../generics/instantiation"
 import { ZsClass } from "../class"
 import { ZsInterface } from "../interface"
 import { ZsMemberKind } from "./kind"
 
 export type ZsImplementable =
     | ZsInterface
-    | ZsInstantiation<ZsInterface>
+    | ZsMade<ZsInterface>
     | ZsClass
-    | ZsInstantiation<ZsClass>
+    | ZsMade<ZsClass>
 
 export function isImplementable(x: any): x is ZsImplementable {
     return (
         x instanceof ZsInterface ||
         x instanceof ZsClass ||
-        (x instanceof ZsInstantiation &&
-            x._def.instance instanceof ZsInterface) ||
+        (x instanceof ZsMade && x._def.instance instanceof ZsInterface) ||
         x._def.instance instanceof ZsClass
     )
 }

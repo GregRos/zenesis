@@ -1,7 +1,8 @@
 import { lazy, seq } from "lazies"
 import { ZodTypeAny, z } from "zod"
 import { ZsShape } from "../../core/types"
-import { ClassBuilder } from "./class-builder"
+import { ZsClass } from "./class"
+import { ZsInterface } from "./interface"
 import { ZsConstructor } from "./members/constructor"
 import {
     ZsImplementable,
@@ -9,9 +10,9 @@ import {
     isImplementable
 } from "./members/implements"
 import { ZsIndexer } from "./members/indexer"
-import { ZsMember as ZsProperty } from "./members/member"
+import { ZsProperty } from "./members/member"
 
-export type ZsMemberable = ZsImplements | ZsProperty | ZsConstructor | ZsIndexer
+export type ZsClassItems = ZsImplements | ZsProperty | ZsConstructor | ZsIndexer
 
 export interface ZsClassBodyDef<Shape extends ZsShape> {
     definition: () => {
@@ -19,15 +20,31 @@ export interface ZsClassBodyDef<Shape extends ZsShape> {
         schema: ZodTypeAny
         implements: ZsImplementable[]
     }
-    decls: Iterable<ZsMemberable>
+    decls: Iterable<ZsClassItems>
 }
 
-export type ClassDeclaration<Decl extends ZsMemberable> = (
-    declarator: ClassBuilder
-) => Generator<Decl>
-
-export class ZsClassBody<Decl extends ZsMemberable = ZsMemberable> {
+export class ZsClassBody<Decl extends ZsClassItems = ZsClassItems> {
     constructor(readonly _def: ZsClassBodyDef<getFullShape<Decl>>) {}
+
+    get requiredDeclarations(): Iterable<
+        ZsIndexer | ZsProperty | ZsConstructor
+    > {
+        const self = this
+        return seq(function* () {
+            const impls = [] as ZsImplements[]
+            for (const decl of self._def.decls) {
+                if (decl instanceof ZsImplements) {
+                    impls.push(decl)
+                } else {
+                    yield decl
+                }
+            }
+            for (const impl of impls) {
+                const impld = impl._def.implemented as ZsClass | ZsInterface
+                yield* impld.body.requiredDeclarations
+            }
+        })
+    }
 
     get schema(): ZodTypeAny {
         return this._def.definition().schema
@@ -41,12 +58,12 @@ export class ZsClassBody<Decl extends ZsMemberable = ZsMemberable> {
         return this._def.definition().implements
     }
 
-    [Symbol.iterator]() {
-        return this._def.decls[Symbol.iterator]()
+    get declarations() {
+        return this._def.decls
     }
 
-    static create<Decl extends ZsMemberable>(decl: ClassDeclaration<Decl>) {
-        const input = decl(new ClassBuilder())
+    static create<Decl extends ZsClassItems>(decl: () => Iterable<Decl>) {
+        const input = decl()
         const decls = seq(seq(input).toArray().pull())
         return new ZsClassBody<Decl>({
             definition: lazy(() => {
@@ -58,7 +75,7 @@ export class ZsClassBody<Decl extends ZsMemberable = ZsMemberable> {
                             `Duplicate field name ${decl.name} in class`
                         )
                     }
-                    shape[decl.name] = decl.schema
+                    shape[decl.name] = decl.valueType
                 }
                 const parents = decls.filterAs(isImplementable).toArray().pull()
                 for (const decl of parents) {
@@ -75,14 +92,14 @@ export class ZsClassBody<Decl extends ZsMemberable = ZsMemberable> {
     }
 }
 
-export type getParentShape<Decls extends ZsMemberable> = {
+export type getParentShape<Decls extends ZsClassItems> = {
     [Decl in Extract<
         Decls,
         ZsImplements
     > as ""]: Decl["_def"]["implemented"]["shape"]
 }
 
-export type getOwnShape<Decls extends ZsMemberable> = {
+export type getOwnShape<Decls extends ZsClassItems> = {
     [Decl in Decls as Decl extends {
         name: infer Name extends string
     }
@@ -92,7 +109,7 @@ export type getOwnShape<Decls extends ZsMemberable> = {
 
 // TODO: Implement indexer static typing
 // TODO: Consider constructor static typing
-export type getFullShape<Decls extends ZsMemberable> = getOwnShape<Decls> &
+export type getFullShape<Decls extends ZsClassItems> = getOwnShape<Decls> &
     (getParentShape<Decls>[""] extends never ? {} : getParentShape<Decls>[""])
 
 export function unpackMemberSchemas<Shape extends ZsShape>(

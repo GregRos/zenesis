@@ -1,4 +1,4 @@
-import { ZsModuleKind } from "../kinds"
+import { ZsModuleKind } from "../core/kinds"
 import { ZsModule, ZsModuleDef } from "./base-module"
 import { ZsForeignImport } from "./foreign-import"
 

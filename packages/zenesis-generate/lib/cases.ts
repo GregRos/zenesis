@@ -7,7 +7,7 @@ import {
     isAstExpr
 } from "@zenesis/schema"
 import { extractModifiers } from "./extract-modifiers"
-import { ZsTsTable } from "./sz-expr"
+import { ZsTsTable } from "./table"
 import { tf } from "./tf"
 import { getOptional, getReadonly } from "./tokens"
 import { TypeExprContext } from "./type-expr-context"

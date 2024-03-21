@@ -1,7 +1,7 @@
 import { AnyZodTuple, z, ZodTuple, ZodTypeAny, ZodTypeDef } from "zod"
-import { InnerTypeOfFunction } from "zod/lib/types"
+import { InnerTypeOfFunction, ZodTupleItems } from "zod/lib/types"
+import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
-import { ZsTypeKind } from "../kinds"
 
 export interface ZsFunctionDef<
     ZParams extends AnyZodTuple,
@@ -59,7 +59,7 @@ export class ZsFunction<
         })
     }
 
-    static create<Args extends [ZodTypeAny, ...ZodTypeAny[]] | []>(
+    static create<Args extends ZodTupleItems | []>(
         ...args: Args
     ): ZsRestBuilder<ZodTuple<Args, null>> {
         return new ZsFunction({

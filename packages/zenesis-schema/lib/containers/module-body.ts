@@ -1,14 +1,14 @@
 import { lazy, seq, Seq } from "lazies"
 import { ZsValue } from "../declarations/value"
 
-import { ZsExportable, ZsTypeLikeExportable } from "../declarations/unions"
-import { ModuleDeclarator } from "./module-builder"
-import { ZsSmartZenesisImport, ZsZenesisImport } from "./zenesis-import"
+import { ZsExportable } from "../utils/unions"
+import { ModuleScopedFactory } from "./module-builder"
+import { ZsSmartZenesisImport, ZsZenesisAnyImport } from "./zenesis-import"
 import { ZsZenesisModule } from "./zenesis-module"
 
-export type ZsModuleDeclarations<Decl extends ZsExportable> = (
-    declarator: ModuleDeclarator
-) => { [Symbol.iterator]: () => Iterator<Decl, void> }
+export type ZsModuleScope<Decl extends ZsExportable> = (
+    this: ModuleScopedFactory
+) => Iterable<Decl>
 
 export type getExportName<Export extends ZsExportable> =
     Export extends ZsExportable ? Export["name"] : never
@@ -24,9 +24,8 @@ export const symActual = Symbol("actual")
  * A module body is a collection of exports backed by an iterable. It's used by
  * Files and other modules.
  */
-export class ZsModuleBody<
-    Exports extends ZsTypeLikeExportable = ZsTypeLikeExportable
-> implements Iterable<ZsTypeLikeExportable>
+export class ZsModuleBody<Exports extends ZsExportable = ZsExportable>
+    implements Iterable<ZsExportable>
 {
     protected _seq: Seq<Exports>
     _last = {} as ExportsRecord<Exports>;
@@ -70,7 +69,7 @@ export class ZsModuleBody<
         name: Name
     ): ZsSmartZenesisImport<this["_last"][Name]> {
         const resolved = lazy(() => this.pull(name))
-        return ZsZenesisImport.create(name, resolved, origin) as any
+        return ZsZenesisAnyImport.create(name, resolved, origin) as any
     }
 
     /**
@@ -96,8 +95,8 @@ export class ZsModuleBody<
     }
 
     static create<Exports extends ZsExportable>(
-        exports: ZsModuleDeclarations<Exports>
+        exports: () => Iterable<Exports>
     ) {
-        return new ZsModuleBody(exports(new ModuleDeclarator()))
+        return new ZsModuleBody(exports())
     }
 }

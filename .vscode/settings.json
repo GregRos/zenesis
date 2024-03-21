@@ -19,8 +19,34 @@
         "**/*.synctex.gz": true,
         "**/dist_aux": true,
         "**/dist": true,
-        ".obsidian/": true,
         ".gitattributes": true,
-        "LICENSE.md": true
+        "LICENSE.md": true,
+        "[!p]*/**": true,
+        "p[!a]*/**": true,
+        "pa[!c]*/**": true,
+        "pac[!k]*/**": true,
+        "pack[!a]*/**": true,
+        "packa[!g]*/**": true,
+        "packag[!e]*/**": true,
+        "package[!s]*/**": true,
+        "packages/[!z]*/**": true,
+        "packages/z[!e]*/**": true,
+        "packages/ze[!n]*/**": true,
+        "packages/zen[!e]*/**": true,
+        "packages/zene[!s]*/**": true,
+        "packages/zenes[!i]*/**": true,
+        "packages/zenesi[!s]*/**": true,
+        "packages/zenesis[!-]*/**": true,
+        "packages/zenesis-[!s]*/**": true,
+        "packages/zenesis-s[!c]*/**": true,
+        "packages/zenesis-sc[!h]*/**": true,
+        "packages/zenesis-sch[!e]*/**": true,
+        "packages/zenesis-sche[!m]*/**": true,
+        "packages/zenesis-schem[!a]*/**": true
+    },
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#1A3138",
+        "titleBar.activeBackground": "#24444F",
+        "titleBar.activeForeground": "#F9FCFC"
     }
 }

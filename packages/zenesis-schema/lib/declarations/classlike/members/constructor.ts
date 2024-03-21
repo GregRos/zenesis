@@ -1,5 +1,5 @@
 import { AnyZodTuple, ZodTuple } from "zod"
-import { ZsStructural } from "../../../misc-node"
+import { ZsStructural } from "../../../core/misc-node"
 import { ZsMemberKind } from "./kind"
 
 export interface ZsConstructorDef<ZArgs extends AnyZodTuple> {

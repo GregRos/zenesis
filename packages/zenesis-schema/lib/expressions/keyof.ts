@@ -1,7 +1,7 @@
 import { TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod"
+import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoLike, ZsMonoType } from "../core/mono-type"
 import { ZodKindedAny } from "../core/types"
-import { ZsTypeKind } from "../kinds"
 
 export interface ZsKeyofDef<Of extends ZodTypeAny> extends ZodTypeDef {
     typeName: ZsTypeKind.ZsKeyof

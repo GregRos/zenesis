@@ -1,30 +1,42 @@
 import { ZodTypeDef } from "zod"
-import { ZsGenericDeclarable } from "../declarations/unions"
-import { ZsTypeVarTuple } from "./type-var"
 
+import { ZsStructural } from "../core/misc-node"
 import { ZsDeclKind } from "../declarations/kind"
-import { ZsStructural } from "../misc-node"
+import { ZsMakeResultType } from "../utils/unions"
 import { Instantiable } from "./instantiable"
-import { ZsInstantiation } from "./instantiation"
+import { ZsMade } from "./instantiation"
+import { ZsTypeVarTuple } from "./type-var"
 
 export interface ZsForallTypeDef<
     Vars extends ZsTypeVarTuple,
-    Instance extends ZsGenericDeclarable
+    Instance extends ZsMakeResultType
 > extends ZodTypeDef {
     declName: ZsDeclKind.ZsForallType
     vars: Vars
     innerType: Instance
 }
 
-export class ZsForallType<
-        Instance extends ZsGenericDeclarable = ZsGenericDeclarable,
+export class ZsGeneric<
+        Instance extends ZsMakeResultType = ZsMakeResultType,
         Vars extends ZsTypeVarTuple = ZsTypeVarTuple
     >
     extends ZsStructural<ZsForallTypeDef<Vars, Instance>>
     implements Instantiable<Vars, Instance>
 {
     readonly name = this._def.innerType.name
-    instantiate: Instantiable<Vars, Instance>["instantiate"] = (...args) => {
-        return ZsInstantiation.create(this._def.innerType, args)
+
+    make: Instantiable<Vars, Instance>["make"] = (...args) => {
+        return ZsMade.create(this._def.innerType, this, args)
+    }
+
+    static create<
+        Instance extends ZsMakeResultType,
+        Vars extends ZsTypeVarTuple
+    >(innerType: Instance, vars: Vars): ZsGeneric<Instance, Vars> {
+        return new ZsGeneric({
+            declName: ZsDeclKind.ZsForallType,
+            innerType,
+            vars
+        })
     }
 }

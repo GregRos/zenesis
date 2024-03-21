@@ -1,7 +1,7 @@
 import { TypeNode } from "typescript"
 import { ZodAny, ZodTypeDef } from "zod"
+import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoLike, ZsMonoType } from "../core/mono-type"
-import { ZsTypeKind } from "../kinds"
 export interface ZsAstExprDef<As> extends ZodTypeDef {
     typeName: ZsTypeKind.ZsAstExpr
     actsLike: ZsMonoLike<As>

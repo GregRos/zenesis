@@ -1,6 +1,6 @@
 import { ZodAny, ZodTypeAny, ZodTypeDef } from "zod"
+import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
-import { ZsTypeKind } from "../kinds"
 
 export interface ZsTypeArgDef<Name extends string> extends ZodTypeDef {
     typeName: ZsTypeKind.ZsTypeArg

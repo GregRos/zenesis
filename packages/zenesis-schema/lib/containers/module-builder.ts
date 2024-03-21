@@ -1,21 +1,22 @@
 import { ZodTypeAny } from "zod"
 import { ZsTypeAlias } from "../declarations/alias"
-import { ClassDeclaration, ZsMemberable } from "../declarations/classlike/body"
+import { ZsClassItems } from "../declarations/classlike/body"
 import { ZsClass } from "../declarations/classlike/class"
+import { ClassScope } from "../declarations/classlike/class-builder"
 import { ZsInterface } from "../declarations/classlike/interface"
 import { ZsValue, ZsValueKind } from "../declarations/value"
 
-export class ModuleDeclarator {
-    Interface<Name extends string, Decl extends ZsMemberable>(
+export class ModuleScopedFactory {
+    Interface<Name extends string, Decl extends ZsClassItems>(
         name: Name,
-        declarations: ClassDeclaration<Decl>
+        declarations: ClassScope<ZsInterface, Decl>
     ) {
         return ZsInterface.create(name, declarations)
     }
 
-    Class<Name extends string, Decl extends ZsMemberable>(
+    Class<Name extends string, Decl extends ZsClassItems>(
         name: Name,
-        declarations: ClassDeclaration<Decl>
+        declarations: ClassScope<ZsClass, Decl>
     ) {
         return ZsClass.create(name, declarations)
     }

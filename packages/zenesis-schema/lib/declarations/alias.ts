@@ -1,6 +1,6 @@
 import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod"
+import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
-import { ZsTypeKind } from "../kinds"
 import { ZsDeclKind } from "./kind"
 
 export interface ZsTypeAliasDef<Name extends string, Type extends ZodTypeAny>
@@ -28,9 +28,5 @@ export class ZsTypeAlias<
             name,
             definition
         })
-    }
-
-    *[Symbol.iterator]() {
-        yield this
     }
 }

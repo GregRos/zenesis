@@ -1,7 +1,7 @@
 import { TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod"
+import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
 import { ZodKindedAny } from "../core/types"
-import { ZsTypeKind } from "../kinds"
 
 export class ZsConditional<
     ZWhat extends ZodTypeAny = ZodKindedAny,

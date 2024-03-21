@@ -1,7 +1,7 @@
-import { ZsExportable } from "../declarations/unions"
+import { ZsExportable } from "../utils/unions"
 import { ZsFile } from "./file"
 import { ZsForeignModule } from "./foreign-module"
-import { ZsModuleDeclarations } from "./module-body"
+import { ZsModuleScope } from "./module-body"
 
 export interface ZsWorldDef {
     readonly worldName: "ZsWorld"
@@ -20,7 +20,7 @@ export class ZsWorld {
     }
     File<Exports extends ZsExportable>(
         name: string,
-        body: ZsModuleDeclarations<Exports>
+        body: ZsModuleScope<Exports>
     ) {
         const file = ZsFile.create(name, body)
         this._files.push(file as any)

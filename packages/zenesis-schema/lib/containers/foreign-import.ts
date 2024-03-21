@@ -1,7 +1,7 @@
 import { ZodAny, ZodTypeAny, ZodTypeDef } from "zod"
+import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
-import { ZsInstantiation } from "../generics/instantiation"
-import { ZsTypeKind } from "../kinds"
+import { ZsMade } from "../generics/instantiation"
 import { ZsForeignModule } from "./foreign-module"
 
 export interface ZsForeignDef<As extends any> extends ZodTypeDef {
@@ -29,12 +29,14 @@ export class ZsForeignImport<As = any> extends ZsMonoType<
      * @param typeArgs The type arguments to instantiate with.
      * @throws If no type arguments are provided.
      */
-    instantiate(...typeArgs: [ZodTypeAny, ...ZodTypeAny[]]) {
+    make(
+        ...typeArgs: [ZodTypeAny, ...ZodTypeAny[]]
+    ): ZsMade<ZsForeignImport<As>> {
         const values = Object.values(typeArgs) as any[]
         if (values.length === 0) {
             throw new Error("Empty type arguments provided.")
         }
-        return ZsInstantiation.create(this, values as any)
+        return ZsMade.create(this, this, values as any)
     }
     static create<As>(
         exporter: ZsForeignModule,

@@ -6,6 +6,7 @@ import { ZsFunction } from "./expressions/function"
 import { ZsKeyof } from "./expressions/keyof"
 import { ZsLookup } from "./expressions/lookup"
 import { ZsMapped } from "./expressions/mapped"
+import { Forall } from "./generics/forall-builder"
 import { ZsTypeVar } from "./generics/type-var"
 
 export { ZsClassBody } from "./declarations/classlike/body"
@@ -14,6 +15,7 @@ export {
     ZsConstructorDef
 } from "./declarations/classlike/members/constructor"
 
+export { AnyTypeKind, ZsTypeKind } from "./core/kinds"
 export { ZsMonoLike, ZsMonoType } from "./core/mono-type"
 export {
     KindedAny,
@@ -38,7 +40,7 @@ export {
 } from "./declarations/classlike/members/indexer"
 export {
     ZsClassMemberDef,
-    ZsMember
+    ZsProperty
 } from "./declarations/classlike/members/member"
 export {
     ZsOverloads,
@@ -51,10 +53,10 @@ export { ZsConditional, ZsConditionalDef } from "./expressions/conditional"
 export { ZsFunction, ZsFunctionDef } from "./expressions/function"
 export { ZsKeyof, ZsKeyofDef } from "./expressions/keyof"
 export { ZsLookup, ZsLookupDef } from "./expressions/lookup"
-export { ZsMapArg, ZsMapVarDef } from "./expressions/map-arg"
+export { ZsKeyTypeArg, ZsMapVarDef } from "./expressions/map-arg"
 export { ZsMapped, ZsMappedDef } from "./expressions/mapped"
-export { ZsForallType, ZsForallTypeDef } from "./generics/forall-type"
-export { ZsInstantiation, ZsInstantiationDef } from "./generics/instantiation"
+export { ZsForallTypeDef, ZsGeneric } from "./generics/forall-type"
+export { ZsInstantiationDef, ZsMade } from "./generics/instantiation"
 export { ZsTypeArg, ZsTypeArgDef, ZsTypeArgTuple } from "./generics/type-arg"
 export {
     ZsTypeVar,
@@ -62,7 +64,6 @@ export {
     ZsTypeVarTuple,
     ZsTypeVarVariance
 } from "./generics/type-var"
-export { AnyTypeKind, ZsTypeKind } from "./kinds"
 export { ZodSchemaTable, ZsSchemaTable } from "./table"
 export { zs }
 
@@ -98,6 +99,7 @@ const zs = {
         "symbol"
     ),
     World: ZsWorld.create,
+    forall: Forall.create,
     lookup: ZsLookup.create,
     typeVar: ZsTypeVar.create,
     conditional: ZsConditional.create,
@@ -107,7 +109,6 @@ const zs = {
     mapped: ZsMapped.create,
     ast: ZsAstExpr.create
 }
-export * from "./checks"
 export { ZsForeignDef, ZsForeignImport } from "./containers/foreign-import"
 export {
     ZsForeignModule,
@@ -117,18 +118,13 @@ export { ZsModuleBody } from "./containers/module-body"
 export { ZsWorld, ZsWorldDef } from "./containers/world"
 export {
     ZsSmartZenesisImport,
+    ZsZenesisAnyImport,
     ZsZenesisGenericImport,
-    ZsZenesisImport,
     ZsZenesisImportDef,
     ZsZenesisTypeImport
 } from "./containers/zenesis-import"
 export { ZsZenesisModule } from "./containers/zenesis-module"
 export { Access } from "./declarations/classlike/members/member"
-export {
-    ZsDeclarable,
-    ZsExportable,
-    ZsGenericDeclarable,
-    ZsInstantiable,
-    ZsReferable
-} from "./declarations/unions"
 export { ZsModifierState } from "./expressions/mapped"
+export * from "./utils/checks"
+export * from "./utils/unions"

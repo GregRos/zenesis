@@ -1,5 +1,5 @@
 import { ZodOptional, ZodTypeAny } from "zod"
-import { ZsStructural } from "../../../misc-node"
+import { ZsStructural } from "../../../core/misc-node"
 import { ZsMemberKind } from "./kind"
 
 export interface ZsClassMemberDef<
@@ -12,7 +12,7 @@ export interface ZsClassMemberDef<
     innerType: Type
 }
 
-export class ZsMember<
+export class ZsProperty<
     Name extends string = string,
     Type extends ZodTypeAny = ZodTypeAny
 > extends ZsStructural<ZsClassMemberDef<Name, Type>> {
@@ -22,7 +22,7 @@ export class ZsMember<
         return this._def.name
     }
 
-    get schema() {
+    get valueType() {
         return this._def.innerType
     }
 
@@ -30,7 +30,7 @@ export class ZsMember<
         name: Name,
         type: Type
     ) {
-        return new ZsMember({
+        return new ZsProperty({
             memberName: ZsMemberKind.ZsField,
             access: "public",
             name,
@@ -38,22 +38,22 @@ export class ZsMember<
         })
     }
 
-    optional(): ZsMember<Name, ZodOptional<Type>> {
-        return new ZsMember({
+    optional(): ZsProperty<Name, ZodOptional<Type>> {
+        return new ZsProperty({
             ...this._def,
             innerType: this._def.innerType.optional()
         })
     }
 
     access<V extends Access>(access: V) {
-        return new ZsMember({
+        return new ZsProperty({
             ...this._def,
             access: access
         })
     }
 
     readonly() {
-        return new ZsMember({
+        return new ZsProperty({
             ...this._def,
             innerType: this._def.innerType.readonly()
         })
