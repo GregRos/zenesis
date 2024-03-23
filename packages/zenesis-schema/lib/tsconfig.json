@@ -3,7 +3,8 @@
     "compilerOptions": {
         "outDir": "../dist/lib",
         "rootDir": ".",
-        "noEmit": false
+        "noEmit": false,
+        "experimentalDecorators": true
     },
     "include": ["**/*.ts", "generics/type-var.ts"],
     "exclude": ["**/dist", "**/node_modules"]

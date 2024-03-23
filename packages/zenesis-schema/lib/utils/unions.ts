@@ -1,8 +1,8 @@
-import { ZodFunction } from "zod"
+import { ZodFunction, ZodTypeAny } from "zod"
 import { ZsForeignImport } from "../containers/foreign-import"
 import {
-    ZsZenesisAnyImport,
     ZsZenesisGenericImport,
+    ZsZenesisShapedImport,
     ZsZenesisTypeImport
 } from "../containers/zenesis-import"
 import { ZsTypeAlias } from "../declarations/alias"
@@ -14,18 +14,23 @@ import { ZsIndexer } from "../declarations/classlike/members/indexer"
 import { ZsProperty } from "../declarations/classlike/members/member"
 import { ZsEnum } from "../declarations/enum"
 import { ZsValue } from "../declarations/value"
-import { ZsTypeSelf, ZsZenesisGenericSelf } from "../declarations/zenesis-self"
+import { ZsGenericSelfref, ZsTypeSelfref } from "../declarations/zenesis-self"
 import { ZsGenericFunction } from "../expressions/forall-function"
 import { ZsFunction } from "../expressions/function"
-import { ZsKeyTypeArg } from "../expressions/map-arg"
+import { ZsMappingKeyRef } from "../expressions/map-arg"
 import { ZsGeneric } from "../generics/forall-type"
-import { ZsTypeArg } from "../generics/type-arg"
+import { ZsMade } from "../generics/instantiation"
+import { ZsTypeVarRef } from "../generics/type-arg"
 
 /**
  * A non-generic function expression, represented using a `zod` or `zenesis` function node.
  */
 export type ZsOrZodFunction = ZsFunction | ZodFunction<any, any>
 
+export type NormalizeFunctions<F extends ZsOrZodFunction> =
+    F extends ZodFunction<infer Args, infer Return>
+        ? ZsFunction<Args, Return>
+        : F
 /**
  * A `zod` or `zenesis` function node, or a `zenesis` generic function node.
  */
@@ -34,15 +39,12 @@ export type ZsFunctionLike = ZsOrZodFunction | ZsGenericFunction
 /**
  * Any reference to a type imported from a zenesis or external module.
  */
-export type ZsImportedType =
-    | ZsZenesisAnyImport
-    | ZsForeignImport
-    | ZsZenesisTypeImport
+export type ZsImportedType = ZsZenesisTypeImport | ZsForeignImport
 
 /**
  * Any reference to an imported type or generic.
  */
-export type ZsTypeLikeImport = ZsImportedType | ZsZenesisGenericImport
+export type ZsImport = ZsImportedType | ZsZenesisGenericImport
 
 /**
  * Any declaration or reference to a class-like object-oriented type. That is, a class or interface.
@@ -52,7 +54,7 @@ export type ZsClassLike = ZsClass | ZsInterface
 /**
  * A type or function that can be declared generic.
  */
-export type ZsGeneralizable = ZsGeneralizableType | ZsOrZodFunction
+export type ZsGeneralizable = ZsGeneralizableType | ZsFunction
 
 /**
  * A type that can be declared generic. That is, a class, interface, or type alias.
@@ -72,7 +74,10 @@ export type ZsModuleDeclarableType = ZsMakeResultType | ZsEnum
  * Any type node that needs to be declared in one place and referenced somewhere else. Includes
  * {@link ZsModuleDeclarableType}, as well as type variables.
  */
-export type ZsDeclarableType = ZsModuleDeclarableType | ZsTypeArg | ZsKeyTypeArg
+export type ZsDeclarableType =
+    | ZsModuleDeclarableType
+    | ZsTypeVarRef
+    | ZsMappingKeyRef
 
 /**
  * Any type or generic that can be declared in a module.
@@ -121,19 +126,27 @@ export type ZsMakable = ZsGeneric | ZsZenesisGenericImport | ZsForeignImport
 export type ZsReferableType =
     | ZsDeclarableType
     | ZsZenesisTypeImport
-    | ZsZenesisAnyImport
     | ZsForeignImport
-    | ZsTypeSelf
+    | ZsTypeSelfref
 
-/**
- * Any node that is used as a reference to a type or a generic.
- */
+export type ZsImplementable =
+    | ZsClassLike
+    | ZsMade<ZsClassLike>
+    | ZsForeignImport
+    | ZsZenesisShapedImport
+
 export type ZsReferableTypeLike =
     | ZsReferableType
     | ZsGeneric
     | ZsZenesisGenericImport
-    | ZsZenesisGenericSelf
+    | ZsGenericSelfref
 
 export type InterfaceMember = ZsProperty | ZsImplements | ZsIndexer
 
 export type ClassMember = InterfaceMember | ZsConstructor
+
+export type Ctor<Schema extends ZodTypeAny> = {
+    new (...args: any[]): Schema
+}
+
+export type ZsSelfref = ZsTypeSelfref | ZsGenericSelfref

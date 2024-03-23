@@ -1,11 +1,6 @@
 import { SyntaxKind, TypeNode } from "typescript"
 
-import {
-    AnyTypeKind,
-    ZsSchemaTable,
-    ZsTypeKind,
-    isAstExpr
-} from "@zenesis/schema"
+import { AnyTypeKind, ZsSchemaTable, ZsTypeKind } from "@zenesis/schema"
 import { extractModifiers } from "./extract-modifiers"
 import { ZsTsTable } from "./table"
 import { tf } from "./tf"
@@ -31,6 +26,12 @@ export const cases: {
         node: ZsSchemaTable[Kind]
     ) => ZsTsTable[Kind]
 } = {
+    [ZsTypeKind.ZsThis](node) {
+        return tf.createThisTypeNode()
+    },
+    [ZsTypeKind.ZsSelfref](node) {
+        return this.get(node._def.resolving())
+    },
     [ZsTypeKind.ZsZenesisImport](node) {
         return this.get(node)
     },
@@ -172,10 +173,10 @@ export const cases: {
     [AnyTypeKind.ZsTypeAlias](node) {
         return this.get(node)
     },
-    [AnyTypeKind.ZsTypeArg](node) {
+    [AnyTypeKind.ZsTypeVarRef](node) {
         return this.get(node)
     },
-    [AnyTypeKind.ZsMapArg](node) {
+    [AnyTypeKind.ZsMappingKeyRef](node) {
         return this.get(node)
     },
     [AnyTypeKind.ZsKeyof](node) {
@@ -200,10 +201,6 @@ export const cases: {
     [AnyTypeKind.ZsInstantiation](node) {
         // An instantiation will always be of a declared type that must be in scope
         const instance = node._def.instance
-        if (isAstExpr(instance)) {
-            // TODO: handle this
-            throw new Error("AstExpr instantiations are not supported")
-        }
         const type = this.get(instance)
         const typeArgs = node._def.typeArgs.map(arg => this.recurse(arg))
         return tf.createTypeReferenceNode(type.typeName, typeArgs)
@@ -265,7 +262,7 @@ export const cases: {
         const nested = this.set(typeVar, typeParamRef)
 
         const constraintType = nested.recurse(typeVar._def.in)
-        const nameType = nested.recurse(node._def.nameType)
+        const nameType = nested.recurse(node._def.keyType)
         const valueType = nested.recurse(node._def.value)
 
         const typeParameter = tf.createTypeParameterDeclaration(
@@ -289,5 +286,12 @@ export const cases: {
             this.recurse(node._def.then),
             this.recurse(node._def.otherwise)
         )
+    },
+    [AnyTypeKind.ZsGenericFunction](node) {
+        const func = this.convertZsFunctionToSomething(
+            node,
+            tf.createFunctionTypeNode
+        )
+        return func
     }
 }

@@ -1,9 +1,9 @@
-import { ZodAny, ZodFunction } from "zod"
-import { convertZodFunctionToZsFunction } from "../utils/normalize"
+import { ZodAny } from "zod"
+import { ZsStructural } from "../core/misc-node"
 import { ZsGenericFunction } from "../expressions/forall-function"
 import { ZsFunction } from "../expressions/function"
-import { ZsStructural } from "../core/misc-node"
 import { ZsGeneralizable, ZsMakeResultType } from "../utils/unions"
+import { isGeneralizableType } from "../utils/validate/is-type"
 import { ZsGeneric } from "./forall-type"
 import { ZsTypeVar, ZsTypeVarTuple } from "./type-var"
 
@@ -33,7 +33,7 @@ export type Generalize<
 export function getTypeArgObject<Vars extends ZsTypeVarTuple>(
     vars: Vars
 ): TypeVarRefsByName<Vars> {
-    return Object.fromEntries(vars.map(v => [v.name, v.arg] as const)) as any
+    return Object.fromEntries(vars.map(v => [v.name, v.arg])) as any
 }
 
 export function getTypeArgArray<Vars extends ZsTypeVarTuple>(
@@ -76,31 +76,21 @@ export class Forall<
     }
 
     private _wrapOne(input: ZsGeneralizable) {
-        if 
-        if (input instanceof ZodFunction) {
-            input = convertZodFunctionToZsFunction(input)
-        }
         if (input instanceof ZsFunction) {
             return ZsGenericFunction.create(this._def.vars, input)
-        } else if (isForallableType(input)) {
+        } else if (isGeneralizableType(input)) {
             return ZsGeneric.create(input, this._def.vars)
         } else {
             throw new Error("Invalid forallable")
         }
     }
 
-    define<Result extends ZsForallable>(
+    define<Result extends ZsGeneralizable>(
         builder: (...args: TypeVarRefs<Vars>) => Result
     ): Generalize<Vars, Result>
-    define<Result extends ZsForallable>(
-        builder: (...args: TypeVarRefs<Vars>) => Iterable<Result>
-    ): Iterable<Generalize<Vars, Result>>
     define(builder: Function): any {
         const refs = getTypeArgArray(this._def.vars)
         let result = builder(...refs)
-        if (isForallableType(result)) {
-            return this._wrapOne(result)
-        }
         return [...result].map(x => this._wrapOne(x))
     }
 }

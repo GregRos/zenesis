@@ -14,14 +14,6 @@ export interface ZsInstantiationDef<Instance extends ZsMakeResultType>
 export class ZsMade<
     Ref extends ZsMakeResultType = ZsMakeResultType
 > extends ZsMonoType<TypeOf<Ref>, ZsInstantiationDef<Ref>> {
-    get declaration(): Ref extends ZsShapedRef
-        ? Ref["declaration"]
-        : undefined {
-        if ("declaration" in this.actsLike) {
-            return this.actsLike.declaration as any
-        }
-        return undefined as any
-    }
     static create<Made extends ZsMakeResultType>(
         instance: Made,
         makable: ZsMakable,

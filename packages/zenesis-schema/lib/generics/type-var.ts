@@ -1,14 +1,14 @@
 import { ZodTypeAny, ZodTypeDef, ZodUnknown } from "zod"
 import { ZsStructural } from "../core/misc-node"
 import { SchemaSubtypeOf } from "../core/operators"
-import { ZsTypeArg } from "./type-arg"
+import { ZsTypeVarRef } from "./type-arg"
 ;``
 export interface ZsTypeVarDef<
     Name extends string,
     Extends extends ZodTypeAny,
     Default extends SchemaSubtypeOf<Extends> | null
 > extends ZodTypeDef {
-    readonly arg: ZsTypeArg<Name>
+    readonly arg: ZsTypeVarRef<Name>
     readonly extends: Extends
     readonly default: Default
     readonly const: boolean
@@ -21,7 +21,7 @@ export class ZsTypeVar<
         SchemaSubtypeOf<Extends> | null = SchemaSubtypeOf<Extends> | null
 > extends ZsStructural<ZsTypeVarDef<Name, Extends, Default>> {
     readonly name = this._def.arg.name
-    readonly arg = this._def.arg as ZsTypeArg<Name>
+    readonly arg = this._def.arg as ZsTypeVarRef<Name>
     default<NewDefault extends SchemaSubtypeOf<Extends> | null>(
         newDefault: NewDefault
     ) {
@@ -42,7 +42,7 @@ export class ZsTypeVar<
     }
     static create<Name extends string>(name: Name) {
         return new ZsTypeVar({
-            arg: ZsTypeArg.create(name),
+            arg: ZsTypeVarRef.create(name),
             extends: ZodUnknown.create(),
             default: null,
             const: false,

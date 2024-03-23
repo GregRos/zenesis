@@ -1,31 +1,22 @@
-import { Lazy } from "lazies"
 import { AnyZodTuple, ZodOptional, ZodTypeAny } from "zod"
 import { ZsMonoLike } from "../../core/mono-type"
-import { ZodKindedAny } from "../../core/types"
-import { ZsClassLike, ZsFunctionLike } from "../../utils/unions"
-import { ZsTypeSelf } from "../zenesis-self"
+import { ZsShapedRef } from "../../core/types"
+import { ZsFunction } from "../../expressions/function"
+import { ZsGenericSelfref, ZsTypeSelfref } from "../zenesis-self"
 import { ZsClassItems } from "./body"
-import { ZsClass } from "./class"
 import { ZsConstructor } from "./members/constructor"
-import { ZsImplementable, ZsImplements } from "./members/implements"
+import { ZsImplements } from "./members/implements"
 import { ZsIndexer } from "./members/indexer"
 import { ZsProperty } from "./members/member"
 import { ZsOverloads } from "./members/overloads"
-import { MethodDeclarator, MethodScope } from "./method-builder"
 import { ZsThis } from "./this"
 
-export type UnionFields<Types extends Record<keyof Types, ZodKindedAny>> = {
-    [K in keyof Types & string]: [ZsProperty<K, Types[K]>]
-}[keyof Types & string][0]
-
-export class ClassScopedFactory<Self extends ZsClassLike = ZsClass> {
-    constructor(private _self: Lazy<Self>) {}
+export class ClassScopedFactory<Self extends ZsGenericSelfref | ZsTypeSelfref> {
+    constructor(readonly self: Self) {}
     get thisType() {
         return ZsThis.create()
     }
-    get selfRef() {
-        return ZsTypeSelf.create(this._self)
-    }
+
     Property<Name extends string, Type extends ZodTypeAny>(
         name: Name,
         type: Type
@@ -33,36 +24,23 @@ export class ClassScopedFactory<Self extends ZsClassLike = ZsClass> {
         return ZsProperty.create(name, type)
     }
 
-    Overloads<Name extends string, Methods extends ZsFunctionLike>(
+    Method<Name extends string, Func extends ZsFunction>(
         name: Name,
-        declarator: MethodScope<Methods> | [Methods, ...Methods[]] | Methods
-    ): Methods extends never
-        ? never
-        : ZsProperty<Name, ZsOverloads<[Methods, ...Methods[]]>> {
-        let overloads: [Methods, ...Methods[]]
-        if (typeof declarator === "function") {
-            const result = declarator(new MethodDeclarator())
-            if (Symbol.iterator in result) {
-                overloads = [...result] as any
-            } else {
-                overloads = [result]
-            }
-        } else if (Symbol.iterator in declarator) {
-            overloads = [...declarator]
+        func: Func | Func[]
+    ) {
+        if (Array.isArray(func)) {
+            var overloads = ZsOverloads.create(() => func)
         } else {
-            overloads = [declarator]
+            overloads = ZsOverloads.create(() => [func])
         }
-        if (overloads.length === 0) {
-            throw new Error("Overloads must have at least one overload")
-        }
-
-        return ZsProperty.create(name, ZsOverloads.create(...overloads)) as any
+        return ZsProperty.create(name, overloads)
     }
 
-    Implements<Type extends ZsImplementable>(
-        type: Type
-    ): ZsImplements<Type["shape"]> {
-        return ZsImplements.create(type)
+    Implements<ZShaped extends ZsShapedRef>(
+        type: ZShaped,
+        auto = true
+    ): ZsImplements<ZShaped["shape"]> {
+        return ZsImplements.create(type, auto)
     }
 
     Indexer<
@@ -79,6 +57,4 @@ export class ClassScopedFactory<Self extends ZsClassLike = ZsClass> {
     }
 }
 
-export type ClassScope<Self extends ZsClassLike, Decl extends ZsClassItems> = (
-    this: ClassScopedFactory<Self>
-) => Generator<Decl>
+export type ClassScope<Decl extends ZsClassItems> = () => Iterable<Decl>

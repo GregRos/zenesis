@@ -1,4 +1,9 @@
-import { ZsReferable, isReferable } from "@zenesis/schema"
+import {
+    ZsReferableTypeLike,
+    describeZenesisNode,
+    isDeclarableType,
+    isImport
+} from "@zenesis/schema"
 import { Map } from "immutable"
 import { Lazy, isLazyLike } from "lazies"
 import { Declaration, TypeReferenceNode } from "typescript"
@@ -10,16 +15,23 @@ export interface TypeDeclRef {
 export class NodeMap {
     constructor(
         private readonly _map: Map<
-            ZsReferable,
+            ZsReferableTypeLike,
             TypeReferenceNode | Lazy<TypeReferenceNode>
         >,
-        private readonly _missingNode: (node: ZsReferable) => TypeReferenceNode
+        private readonly _missingNode: (
+            node: ZsReferableTypeLike
+        ) => TypeReferenceNode
     ) {}
-    static create(missingNode: (node: ZsReferable) => TypeReferenceNode) {
-        return new NodeMap(Map<ZsReferable, TypeReferenceNode>(), missingNode)
+    static create(
+        missingNode: (node: ZsReferableTypeLike) => TypeReferenceNode
+    ) {
+        return new NodeMap(
+            Map<ZsReferableTypeLike, TypeReferenceNode>(),
+            missingNode
+        )
     }
 
-    get(node: ZsReferable): TypeReferenceNode {
+    get(node: ZsReferableTypeLike): TypeReferenceNode {
         const ref = this._map.get(node)
         if (ref) {
             if (isLazyLike(ref)) {
@@ -27,15 +39,20 @@ export class NodeMap {
             }
             return ref
         }
-        if (!isReferable(node)) {
-            throw new Error("Node isff not declarable")
+        if (!isDeclarableType(node) && !isImport(node)) {
+            throw new Error(
+                `Node ${describeZenesisNode(node)} is not declarable`
+            )
         }
         const newNode = this._missingNode(node)
         this._map.set(node, newNode)
         return newNode
     }
 
-    set(node: ZsReferable, ref: TypeReferenceNode | Lazy<TypeReferenceNode>) {
+    set(
+        node: ZsReferableTypeLike,
+        ref: TypeReferenceNode | Lazy<TypeReferenceNode>
+    ) {
         return new NodeMap(this._map.set(node, ref), this._missingNode)
     }
 }

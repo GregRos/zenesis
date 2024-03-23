@@ -8,21 +8,18 @@ export enum ZsTypeKind {
     ZsTypeAlias = "ZsTypeAlias",
     ZsFunction = "ZsFunction",
     ZsConditional = "ZsConditional",
-    ZsTypeArg = "ZsTypeArg",
+    ZsTypeVarRef = "ZsTypeVarRef",
     ZsMapped = "ZsMapped",
-    ZsMapArg = "ZsMapArg",
+    ZsMappingKeyRef = "ZsMappingKeyRef",
     ZsInstantiation = "ZsInstantiation",
     ZsKeyof = "ZsKeyof",
     ZsEnum = "ZsEnum",
-    ZsGenericType = "ZsGenericType",
     ZsAstExpr = "ZsAstExpr",
     ZsZenesisImport = "ZsZenesisImport",
-    ZsZenesisGenericImport = "ZsZenesisGenericImport",
     ZsForeignImport = "ZsZoreignImport",
-    ZsForallFunction = "ZsForallFunction",
+    ZsGenericFunction = "ZsGenericFunction",
     ZsThis = "ZsThis",
-    ZsZenesisSelf = "ZsZenesisSelf",
-    ZsScopedObject = "ZsScopedObject"
+    ZsSelfref = "ZsSelfref"
 }
 
 export type AnyTypeKind = ZsTypeKind | ZodFirstPartyTypeKind

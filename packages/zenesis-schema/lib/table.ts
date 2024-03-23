@@ -41,24 +41,26 @@ import {
     ZodVoid
 } from "zod"
 import { ZsForeignImport } from "./containers/foreign-import"
-import { ZsZenesisAnyImport } from "./containers/zenesis-import"
+import { ZsZenesisTypeImport } from "./containers/zenesis-import"
 import { ZsTypeKind } from "./core/kinds"
 import { ZodKindedAny } from "./core/types"
 import { ZsTypeAlias } from "./declarations/alias"
 import { ZsClass } from "./declarations/classlike/class"
 import { ZsInterface } from "./declarations/classlike/interface"
 import { ZsOverloads } from "./declarations/classlike/members/overloads"
+import { ZsThis } from "./declarations/classlike/this"
 import { ZsEnum } from "./declarations/enum"
+import { ZsTypeSelfref } from "./declarations/zenesis-self"
 import { ZsAstExpr } from "./expressions/ast-expr"
 import { ZsConditional } from "./expressions/conditional"
 import { ZsGenericFunction } from "./expressions/forall-function"
 import { ZsFunction } from "./expressions/function"
 import { ZsKeyof } from "./expressions/keyof"
 import { ZsLookup } from "./expressions/lookup"
-import { ZsKeyTypeArg } from "./expressions/map-arg"
+import { ZsMappingKeyRef } from "./expressions/map-arg"
 import { ZsMapped } from "./expressions/mapped"
 import { ZsMade } from "./generics/instantiation"
-import { ZsTypeArg } from "./generics/type-arg"
+import { ZsTypeVarRef } from "./generics/type-arg"
 
 /**
  * This is a table of all the first party schemas. It makes various types
@@ -121,16 +123,20 @@ export abstract class ZodSchemaTable {
 
 export abstract class ZsSchemaTable extends ZodSchemaTable {
     [ZsTypeKind.ZsEnum]!: ZsEnum;
+    [ZsTypeKind.ZsZenesisImport]!: ZsZenesisTypeImport;
+    [ZsTypeKind.ZsForeignImport]!: ZsForeignImport;
+    [ZsTypeKind.ZsSelfref]!: ZsTypeSelfref;
+    [ZsTypeKind.ZsThis]!: ZsThis;
+
     [ZsTypeKind.ZsClass]!: ZsClass;
     [ZsTypeKind.ZsInterface]!: ZsInterface;
     [ZsTypeKind.ZsTypeAlias]!: ZsTypeAlias;
-    [ZsTypeKind.ZsForallFunction]!: ZsGenericFunction;
-    [ZsTypeKind.ZsTypeArg]!: ZsTypeArg;
-    [ZsTypeKind.ZsMapArg]!: ZsKeyTypeArg;
+    [ZsTypeKind.ZsGenericFunction]!: ZsGenericFunction;
+    [ZsTypeKind.ZsTypeVarRef]!: ZsTypeVarRef;
+    [ZsTypeKind.ZsMappingKeyRef]!: ZsMappingKeyRef;
     [ZsTypeKind.ZsInstantiation]!: ZsMade;
     [ZsTypeKind.ZsAstExpr]!: ZsAstExpr;
-    [ZsTypeKind.ZsZenesisImport]!: ZsZenesisAnyImport;
-    [ZsTypeKind.ZsForeignImport]!: ZsForeignImport;
+
     [ZsTypeKind.ZsFunction]!: ZsFunction;
     [ZsTypeKind.ZsMapped]!: ZsMapped;
     [ZsTypeKind.ZsKeyof]!: ZsKeyof;

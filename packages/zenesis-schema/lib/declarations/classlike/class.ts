@@ -1,4 +1,3 @@
-import { lazy } from "lazies"
 import { ZodTypeDef } from "zod"
 import { ZsTypeKind } from "../../core/kinds"
 import { ZsMonoType } from "../../core/mono-type"
@@ -6,7 +5,7 @@ import { getCombinedType } from "../../core/operators"
 import { ZsShapedRef } from "../../core/types"
 import { ZsDeclKind } from "../kind"
 import { ZsClassBody, ZsClassItems } from "./body"
-import { ClassScope, ClassScopedFactory } from "./class-builder"
+import { ClassScope } from "./class-builder"
 
 export interface ZsClassDef<
     Name extends string,
@@ -66,8 +65,7 @@ export class ZsClass<
         Name extends string,
         Parent extends ZsShapedRef | null,
         Memberable extends ZsClassItems
-    >(name: Name, body: ClassScope<ZsClass, Memberable>) {
-        const factory = new ClassScopedFactory(lazy(() => result))
+    >(name: Name, body: ClassScope<Memberable>) {
         const result = new ZsClass({
             name,
             declName: ZsDeclKind.ZsClass,
@@ -76,5 +74,6 @@ export class ZsClass<
             body: ZsClassBody.create(body),
             parent: null
         })
+        return result
     }
 }

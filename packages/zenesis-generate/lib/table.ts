@@ -8,6 +8,7 @@ import {
     KeywordTypeNode,
     LiteralTypeNode,
     MappedTypeNode,
+    ThisTypeNode,
     TupleTypeNode,
     TypeLiteralNode,
     TypeNode,
@@ -23,6 +24,9 @@ export type MissingDeclHandler = (node: ZodKindedAny) => TypeReferenceNode
 
 export abstract class ZsTsTable {
     [AnyTypeKind.ZsZenesisImport]!: TypeReferenceNode;
+    [AnyTypeKind.ZsGenericFunction]!: FunctionTypeNode;
+    [AnyTypeKind.ZsThis]!: ThisTypeNode;
+    [AnyTypeKind.ZsSelfref]!: TypeReferenceNode;
     [AnyTypeKind.ZodEffects]!: never;
     [AnyTypeKind.ZodPipeline]!: never;
     [AnyTypeKind.ZodNativeEnum]!: UnionTypeNode;
@@ -30,8 +34,8 @@ export abstract class ZsTsTable {
     [AnyTypeKind.ZsEnum]!: TypeReferenceType;
     [AnyTypeKind.ZsClass]!: TypeReferenceNode;
     [AnyTypeKind.ZsInterface]!: TypeReferenceNode;
-    [AnyTypeKind.ZsTypeArg]!: TypeReferenceNode;
-    [AnyTypeKind.ZsMapArg]!: TypeReferenceNode;
+    [AnyTypeKind.ZsTypeVarRef]!: TypeReferenceNode;
+    [AnyTypeKind.ZsMappingKeyRef]!: TypeReferenceNode;
     [AnyTypeKind.ZsInstantiation]!: TypeReferenceNode;
     [AnyTypeKind.ZsTypeAlias]!: TypeReferenceNode;
     [AnyTypeKind.ZsForeignImport]!: TypeReferenceNode;

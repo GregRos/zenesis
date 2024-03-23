@@ -1,4 +1,5 @@
 import { ZodType, ZodTypeAny, ZodTypeDef } from "zod"
+import { ZsClassBody } from "../declarations/classlike/body"
 
 /**
  * Gets the `ZodDef` type of a schema instance.
@@ -31,12 +32,9 @@ export type ZodDefOf<ZSchema extends KindedAny> = ZSchema["_def"]
  * Gets the type of a schema instance's `_def.typeName`.
  */
 export type ZodKindOf<ZSchema extends KindedAny> = ZSchema["_def"]["typeName"]
-export type ZsShapedRef<
-    Shape extends ZsShape = ZsShape,
-    Kind extends "class" | "interface" = "class" | "interface"
-> = ZodKindedAny & {
+export type ZsShapedRef<Shape extends ZsShape = ZsShape> = ZodKindedAny & {
     readonly shape: Shape
-    readonly declaration: Kind
+    readonly body: ZsClassBody
 }
 export type ZsShape = {
     [key: string]: ZodTypeAny

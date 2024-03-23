@@ -1,7 +1,7 @@
-import { lazy, seq, Seq } from "lazies"
+import { seq, Seq } from "lazies"
 import { ZsValue } from "../declarations/value"
 
-import { ZsExportable } from "../utils/unions"
+import { ZsExportable, ZsExportableTypeLike } from "../utils/unions"
 import { ModuleScopedFactory } from "./module-builder"
 import { ZsSmartZenesisImport, ZsZenesisAnyImport } from "./zenesis-import"
 import { ZsZenesisModule } from "./zenesis-module"
@@ -14,7 +14,7 @@ export type getExportName<Export extends ZsExportable> =
     Export extends ZsExportable ? Export["name"] : never
 
 export type ExportsRecord<Exports extends ZsExportable> = {
-    [Export in Extract<Exports, ZsExportable> as getExportName<Export> &
+    [Export in Extract<Exports, ZsExportableTypeLike> as getExportName<Export> &
         string]: Export
 }
 
@@ -68,8 +68,11 @@ export class ZsModuleBody<Exports extends ZsExportable = ZsExportable>
         origin: ZsZenesisModule,
         name: Name
     ): ZsSmartZenesisImport<this["_last"][Name]> {
-        const resolved = lazy(() => this.pull(name))
-        return ZsZenesisAnyImport.create(name, resolved, origin) as any
+        return ZsZenesisAnyImport.create(
+            name,
+            () => this.pull(name),
+            origin
+        ) as any
     }
 
     /**

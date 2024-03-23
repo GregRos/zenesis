@@ -12,6 +12,6 @@
     "dependencies": {
         "@zenesis/generate": "^0.1.0",
         "@zenesis/schema": "^0.1.0",
-        "lazies": "^0.6.2"
+        "lazies": "^0.6.4"
     }
 }

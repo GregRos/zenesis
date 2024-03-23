@@ -1,14 +1,11 @@
-import { lazy, seq } from "lazies"
+import { memoize, seq } from "lazies"
 import { ZodTypeAny, z } from "zod"
+import { foreignShape } from "../../containers/foreign-import"
 import { ZsShape } from "../../core/types"
-import { ZsClass } from "./class"
-import { ZsInterface } from "./interface"
+import { ZsImplementable } from "../../utils/unions"
+import { isImplements } from "../../utils/validate/is-member"
 import { ZsConstructor } from "./members/constructor"
-import {
-    ZsImplementable,
-    ZsImplements,
-    isImplementable
-} from "./members/implements"
+import { ZsImplements } from "./members/implements"
 import { ZsIndexer } from "./members/indexer"
 import { ZsProperty } from "./members/member"
 
@@ -25,26 +22,6 @@ export interface ZsClassBodyDef<Shape extends ZsShape> {
 
 export class ZsClassBody<Decl extends ZsClassItems = ZsClassItems> {
     constructor(readonly _def: ZsClassBodyDef<getFullShape<Decl>>) {}
-
-    get requiredDeclarations(): Iterable<
-        ZsIndexer | ZsProperty | ZsConstructor
-    > {
-        const self = this
-        return seq(function* () {
-            const impls = [] as ZsImplements[]
-            for (const decl of self._def.decls) {
-                if (decl instanceof ZsImplements) {
-                    impls.push(decl)
-                } else {
-                    yield decl
-                }
-            }
-            for (const impl of impls) {
-                const impld = impl._def.implemented as ZsClass | ZsInterface
-                yield* impld.body.requiredDeclarations
-            }
-        })
-    }
 
     get schema(): ZodTypeAny {
         return this._def.definition().schema
@@ -66,7 +43,7 @@ export class ZsClassBody<Decl extends ZsClassItems = ZsClassItems> {
         const input = decl()
         const decls = seq(seq(input).toArray().pull())
         return new ZsClassBody<Decl>({
-            definition: lazy(() => {
+            definition: memoize(() => {
                 const shape: getFullShape<any> = {} as any
 
                 for (const decl of decls.ofTypes(ZsProperty)) {
@@ -77,16 +54,32 @@ export class ZsClassBody<Decl extends ZsClassItems = ZsClassItems> {
                     }
                     shape[decl.name] = decl.valueType
                 }
-                const parents = decls.filterAs(isImplementable).toArray().pull()
-                for (const decl of parents) {
-                    Object.assign(shape, decl.shape)
+                const parents = decls
+                    .filterAs(isImplements)
+                    .map(x => x._def.implemented as ZsImplementable)
+                    .toArray()
+                    .pull()
+                for (const p of parents) {
+                    Object.assign(shape, p.shape)
                 }
-                return {
+                const partial = {
                     shape,
-                    implements: parents,
-                    schema: z.object(unpackMemberSchemas(shape))
+                    implements: parents
                 }
-            }).pull,
+                if (foreignShape in shape) {
+                    return {
+                        ...partial,
+                        schema: z
+                            .object(unpackMemberSchemas(shape))
+                            .passthrough()
+                    }
+                } else {
+                    return {
+                        ...partial,
+                        schema: z.object(unpackMemberSchemas(shape))
+                    }
+                }
+            }),
             decls
         })
     }

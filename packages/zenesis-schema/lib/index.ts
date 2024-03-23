@@ -29,10 +29,8 @@ export { ZsTypeAlias, ZsTypeAliasDef } from "./declarations/alias"
 export { ZsClass, ZsClassDef } from "./declarations/classlike/class"
 export { ZsInterface, ZsInterfaceDef } from "./declarations/classlike/interface"
 export {
-    ZsImplementable,
     ZsImplements,
-    ZsImplementsDef,
-    isImplementable
+    ZsImplementsDef
 } from "./declarations/classlike/members/implements"
 export {
     ZsIndexer,
@@ -50,14 +48,22 @@ export { ZsEnum, ZsEnumDef } from "./declarations/enum"
 export { ZsValue, ZsValueDef } from "./declarations/value"
 export { ZsAstExpr, ZsAstExprDef } from "./expressions/ast-expr"
 export { ZsConditional, ZsConditionalDef } from "./expressions/conditional"
+export {
+    ZsGenericFunction,
+    ZsGenericFunctionDef
+} from "./expressions/forall-function"
 export { ZsFunction, ZsFunctionDef } from "./expressions/function"
 export { ZsKeyof, ZsKeyofDef } from "./expressions/keyof"
 export { ZsLookup, ZsLookupDef } from "./expressions/lookup"
-export { ZsKeyTypeArg, ZsMapVarDef } from "./expressions/map-arg"
+export { ZsMapVarDef, ZsMappingKeyRef } from "./expressions/map-arg"
 export { ZsMapped, ZsMappedDef } from "./expressions/mapped"
 export { ZsForallTypeDef, ZsGeneric } from "./generics/forall-type"
 export { ZsInstantiationDef, ZsMade } from "./generics/instantiation"
-export { ZsTypeArg, ZsTypeArgDef, ZsTypeArgTuple } from "./generics/type-arg"
+export {
+    ZsTypeArgTuple,
+    ZsTypeVarRef,
+    ZsTypeVarRefDef
+} from "./generics/type-arg"
 export {
     ZsTypeVar,
     ZsTypeVarDef,
@@ -120,11 +126,22 @@ export {
     ZsSmartZenesisImport,
     ZsZenesisAnyImport,
     ZsZenesisGenericImport,
+    ZsZenesisImport,
     ZsZenesisImportDef,
+    ZsZenesisShapedImport,
     ZsZenesisTypeImport
 } from "./containers/zenesis-import"
 export { ZsZenesisModule } from "./containers/zenesis-module"
 export { Access } from "./declarations/classlike/members/member"
+export { ZsThis, ZsThisDef } from "./declarations/classlike/this"
+export {
+    ZsGenericSelfref,
+    ZsGenericSelfrefDef,
+    ZsSelfrefDef,
+    ZsTypeSelfref
+} from "./declarations/zenesis-self"
 export { ZsModifierState } from "./expressions/mapped"
-export * from "./utils/checks"
+export * from "./utils/describe"
 export * from "./utils/unions"
+export * from "./utils/validate/is-member"
+export * from "./utils/validate/is-type"

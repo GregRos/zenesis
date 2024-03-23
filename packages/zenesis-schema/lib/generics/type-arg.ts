@@ -2,25 +2,25 @@ import { ZodAny, ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
 
-export interface ZsTypeArgDef<Name extends string> extends ZodTypeDef {
-    typeName: ZsTypeKind.ZsTypeArg
+export interface ZsTypeVarRefDef<Name extends string> extends ZodTypeDef {
+    typeName: ZsTypeKind.ZsTypeVarRef
     name: Name
 }
 
-export class ZsTypeArg<Name extends string = string> extends ZsMonoType<
+export class ZsTypeVarRef<Name extends string = string> extends ZsMonoType<
     any,
-    ZsTypeArgDef<Name>
+    ZsTypeVarRefDef<Name>
 > {
     readonly actsLike = ZodAny.create()
     readonly name = this._def.name
     static create<Name extends string, Extends extends ZodTypeAny>(
         name: Name
-    ): ZsTypeArg<Name> {
-        return new ZsTypeArg({
-            typeName: ZsTypeKind.ZsTypeArg,
+    ): ZsTypeVarRef<Name> {
+        return new ZsTypeVarRef({
+            typeName: ZsTypeKind.ZsTypeVarRef,
             name
         })
     }
 }
 
-export type ZsTypeArgTuple = [ZsTypeArg, ...ZsTypeArg[]]
+export type ZsTypeArgTuple = [ZsTypeVarRef, ...ZsTypeVarRef[]]

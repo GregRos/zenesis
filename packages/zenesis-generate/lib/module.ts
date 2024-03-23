@@ -1,16 +1,19 @@
 import {
-    ZsDeclarable,
+    ZsDeclarableTypeLike,
     ZsForeignImport,
-    ZsMapArg,
+    ZsImport,
+    ZsMappingKeyRef,
     ZsModuleBody,
-    ZsReferable,
-    ZsTypeVar,
+    ZsReferableTypeLike,
+    ZsTypeVarRef,
     ZsZenesisImport,
     isDeclarableType,
-    isForeignImport,
-    isValue,
-    isZenesisImport
+    isImport,
+    isModuleDeclarableTypeLike,
+    isSelfref,
+    isValue
 } from "@zenesis/schema"
+
 import { Map, Set } from "immutable"
 import { Lazy, lazy } from "lazies"
 import {
@@ -27,7 +30,7 @@ import { tf } from "./tf"
 import { TypeExprContext } from "./type-expr-context"
 
 export class ScopeEscapeError extends Error {
-    constructor(node: ZsMapArg | ZsTypeVar) {
+    constructor(node: ZsMappingKeyRef | ZsTypeVarRef) {
         super(`${node.constructor.name}(${node.name}) has escaped its scope!`)
     }
 }
@@ -60,16 +63,21 @@ export class ImportContext {
 
     generateModule(body: ZsModuleBody): ModuleBlueprint {
         let schemaToReference = Map<
-            ZsReferable,
+            ZsReferableTypeLike,
             TypeReferenceNode | Lazy<TypeReferenceNode>
         >()
         let namespace = Set<string>()
         let delayedDeclarations = Map<string, Lazy<MixedDeclarations>>()
         let imports = Map<string, Set<string>>()
 
-        const registerReferable = (node: ZsReferable) => {
+        const registerReferable = (node: ZsReferableTypeLike) => {
             if (schemaToReference.has(node)) {
                 throw new Error("Node already registered")
+            }
+            if (isSelfref(node)) {
+                throw new Error(
+                    "Tried to register a selfref! Is it out of scope?"
+                )
             }
             if (namespace.has(node.name)) {
                 throw new NameCollisionError(node.name)
@@ -82,7 +90,7 @@ export class ImportContext {
             const newNamespace = namespace.add(node.name)
             if (isDeclarableType(node)) {
                 addDeclaration(node, false)
-            } else if (isZenesisImport(node) || isForeignImport(node)) {
+            } else if (isImport(node)) {
                 addImport(node)
             }
             schemaToReference = newSchemaToReference
@@ -90,7 +98,7 @@ export class ImportContext {
             return typeReferenceNode
         }
 
-        const addImport = (schema: ZsForeignImport | ZsZenesisImport) => {
+        const addImport = (schema: ZsImport) => {
             const relativePath = this._importResolver(schema)
             let existing = imports.get(relativePath)
             if (!existing) {
@@ -104,7 +112,7 @@ export class ImportContext {
         }
 
         const addDeclaration = (
-            schema: ZsDeclarable,
+            schema: ZsDeclarableTypeLike,
             exported: boolean = false
         ) => {
             if (schemaToReference.has(schema)) {
@@ -123,7 +131,7 @@ export class ImportContext {
         }
 
         for (const node of body) {
-            if (isDeclarableType(node)) {
+            if (isModuleDeclarableTypeLike(node)) {
                 addDeclaration(node, true)
             } else if (isValue(node)) {
                 throw new Error("Values are not supported")

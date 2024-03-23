@@ -38,22 +38,21 @@ import {
     ZsConstructor,
     ZsDeclarable,
     ZsEnum,
-    ZsForallType,
     ZsFunction,
+    ZsGeneric,
+    ZsGenericFunction,
     ZsImplements,
     ZsIndexer,
     ZsInterface,
-    ZsMember,
     ZsOverloads,
     ZsProperty,
-    ZsReferable,
+    ZsReferableTypeLike,
     ZsSchemaTable,
     ZsTypeAlias,
     ZsTypeVar,
     ZsValue,
-    isForallFunction
+    describeZenesisNode
 } from "@zenesis/schema"
-import { ZsForallFunction } from "@zenesis/schema/dist/lib/expressions/forall-function"
 
 import { seq } from "lazies"
 import { cases } from "./cases"
@@ -83,7 +82,7 @@ function createMethodSignature(
 export class TypeExprContext {
     constructor(private readonly _refs: NodeMap) {}
 
-    get(node: ZsReferable) {
+    get(node: ZsReferableTypeLike) {
         return this._refs.get(node)
     }
     recurse<Node extends ZodKindedAny>(
@@ -100,7 +99,7 @@ export class TypeExprContext {
     convertZodShape(shape: ZodRawShape) {
         return Object.entries(shape).flatMap(
             ([name, schema]): (MethodSignature | PropertySignature)[] => {
-                const member = ZsMember.create(name, schema)
+                const member = ZsProperty.create(name, schema)
                 return this.convertMember(member)
             }
         )
@@ -112,7 +111,7 @@ export class TypeExprContext {
         return tf.createExpressionWithTypeArguments(expr, typeArgs)
     }
 
-    set(node: ZsDeclarable, type: TypeReferenceNode): TypeExprContext {
+    set(node: ZsReferableTypeLike, type: TypeReferenceNode): TypeExprContext {
         return new TypeExprContext(this._refs.set(node, type))
     }
 
@@ -122,27 +121,60 @@ export class TypeExprContext {
         )
         return this.convertTypeRefToExpr(typeRefNode)
     }
-    convertClassBody(fragment: ZsClassBody) {
-        const wrapped = seq(fragment._def.decls).cache()
+
+    *getAutoProperties(
+        body: ZsClassBody,
+        depth = 0
+    ): Iterable<ZsProperty | ZsIndexer | ZsConstructor> {
+        const impls = [] as ZsImplements[]
+        const names = new Set<string>()
+        for (const decl of body._def.decls) {
+            if (decl instanceof ZsImplements) {
+                impls.push(decl)
+                continue
+            }
+            if ("name" in decl) {
+                names.add(decl.name)
+            }
+            if (decl instanceof ZsConstructor) {
+                if (depth !== 0) {
+                    throw new Error("Cannot implicitly implement constructor!")
+                }
+            }
+            yield decl
+        }
+        const properties = seq(impls).concatMap(x => {
+            if (x._def.auto) {
+                return this.getAutoProperties(
+                    x._def.implemented.body,
+                    depth + 1
+                )
+            } else {
+                return []
+            }
+        })
+        yield* properties.filter(x => {
+            if ("name" in x) {
+                return !names.has(x.name)
+            }
+            return true
+        })
+    }
+
+    convertClassBody(body: ZsClassBody) {
+        const wrapped = seq(body._def.decls).cache()
         const properties = wrapped.ofTypes(ZsProperty)
         const impls = wrapped.ofTypes(ZsImplements)
-        const implicitProperties = seq(impls)
-            .map(x => x._def.implemented as ZsInterface | ZsClass)
-            .concatMap(x => {
-                return x.body.requiredDeclarations()
-            })
-            .ofTypes(ZsMember, ZsIndexer)
-            .toArray()
-            .pull()
+        const autoProperties = seq(this.getAutoProperties(body))
 
         const heritageClauses = seq(impls)
             .map(x => this.getTypeExprForHeritageClause(x))
             .toArray()
             .pull()
-        const membersx = properties.concat(implicitProperties).uniq()
+        const membersx = properties.concat(autoProperties).uniq()
 
         const members = membersx
-            .ofTypes(ZsMember)
+            .ofTypes(ZsProperty)
             .concatMap(x => this.convertMember(x))
             .toArray()
             .pull()
@@ -152,7 +184,7 @@ export class TypeExprContext {
             .toArray()
             .pull()
 
-        const ctors = decls
+        const ctors = membersx
             .ofTypes(ZsConstructor)
             .map(x => this.convertConstructor(x))
             .toArray()
@@ -267,7 +299,7 @@ export class TypeExprContext {
     }
     convertGenericTypeToDeclaration(
         explicit: boolean,
-        generic: ZsForallType
+        generic: ZsGeneric
     ): TypeAliasDeclaration | InterfaceDeclaration | ClassDeclaration {
         const scoped = this.withTypeVars(generic._def.vars)
         const typeVars = scoped.convertTypeVarsToDeclarations(generic._def.vars)
@@ -288,14 +320,16 @@ export class TypeExprContext {
             return this.convertInterfaceDeclaration(explicit, schema, typeVars)
         } else if (schema instanceof ZsClass) {
             return this.convertClassDeclaration(explicit, schema, typeVars)
-        } else if (schema instanceof ZsForallType) {
+        } else if (schema instanceof ZsGeneric) {
             return this.convertGenericTypeToDeclaration(explicit, schema)
         } else if (schema instanceof ZsValue) {
             throw new Error("Values not implemented")
         } else if (schema instanceof ZsEnum) {
             throw new Error("Enums not implemented")
         } else {
-            throw new Error("Unreachable")
+            throw new Error(
+                `Can't add module-level declaration for ${describeZenesisNode(schema)}`
+            )
         }
     }
 
@@ -311,7 +345,7 @@ export class TypeExprContext {
         }
 
         modifiers.push(tf.createModifier(SyntaxKind.DeclareKeyword))
-        const type = this.recurse(alias._def.definition)
+        const type = this.recurse(alias._def.definition())
         return tf.createTypeAliasDeclaration(
             modifiers,
             alias.name,
@@ -320,7 +354,7 @@ export class TypeExprContext {
         )
     }
     convertZsFunctionToSomething<T>(
-        signature: ZsFunction | ZsForallFunction,
+        signature: ZsFunction | ZsGenericFunction,
         mapper: (
             typeVars: TypeParameterDeclaration[] | undefined,
             args: ParameterDeclaration[],
@@ -329,7 +363,7 @@ export class TypeExprContext {
     ) {
         let typeVars: ZsTypeVar[]
         let f: ZsFunction
-        if (isForallFunction(signature)) {
+        if (signature instanceof ZsGenericFunction) {
             typeVars = signature._def.vars
             f = signature._def.innerType
         } else {
@@ -448,7 +482,7 @@ export class TypeExprContext {
         return tf.createIndexSignature(undefined, keyParams, valueType)
     }
 
-    convertMember(member: ZsMember): (MethodSignature | PropertySignature)[] {
+    convertMember(member: ZsProperty): (MethodSignature | PropertySignature)[] {
         const modifiers = [] as Modifier[]
 
         if (member._def.access !== "public") {

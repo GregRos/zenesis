@@ -1,8 +1,7 @@
 import {
-    ZsForeignImport,
     ZsForeignModule,
+    ZsImport,
     ZsWorld,
-    ZsZenesisImport,
     ZsZenesisModule
 } from "@zenesis/schema"
 import { Map, Set, Stack } from "immutable"
@@ -56,7 +55,7 @@ export function fromBlueprint(blueprint: ModuleBlueprint): SourceFile {
 export function generateWorld(w: ZsWorld) {
     let foreignModules = Set<ZsForeignModule>()
     let zenesisModules = Set<ZsZenesisModule>()
-    const ctx = new ImportContext((node: ZsZenesisImport | ZsForeignImport) => {
+    const ctx = new ImportContext((node: ZsImport) => {
         const origin = node.origin
         if (origin instanceof ZsForeignModule) {
             foreignModules = foreignModules.add(origin)

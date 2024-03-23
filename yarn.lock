@@ -1333,7 +1333,7 @@ __metadata:
   dependencies:
     "@zenesis/generate": "npm:^0.1.0"
     "@zenesis/schema": "npm:^0.1.0"
-    lazies: "npm:^0.6.2"
+    lazies: "npm:^0.6.4"
   languageName: unknown
   linkType: soft
 
@@ -1343,7 +1343,7 @@ __metadata:
   dependencies:
     "@zenesis/schema": "npm:^0.1.0"
     immutable: "npm:^5.0.0-beta.4"
-    lazies: "npm:^0.6.2"
+    lazies: "npm:^0.6.4"
     zod: "npm:^3.22.2"
   languageName: unknown
   linkType: soft
@@ -1352,7 +1352,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@zenesis/schema@workspace:packages/zenesis-schema"
   dependencies:
-    lazies: "npm:^0.6.2"
+    lazies: "npm:^0.6.4"
     zod: "npm:^3.22.4"
   languageName: unknown
   linkType: soft
@@ -4585,10 +4585,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lazies@npm:^0.6.2":
-  version: 0.6.2
-  resolution: "lazies@npm:0.6.2"
-  checksum: 10c0/7e495b8271d8b624af55429111435a3845409c14baefde9b5211943b385798c6c980eea5cf38bda227e4073695f19279ee1f2f13d79d179ac1fde5a7d3fd46e8
+"lazies@npm:^0.6.4":
+  version: 0.6.4
+  resolution: "lazies@npm:0.6.4"
+  checksum: 10c0/417654a41582bc8f7559c38e86edc7d6d6cee4466f829331bf7b59324c1fd9c4a3762c5af5f0105580187137972a2a5e132a9b7fc92aa07768a90d3510bbb231
   languageName: node
   linkType: hard
 
@@ -6593,7 +6593,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^7.2.0"
     "@typescript-eslint/parser": "npm:^7.2.0"
     eslint: "npm:^8.57.0"
-    lazies: "npm:^0.6.2"
+    lazies: "npm:^0.6.4"
     lerna: "npm:^8.1.2"
     lodash: "npm:^4.17.21"
     npm-run-all: "npm:^4.1.5"
@@ -8005,7 +8005,7 @@ __metadata:
   dependencies:
     "@zenesis/generate": "npm:^0.1.0"
     "@zenesis/schema": "npm:^0.1.0"
-    lazies: "npm:^0.6.2"
+    lazies: "npm:^0.6.4"
   languageName: unknown
   linkType: soft
 

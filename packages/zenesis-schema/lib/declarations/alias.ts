@@ -1,3 +1,4 @@
+import { memoize } from "lazies"
 import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
@@ -8,7 +9,7 @@ export interface ZsTypeAliasDef<Name extends string, Type extends ZodTypeAny>
     name: Name
     declName: ZsDeclKind.ZsTypeAlias
     typeName: ZsTypeKind.ZsTypeAlias
-    definition: Type
+    definition: () => Type
 }
 
 export class ZsTypeAlias<
@@ -16,17 +17,19 @@ export class ZsTypeAlias<
     Instance extends ZodTypeAny = ZodTypeAny
 > extends ZsMonoType<TypeOf<Instance>, ZsTypeAliasDef<Name, Instance>> {
     readonly name = this._def.name
-    readonly actsLike = this._def.definition
+    get actsLike() {
+        return this._def.definition()
+    }
     readonly declaration = "alias"
     static create<Name extends string, T extends ZodTypeAny>(
         name: Name,
-        definition: T
+        definition: () => T
     ) {
         return new ZsTypeAlias({
             declName: ZsDeclKind.ZsTypeAlias,
             typeName: ZsTypeKind.ZsTypeAlias,
             name,
-            definition
+            definition: memoize(definition) as () => T
         })
     }
 }

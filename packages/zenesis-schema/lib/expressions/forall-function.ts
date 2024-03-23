@@ -4,11 +4,11 @@ import { ZsMonoType } from "../core/mono-type"
 import { ZsTypeVarTuple } from "../generics/type-var"
 import { ZsFunction } from "./function"
 
-export interface ZsForallFunctionDef<
+export interface ZsGenericFunctionDef<
     Vars extends ZsTypeVarTuple,
     Func extends ZsFunction
 > extends ZodTypeDef {
-    typeName: ZsTypeKind.ZsForallFunction
+    typeName: ZsTypeKind.ZsGenericFunction
     vars: Vars
     innerType: Func
 }
@@ -16,7 +16,7 @@ export interface ZsForallFunctionDef<
 export class ZsGenericFunction<
     Vars extends ZsTypeVarTuple = ZsTypeVarTuple,
     Func extends ZsFunction = ZsFunction
-> extends ZsMonoType<TypeOf<Func>, ZsForallFunctionDef<Vars, Func>> {
+> extends ZsMonoType<TypeOf<Func>, ZsGenericFunctionDef<Vars, Func>> {
     readonly actsLike = this._def.innerType
 
     static create<Vars extends ZsTypeVarTuple, Func extends ZsFunction>(
@@ -24,7 +24,7 @@ export class ZsGenericFunction<
         func: Func
     ): ZsGenericFunction<Vars, Func> {
         return new ZsGenericFunction({
-            typeName: ZsTypeKind.ZsForallFunction,
+            typeName: ZsTypeKind.ZsGenericFunction,
             vars,
             innerType: func
         })

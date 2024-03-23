@@ -1,12 +1,24 @@
-import { ZodType } from "zod"
-import { ZsStructural } from "../core/misc-node"
-
-export const desc = Symbol("describe")
+export function describeSomething(thing: any) {
+    if (typeof thing === "object" && thing) {
+        return thing.constructor.name
+    }
+    if (thing === null) {
+        return "null"
+    }
+    switch (typeof thing) {
+        case "string":
+            return "string"
+        case "number":
+            return "number"
+        case "boolean":
+            return "boolean"
+        case "undefined":
+            return "undefined"
+        case "function":
+            return "function"
+    }
+}
 
 export function describeZenesisNode(node: any) {
-    if (node instanceof ZodType) {
-        return node._def.typeName
-    }
-    if (node instanceof ZsStructural) {
-    }
+    return describeSomething(node)
 }

@@ -2,7 +2,7 @@ import { RecordType, TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoLike, ZsMonoType } from "../core/mono-type"
 import { ZodKindedAny } from "../core/types"
-import { ZsKeyTypeArg } from "./map-arg"
+import { ZsMappingKeyRef } from "./map-arg"
 
 export interface ZsMappedDef<
     In extends ZodTypeAny,
@@ -10,8 +10,8 @@ export interface ZsMappedDef<
     Mapping extends ZodTypeAny
 > extends ZodTypeDef {
     typeName: ZsTypeKind.ZsMapped
-    var: ZsKeyTypeArg<In>
-    nameType: As
+    var: ZsMappingKeyRef<In>
+    keyType: As
     value: Mapping
     modifiers: ZsMappedTypeModifiers
 }
@@ -28,20 +28,22 @@ export class ZsMapped<
     implements ZsMappedBuilderValue<ZIn, ZAs>
 {
     key<As extends ZsMonoLike<PropertyKey>>(
-        mapping: (var_: ZsKeyTypeArg<ZIn>) => As
+        mapping: (var_: ZsMappingKeyRef<ZIn>) => As
     ) {
+        const result = mapping(this._def.var)
         return new ZsMapped<ZIn, As, ZMapping>({
             ...this._def,
-            nameType: mapping(this._def.var)
+            keyType: mapping(this._def.var)
         })
     }
 
     value<Mapping extends ZodTypeAny>(
-        mapping: (var_: ZsKeyTypeArg<ZIn>) => Mapping
+        mapping: (var_: ZsMappingKeyRef<ZIn>) => Mapping
     ) {
+        const mappingResult = mapping(this._def.var)
         return new ZsMapped<ZIn, ZAs, Mapping>({
             ...this._def,
-            value: mapping(this._def.var)
+            value: mappingResult
         })
     }
 
@@ -64,11 +66,11 @@ export class ZsMapped<
     ): TypeOf<In> extends PropertyKey
         ? ZsMappedBuilderValue<In, In>
         : ZsMappedBuilderKey<In> {
-        const var_ = ZsKeyTypeArg.create(name, in_)
+        const var_ = ZsMappingKeyRef.create(name, in_)
         return new ZsMapped<In, In, In>({
             typeName: ZsTypeKind.ZsMapped,
             var: var_,
-            nameType: var_ as any,
+            keyType: var_ as any,
             value: z.never() as any,
             modifiers: {
                 readonly: null,
@@ -77,7 +79,7 @@ export class ZsMapped<
         }) as any
     }
 
-    readonly actsLike = z.record(this._def.nameType, this._def.value)
+    readonly actsLike = z.record(this._def.keyType, this._def.value)
 }
 
 export interface ZsMappedBuilderValue<
@@ -85,13 +87,13 @@ export interface ZsMappedBuilderValue<
     As extends ZsMonoLike<PropertyKey>
 > extends ZsMappedBuilderKey<In> {
     value<Mapping extends ZodTypeAny>(
-        mapping: (var_: ZsKeyTypeArg<In>) => Mapping
+        mapping: (var_: ZsMappingKeyRef<In>) => Mapping
     ): ZsMapped<In, As, Mapping>
 }
 
 export interface ZsMappedBuilderKey<In extends ZodTypeAny> {
     key<As extends ZsMonoLike<PropertyKey>>(
-        mapping: (var_: ZsKeyTypeArg<In>) => As
+        mapping: (var_: ZsMappingKeyRef<In>) => As
     ): ZsMappedBuilderValue<In, As>
 }
 export interface ZsMappedTypeModifiers {

@@ -11,6 +11,7 @@ export interface ZsForeignDef<As extends any> extends ZodTypeDef {
     staticType(): As
 }
 
+export const foreignShape = Symbol("foreignShape")
 /**
  * Represents a type imported from a non-Zenesis module. Because it's external,
  * nothing is known about it, so you're not going to get any type checking.
@@ -23,6 +24,11 @@ export class ZsForeignImport<As = any> extends ZsMonoType<
     readonly name = this._def.name
     readonly origin = this._def.origin
 
+    get shape(): any {
+        return {
+            [foreignShape]: true
+        }
+    }
     /**
      * Assuming this import is generic, will instantiate it with the given
      * type arguments. Produces invalid code if the import is not generic.

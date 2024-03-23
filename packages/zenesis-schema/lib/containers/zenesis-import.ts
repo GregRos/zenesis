@@ -1,15 +1,20 @@
-import { Lazy } from "lazies"
+import { memoize } from "lazies"
 import { TypeOf, ZodTypeDef } from "zod"
 import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoLike, ZsMonoType } from "../core/mono-type"
+import { ZsClass } from "../declarations/classlike/class"
+import { ZsInterface } from "../declarations/classlike/interface"
 import { ZsGeneric } from "../generics/forall-type"
-import { ZsExportableType, ZsExportableTypeLike } from "../utils/unions"
+import {
+    ZsClassLike,
+    ZsExportableType,
+    ZsExportableTypeLike
+} from "../utils/unions"
 import { ZsZenesisModule } from "./zenesis-module"
-
 export interface ZsZenesisImportDef extends ZodTypeDef {
     typeName: ZsTypeKind.ZsZenesisImport
     name: string
-    inner: Lazy<ZsExportableTypeLike>
+    inner: () => ZsExportableTypeLike
     origin: ZsZenesisModule
 }
 /**
@@ -25,6 +30,7 @@ export class ZsZenesisAnyImport extends ZsMonoType<any, ZsZenesisImportDef> {
     get origin() {
         return this._def.origin
     }
+
     get name() {
         return this._def.name
     }
@@ -33,7 +39,7 @@ export class ZsZenesisAnyImport extends ZsMonoType<any, ZsZenesisImportDef> {
     }
 
     get inner() {
-        return this._def.inner.pull()
+        return this._def.inner()
     }
 
     get actsLike(): any {
@@ -46,19 +52,19 @@ export class ZsZenesisAnyImport extends ZsMonoType<any, ZsZenesisImportDef> {
 
     static create<ZType extends ZsExportableTypeLike>(
         name: string,
-        innerType: Lazy<ZsExportableTypeLike>,
+        innerType: () => ZsExportableTypeLike,
         origin: ZsZenesisModule
     ): ZsSmartZenesisImport<ZType> {
         return new ZsZenesisAnyImport({
             typeName: ZsTypeKind.ZsZenesisImport,
             name,
-            inner: innerType,
+            inner: memoize(innerType),
             origin
         }) as any
     }
 
     make(args: any) {
-        const inner = this._def.inner.pull()
+        const inner = this._def.inner()
         if (inner instanceof ZsGeneric) {
             return inner.make(args)
         }
@@ -74,19 +80,30 @@ export interface ZsZenesisTypeImport<
     readonly name: string
     readonly isType: true
     readonly inner: ZType
+    readonly origin: ZsZenesisModule
+}
+
+export interface ZsZenesisShapedImport<ZType extends ZsClassLike = ZsClassLike>
+    extends ZsZenesisTypeImport<ZType> {
+    readonly shape: ZType["shape"]
 }
 
 /**
  * Represents an imported Generic from another Zenesis module.
  */
-export interface ZsZenesisGenericImport<
-    ZGenType extends ZsGeneric = ZsGeneric
-> {
+export type ZsZenesisGenericImport<ZGenType extends ZsGeneric = ZsGeneric> = {
     readonly name: string
     readonly inner: ZGenType
     readonly isType: false
+    readonly origin: ZsZenesisModule
+
     make: ZGenType["make"]
 }
+
+export type ZsZenesisImport =
+    | ZsZenesisGenericImport
+    | ZsZenesisTypeImport
+    | ZsZenesisShapedImport
 
 /**
  * Represents an imported Type or Generic from another Zenesis module. The type
@@ -94,6 +111,8 @@ export interface ZsZenesisGenericImport<
  */
 export type ZsSmartZenesisImport<ZType> = ZType extends ZsGeneric
     ? ZsZenesisGenericImport<ZType>
-    : ZType extends ZsExportableType
-      ? ZsZenesisTypeImport<ZType>
-      : never
+    : ZType extends ZsClass | ZsInterface
+      ? ZsZenesisShapedImport<ZType>
+      : ZType extends ZsExportableType
+        ? ZsZenesisTypeImport<ZType>
+        : never
