@@ -12,7 +12,8 @@ const f1 = W.File("hello", function* () {
     const cl1 = this.Class("Hello", function* (this) {
         yield this.Property("a", zs.string())
         const a = yield this.Property("b", zs.number())
-
+        yield this.Property("self", this.self)
+        yield this.Property("thisType", this.this)
         yield this.Method("hello", zs.fun(zs.string()).returns(zs.string()))
 
         yield this.Implements(iface1)
@@ -21,10 +22,16 @@ const f1 = W.File("hello", function* () {
     yield this.forall("A", "B")
         .where("A", A => A.extends(zs.string()))
         .where("B", (B, args) => B.extends(args.A))
-        .Class("Hello2", function* (typeArgs) {
-            yield this.Property("a", typeArgs.A)
+        .Class("Hello2", function* ({ A, B }) {
+            yield this.Property(
+                "x",
+                this.self.make(
+                    zs.literal("a").or(zs.literal("b")),
+                    zs.literal("a")
+                )
+            )
+            yield this.Property("a", A)
         })
-
     yield cl1
 })
 

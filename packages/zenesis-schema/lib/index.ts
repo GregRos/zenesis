@@ -1,8 +1,8 @@
 import { z } from "zod"
 import { ZsWorld } from "./containers/world"
 import { ZsAstExpr } from "./expressions/ast-expr"
-import { ZsConditional } from "./expressions/conditional"
 import { ZsFunction } from "./expressions/function"
+import { ZsIf } from "./expressions/if"
 import { ZsKeyof } from "./expressions/keyof"
 import { ZsLookup } from "./expressions/lookup"
 import { ZsMapped } from "./expressions/mapped"
@@ -47,12 +47,12 @@ export {
 export { ZsEnum, ZsEnumDef } from "./declarations/enum"
 export { ZsValue, ZsValueDef } from "./declarations/value"
 export { ZsAstExpr, ZsAstExprDef } from "./expressions/ast-expr"
-export { ZsConditional, ZsConditionalDef } from "./expressions/conditional"
 export {
     ZsGenericFunction,
     ZsGenericFunctionDef
 } from "./expressions/forall-function"
 export { ZsFunction, ZsFunctionDef } from "./expressions/function"
+export { ZsIf, ZsIfDef } from "./expressions/if"
 export { ZsKeyof, ZsKeyofDef } from "./expressions/keyof"
 export { ZsLookup, ZsLookupDef } from "./expressions/lookup"
 export { ZsMapVarDef, ZsMappingKeyRef } from "./expressions/map-arg"
@@ -108,11 +108,11 @@ const zs = {
     forall: Forall.create,
     lookup: ZsLookup.create,
     typeVar: ZsTypeVar.create,
-    conditional: ZsConditional.create,
+    if: ZsIf.create,
     function: ZsFunction.create,
     fun: ZsFunction.create,
     keyof: ZsKeyof.create,
-    mapped: ZsMapped.create,
+    map: ZsMapped.create,
     ast: ZsAstExpr.create
 }
 export { ZsForeignDef, ZsForeignImport } from "./containers/foreign-import"

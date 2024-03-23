@@ -15,6 +15,12 @@ export type TypeVarRefsByName<Vars extends ZsTypeVarTuple> = {
     [Var in Vars[number] as Var["name"]]: Var["arg"]
 }
 
+export type TypeVarRefsByNameOrNumber<Vars extends ZsTypeVarTuple> = {
+    [Var in Vars[number] as Var["name"]]: Var["arg"]
+} & {
+    [I in keyof Vars]: Vars[I]["arg"]
+}
+
 export type TypeVarRefs<Vars extends ZsTypeVarTuple> = {
     [I in keyof Vars]: Vars[I]["arg"]
 }

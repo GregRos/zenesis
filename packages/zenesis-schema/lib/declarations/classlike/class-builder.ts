@@ -13,7 +13,7 @@ import { ZsThis } from "./this"
 
 export class ClassScopedFactory<Self extends ZsGenericSelfref | ZsTypeSelfref> {
     constructor(readonly self: Self) {}
-    get thisType() {
+    get this() {
         return ZsThis.create()
     }
 

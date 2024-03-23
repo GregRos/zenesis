@@ -33,7 +33,10 @@ export class ZsClass<
 > {
     readonly name = this._def.name
     readonly declaration = "class"
-    readonly actsLike = this._def.body.schema
+    get actsLike() {
+        return this._def.body.schema
+    }
+
     readonly refAs = this
     readonly body = this._def.body
     get shape() {

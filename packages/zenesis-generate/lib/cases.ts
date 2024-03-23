@@ -284,7 +284,7 @@ export const cases: {
             this.recurse(node._def.what),
             this.recurse(node._def.extends),
             this.recurse(node._def.then),
-            this.recurse(node._def.otherwise)
+            this.recurse(node._def.else)
         )
     },
     [AnyTypeKind.ZsGenericFunction](node) {

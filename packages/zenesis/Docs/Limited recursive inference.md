@@ -1,0 +1,1 @@
+TypeScript doesn’t support type inference if an inferred type recurses back into itself. 

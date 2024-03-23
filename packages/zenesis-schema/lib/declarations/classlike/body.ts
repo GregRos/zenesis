@@ -40,8 +40,7 @@ export class ZsClassBody<Decl extends ZsClassItems = ZsClassItems> {
     }
 
     static create<Decl extends ZsClassItems>(decl: () => Iterable<Decl>) {
-        const input = decl()
-        const decls = seq(seq(input).toArray().pull())
+        const decls = seq(decl).cache()
         return new ZsClassBody<Decl>({
             definition: memoize(() => {
                 const shape: getFullShape<any> = {} as any

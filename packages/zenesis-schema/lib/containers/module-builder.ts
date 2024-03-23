@@ -36,7 +36,10 @@ export class GenericModuleScopedFactory<Vars extends ZsTypeVarTuple> {
     Interface<Name extends string, Decl extends ZsClassItems>(
         name: Name,
         declarations: (
-            this: Omit<ClassScopedFactory<ZsGenericSelfref>, "Constructor">,
+            this: Omit<
+                ClassScopedFactory<ZsGenericSelfref<Vars>>,
+                "Constructor"
+            >,
             args: TypeVarRefsByName<Vars>
         ) => Iterable<Decl>
     ) {
@@ -57,7 +60,10 @@ export class GenericModuleScopedFactory<Vars extends ZsTypeVarTuple> {
     Class<Name extends string, Decl extends ZsClassItems>(
         name: Name,
         declarations: (
-            this: Omit<ClassScopedFactory<ZsGenericSelfref>, "Constructor">,
+            this: Omit<
+                ClassScopedFactory<ZsGenericSelfref<Vars>>,
+                "Constructor"
+            >,
             args: TypeVarRefsByName<Vars>
         ) => Iterable<Decl>
     ) {
@@ -78,7 +84,7 @@ export class GenericModuleScopedFactory<Vars extends ZsTypeVarTuple> {
     TypeAlias<Name extends string, T extends ZodTypeAny>(
         name: Name,
         definition: (
-            this: { self: ZsGenericSelfref },
+            this: { self: ZsGenericSelfref<Vars> },
             args: TypeVarRefsByName<Vars>
         ) => T
     ) {

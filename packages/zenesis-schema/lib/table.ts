@@ -52,9 +52,9 @@ import { ZsThis } from "./declarations/classlike/this"
 import { ZsEnum } from "./declarations/enum"
 import { ZsTypeSelfref } from "./declarations/zenesis-self"
 import { ZsAstExpr } from "./expressions/ast-expr"
-import { ZsConditional } from "./expressions/conditional"
 import { ZsGenericFunction } from "./expressions/forall-function"
 import { ZsFunction } from "./expressions/function"
+import { ZsIf } from "./expressions/if"
 import { ZsKeyof } from "./expressions/keyof"
 import { ZsLookup } from "./expressions/lookup"
 import { ZsMappingKeyRef } from "./expressions/map-arg"
@@ -140,7 +140,7 @@ export abstract class ZsSchemaTable extends ZodSchemaTable {
     [ZsTypeKind.ZsFunction]!: ZsFunction;
     [ZsTypeKind.ZsMapped]!: ZsMapped;
     [ZsTypeKind.ZsKeyof]!: ZsKeyof;
-    [ZsTypeKind.ZsConditional]!: ZsConditional;
+    [ZsTypeKind.ZsConditional]!: ZsIf;
     [ZsTypeKind.ZsIndexedAccess]!: ZsLookup;
     [ZsTypeKind.ZsOverloads]!: ZsOverloads
 }

@@ -13,9 +13,9 @@ export interface ZsLookupDef<
 }
 
 export class ZsLookup<
-    ZTarget extends ZodTypeAny = ZodKindedAny,
-    TKey extends keyof TypeOf<ZTarget> = keyof TypeOf<ZTarget>
-> extends ZsMonoType<TypeOf<ZTarget>[TKey], ZsLookupDef<ZTarget, TKey>> {
+    ZSubject extends ZodTypeAny = ZodKindedAny,
+    TKey extends keyof TypeOf<ZSubject> = keyof TypeOf<ZSubject>
+> extends ZsMonoType<TypeOf<ZSubject>[TKey], ZsLookupDef<ZSubject, TKey>> {
     readonly actsLike = z.any()
     static create<
         ZTarget extends ZodTypeAny,
