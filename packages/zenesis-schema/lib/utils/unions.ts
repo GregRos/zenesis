@@ -13,14 +13,15 @@ import { ZsImplements } from "../declarations/classlike/members/implements"
 import { ZsIndexer } from "../declarations/classlike/members/indexer"
 import { ZsProperty } from "../declarations/classlike/members/member"
 import { ZsEnum } from "../declarations/enum"
+import { ZsTypeSelfref } from "../declarations/selfref"
 import { ZsValue } from "../declarations/value"
-import { ZsGenericSelfref, ZsTypeSelfref } from "../declarations/zenesis-self"
-import { ZsGenericFunction } from "../expressions/forall-function"
 import { ZsFunction } from "../expressions/function"
-import { ZsMappingKeyRef } from "../expressions/map-arg"
-import { ZsGeneric } from "../generics/forall-type"
-import { ZsMade } from "../generics/instantiation"
-import { ZsTypeVarRef } from "../generics/type-arg"
+import { ZsMappedKeyRef } from "../expressions/map-arg"
+import { ZsGeneric } from "../generics/generic"
+import { ZsGenericFunction } from "../generics/generic-function"
+import { ZsGenericSelfref } from "../generics/generic-selfref"
+import { ZsMade } from "../generics/made"
+import { ZsTypeVarRef } from "../generics/type-var--ref"
 
 /**
  * A non-generic function expression, represented using a `zod` or `zenesis` function node.
@@ -77,7 +78,7 @@ export type ZsModuleDeclarableType = ZsMakeResultType | ZsEnum
 export type ZsDeclarableType =
     | ZsModuleDeclarableType
     | ZsTypeVarRef
-    | ZsMappingKeyRef
+    | ZsMappedKeyRef
 
 /**
  * Any type or generic that can be declared in a module.

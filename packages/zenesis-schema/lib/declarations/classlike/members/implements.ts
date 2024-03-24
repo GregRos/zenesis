@@ -1,6 +1,6 @@
+import { ZsMemberKind } from "../../../core/member-kind"
 import { ZsStructural } from "../../../core/misc-node"
 import { ZsShape, ZsShapedRef } from "../../../core/types"
-import { ZsMemberKind } from "./kind"
 
 export interface ZsImplementsDef<Shape extends ZsShape> {
     memberName: ZsMemberKind.ZsImplements

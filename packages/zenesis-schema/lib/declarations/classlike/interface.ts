@@ -1,10 +1,9 @@
 import { ZodTypeDef } from "zod"
-import { ZsTypeKind } from "../../core/kinds"
+import { ZsDeclKind } from "../../core/declaration-kind"
 import { ZsMonoType } from "../../core/mono-type"
 import { getCombinedType } from "../../core/operators"
-import { ZsDeclKind } from "../kind"
-import { ZsClassBody, ZsClassItems } from "./body"
-import { ClassScope } from "./class-builder"
+import { ZsTypeKind } from "../../core/type-kind"
+import { ZsClassBody, ZsClassItems } from "./class-body"
 
 export interface ZsInterfaceDef<Name extends string, Body extends ZsClassBody>
     extends ZodTypeDef {
@@ -35,7 +34,7 @@ export class ZsInterface<
 
     static create<Name extends string, Memberable extends ZsClassItems>(
         name: Name,
-        body: ClassScope<Memberable>
+        body: () => Iterable<Memberable>
     ) {
         const result = new ZsInterface({
             name,

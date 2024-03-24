@@ -1,7 +1,7 @@
 import { AnyZodTuple, z, ZodTuple, ZodTypeAny, ZodTypeDef } from "zod"
 import { InnerTypeOfFunction, ZodTupleItems } from "zod/lib/types"
-import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
+import { ZsTypeKind } from "../core/type-kind"
 
 export interface ZsFunctionDef<
     ZParams extends AnyZodTuple,

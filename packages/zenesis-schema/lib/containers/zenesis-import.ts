@@ -1,10 +1,10 @@
 import { memoize } from "lazies"
 import { TypeOf, ZodTypeDef } from "zod"
-import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoLike, ZsMonoType } from "../core/mono-type"
+import { ZsTypeKind } from "../core/type-kind"
 import { ZsClass } from "../declarations/classlike/class"
 import { ZsInterface } from "../declarations/classlike/interface"
-import { ZsGeneric } from "../generics/forall-type"
+import { ZsGeneric } from "../generics/generic"
 import {
     ZsClassLike,
     ZsExportableType,

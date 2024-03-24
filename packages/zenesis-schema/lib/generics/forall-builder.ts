@@ -1,66 +1,36 @@
 import { ZodAny } from "zod"
 import { ZsStructural } from "../core/misc-node"
-import { ZsGenericFunction } from "../expressions/forall-function"
 import { ZsFunction } from "../expressions/function"
-import { ZsGeneralizable, ZsMakeResultType } from "../utils/unions"
+import { ZsGeneralizable } from "../utils/unions"
 import { isGeneralizableType } from "../utils/validate/is-type"
-import { ZsGeneric } from "./forall-type"
+import { ZsGeneric } from "./generic"
+import { ZsGenericFunction } from "./generic-function"
+import { Generalize } from "./makable"
+import {
+    TypeVarRefs,
+    TypeVarRefsByName,
+    getTypeArgArray,
+    getTypeArgObject
+} from "./ref-objects"
 import { ZsTypeVar, ZsTypeVarTuple } from "./type-var"
 
 export interface ZsForallDef<Vars extends ZsTypeVarTuple> {
     vars: Vars
 }
 
-export type TypeVarRefsByName<Vars extends ZsTypeVarTuple> = {
-    [Var in Vars[number] as Var["name"]]: Var["arg"]
-}
-
-export type TypeVarRefsByNameOrNumber<Vars extends ZsTypeVarTuple> = {
-    [Var in Vars[number] as Var["name"]]: Var["arg"]
-} & {
-    [I in keyof Vars]: Vars[I]["arg"]
-}
-
-export type TypeVarRefs<Vars extends ZsTypeVarTuple> = {
-    [I in keyof Vars]: Vars[I]["arg"]
-}
-
-export const typeVar = Symbol("typeVar")
-
-export type Generalize<
-    Vars extends ZsTypeVarTuple,
-    Schema extends ZsMakeResultType | ZsFunction
-> = Schema extends ZsMakeResultType
-    ? ZsGeneric<Schema, Vars>
-    : Schema extends ZsFunction
-      ? ZsGenericFunction<Vars, Schema>
-      : never
-
-export function getTypeArgObject<Vars extends ZsTypeVarTuple>(
-    vars: Vars
-): TypeVarRefsByName<Vars> {
-    return Object.fromEntries(vars.map(v => [v.name, v.arg])) as any
-}
-
-export function getTypeArgArray<Vars extends ZsTypeVarTuple>(
-    vars: Vars
-): TypeVarRefs<Vars> {
-    return vars.map(v => v.arg) as any
-}
-
 /**
  * Builds a set of type variables. The number and names of the type vars is predetermined,
  * but this object lets you place constraints on them by name,
  */
-export class Forall<
+export class ForallClause<
     Vars extends ZsTypeVarTuple = ZsTypeVarTuple
 > extends ZsStructural<ZsForallDef<Vars>> {
     static create<Names extends [string, ...string[]]>(
         ...names: Names
-    ): Forall<{
+    ): ForallClause<{
         [I in keyof Names]: ZsTypeVar<Names[I], ZodAny, null>
     }> {
-        return new Forall({
+        return new ForallClause({
             vars: names.map(name => ZsTypeVar.create(name)) as any
         }) as any
     }
@@ -70,11 +40,11 @@ export class Forall<
             cur: Extract<Vars[number], { name: Name }>,
             others: TypeVarRefsByName<Vars>
         ) => NewVar
-    ): Forall<{
+    ): ForallClause<{
         [I in keyof Vars]: Vars[I]["name"] extends Name ? NewVar : Vars[I]
     }> {
         const refs = getTypeArgObject(this._def.vars)
-        return new Forall({
+        return new ForallClause({
             vars: this._def.vars.map(v =>
                 v.name === name ? declarator(v as any, refs) : v
             ) as any

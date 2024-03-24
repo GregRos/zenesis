@@ -12,17 +12,15 @@ import { ZsInterface } from "../../declarations/classlike/interface"
 import { ZsOverloads } from "../../declarations/classlike/members/overloads"
 import { ZsThis } from "../../declarations/classlike/this"
 import { ZsEnum } from "../../declarations/enum"
+import { ZsTypeSelfref } from "../../declarations/selfref"
 import { ZsValue } from "../../declarations/value"
-import {
-    ZsGenericSelfref,
-    ZsTypeSelfref
-} from "../../declarations/zenesis-self"
-import { ZsGenericFunction } from "../../expressions/forall-function"
 import { ZsFunction } from "../../expressions/function"
-import { ZsMappingKeyRef } from "../../expressions/map-arg"
-import { ZsGeneric } from "../../generics/forall-type"
-import { ZsMade } from "../../generics/instantiation"
-import { ZsTypeVarRef } from "../../generics/type-arg"
+import { ZsMappedKeyRef } from "../../expressions/map-arg"
+import { ZsGeneric } from "../../generics/generic"
+import { ZsGenericFunction } from "../../generics/generic-function"
+import { ZsGenericSelfref } from "../../generics/generic-selfref"
+import { ZsMade } from "../../generics/made"
+import { ZsTypeVarRef } from "../../generics/type-var--ref"
 import {
     ZsClassLike,
     ZsDeclarable,
@@ -126,7 +124,7 @@ export function isDeclarableType(obj: any): obj is ZsDeclarableType {
     return (
         isModuleDeclarableType(obj) ||
         obj instanceof ZsTypeVarRef ||
-        obj instanceof ZsMappingKeyRef
+        obj instanceof ZsMappedKeyRef
     )
 }
 export function isModuleDeclarableTypeLike(

@@ -6,6 +6,6 @@
         "noEmit": false,
         "experimentalDecorators": true
     },
-    "include": ["**/*.ts", "generics/type-var.ts"],
+    "include": ["**/*.ts"],
     "exclude": ["**/dist", "**/node_modules"]
 }

@@ -1,5 +1,5 @@
 import { ZodType, ZodTypeAny, ZodTypeDef } from "zod"
-import { ZsClassBody } from "../declarations/classlike/body"
+import { ZsClassBody } from "../declarations/classlike/class-body"
 
 /**
  * Gets the `ZodDef` type of a schema instance.

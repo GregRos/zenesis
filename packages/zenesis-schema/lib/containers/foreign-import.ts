@@ -1,7 +1,7 @@
 import { ZodAny, ZodTypeAny, ZodTypeDef } from "zod"
-import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
-import { ZsMade } from "../generics/instantiation"
+import { ZsTypeKind } from "../core/type-kind"
+import { ZsMade } from "../generics/made"
 import { ZsForeignModule } from "./foreign-module"
 
 export interface ZsForeignDef<As extends any> extends ZodTypeDef {

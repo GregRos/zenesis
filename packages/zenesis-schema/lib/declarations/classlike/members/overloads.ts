@@ -1,6 +1,6 @@
 import { TypeOf, ZodTypeDef } from "zod"
-import { ZsTypeKind } from "../../../core/kinds"
 import { ZsMonoLike, ZsMonoType } from "../../../core/mono-type"
+import { ZsTypeKind } from "../../../core/type-kind"
 import { ZsFunction } from "../../../expressions/function"
 
 export interface ZsOverloadsDef<ZOverloads extends ZsFunction>

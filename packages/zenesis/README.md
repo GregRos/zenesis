@@ -1,4 +1,23 @@
 # Zenesis
+Zenesis is a TypeScript **metaprogramming framework** for constructing type declarations.
+
+Zenesis lets you construct types structurally rather than syntactically, representing each type expression and declaration using an object. These objects can then be composed to construct more complicated types.
+
+All of this is done using a domain-specific API that encodes the entirety of your generated types into the type system. This means both you and the compiler can 
+
+
+
+using a domain-specific API that resembles the types being generated. This API supports nearly all type system constructs, with [[Limitations|few exceptions]]. 
+
+
+Zenesis differs greatly from code generation tools you may be familiar with in many crucial aspects.
+
+1. 
+
+Zenesis s built on `zod`, and expands on its work by embedding more of the language into itself. A `zenesis` schema will, with some restrictions, 
+
+Zenesis is based on `zod` schemas. 
+
 Zenesis is a new way of generating TypeScript type declarations. `zenesis` is built on `zod` and wouldn’t be possible without it. 
 
 ![[Zenesis Schema.svg]]

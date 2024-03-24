@@ -1,4 +1,4 @@
-import { ZsModuleKind } from "../core/kinds"
+import { ZsModuleKind } from "../core/type-kind"
 import { ZsExportable } from "../utils/unions"
 import { ZsModuleBody, ZsModuleScope } from "./module-body"
 import { ModuleScopedFactory } from "./module-builder"

@@ -1,5 +1,5 @@
 import { ZodFunction, ZodTuple, ZodTypeAny } from "zod"
-import { ZsTypeKind } from "../core/kinds"
+import { ZsTypeKind } from "../core/type-kind"
 import { ZsFunction } from "../expressions/function"
 
 export function convertZodFunctionToZsFunction<

@@ -1,13 +1,14 @@
 import { ZodTypeAny } from "zod"
 import { ZsTypeAlias } from "../declarations/alias"
-import { ZsClassItems } from "../declarations/classlike/body"
 import { ZsClass } from "../declarations/classlike/class"
-import { ClassScopedFactory } from "../declarations/classlike/class-builder"
+import { ZsClassBody, ZsClassItems } from "../declarations/classlike/class-body"
+import { ClassScopeContext } from "../declarations/classlike/class-builder"
 import { ZsInterface } from "../declarations/classlike/interface"
+import { ZsTypeSelfref } from "../declarations/selfref"
 import { ZsValue, ZsValueKind } from "../declarations/value"
-import { ZsGenericSelfref, ZsTypeSelfref } from "../declarations/zenesis-self"
-import { TypeVarRefsByName, getTypeArgObject } from "../generics/forall-builder"
-import { ZsGeneric } from "../generics/forall-type"
+import { ZsGeneric } from "../generics/generic"
+import { ZsGenericSelfref } from "../generics/generic-selfref"
+import { TypeVarRefsByName, getTypeArgObject } from "../generics/ref-objects"
 import { ZsTypeVar, ZsTypeVarTuple } from "../generics/type-var"
 
 export class GenericModuleScopedFactory<Vars extends ZsTypeVarTuple> {
@@ -37,14 +38,14 @@ export class GenericModuleScopedFactory<Vars extends ZsTypeVarTuple> {
         name: Name,
         declarations: (
             this: Omit<
-                ClassScopedFactory<ZsGenericSelfref<Vars>>,
+                ClassScopeContext<ZsGenericSelfref<Vars>>,
                 "Constructor"
             >,
             args: TypeVarRefsByName<Vars>
         ) => Iterable<Decl>
     ) {
         const self = ZsGenericSelfref.create(this._vars, () => generic)
-        const factory = new ClassScopedFactory(self)
+        const factory = new ClassScopeContext(self)
         const args = this._typeArgsByName
         const makeResult = ZsInterface.create(
             name,
@@ -61,14 +62,14 @@ export class GenericModuleScopedFactory<Vars extends ZsTypeVarTuple> {
         name: Name,
         declarations: (
             this: Omit<
-                ClassScopedFactory<ZsGenericSelfref<Vars>>,
+                ClassScopeContext<ZsGenericSelfref<Vars>>,
                 "Constructor"
             >,
             args: TypeVarRefsByName<Vars>
         ) => Iterable<Decl>
     ) {
         const self = ZsGenericSelfref.create(this._vars, () => generic)
-        const factory = new ClassScopedFactory(self)
+        const factory = new ClassScopeContext(self)
         const args = this._typeArgsByName
         const makeResult = ZsClass.create(
             name,
@@ -120,33 +121,43 @@ export class ModuleScopedFactory {
     Interface<Name extends string, Decl extends ZsClassItems>(
         name: Name,
         declarations: (
-            this: Omit<ClassScopedFactory<ZsTypeSelfref>, "Constructor">
+            this: Omit<ClassScopeContext<ZsTypeSelfref>, "Constructor">
         ) => Iterable<Decl>
     ) {
-        const self = ZsTypeSelfref.create(() => result)
-        const factory = new ClassScopedFactory(self)
-        const result = ZsInterface.create(name, declarations.bind(factory))
+        const body = ZsClassBody.create(
+            declarations,
+            ZsTypeSelfref.create(() => result)
+        ) as any
+        const result = ZsInterface.create(name, body)
         return result
     }
 
     Class<Name extends string, Decl extends ZsClassItems>(
         name: Name,
         declarations: (
-            this: ClassScopedFactory<ZsTypeSelfref>
+            this: ClassScopeContext<ZsTypeSelfref<ZsClass>>
         ) => Iterable<Decl>
     ) {
-        const self = ZsTypeSelfref.create(() => result)
-        const factory = new ClassScopedFactory(self)
-        const result = ZsClass.create(name, declarations.bind(factory))
+        const body = ZsClassBody.create(
+            declarations,
+            ZsTypeSelfref.create(() => result)
+        ) as any
+        const result = ZsClass.create(name, body)
         return result
     }
 
     TypeAlias<Name extends string, T extends ZodTypeAny>(
         name: Name,
-        type: T | (() => T)
+        type: T | ((this: { self: ZsTypeSelfref<ZsTypeAlias> }) => T)
     ) {
         const result = typeof type === "function" ? type : () => type
-        return ZsTypeAlias.create(name, result)
+        const alias = ZsTypeAlias.create(
+            name,
+            result.call({
+                self: ZsTypeSelfref.create(() => alias)
+            }) as any
+        ) as any
+        return alias
     }
 
     Const(name: string, type: ZodTypeAny) {

@@ -1,8 +1,8 @@
 import { TypeOf, ZodTypeDef } from "zod"
-import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
-import { ZsTypeVarTuple } from "../generics/type-var"
-import { ZsFunction } from "./function"
+import { ZsTypeKind } from "../core/type-kind"
+import { ZsFunction } from "../expressions/function"
+import { ZsTypeVarTuple } from "./type-var"
 
 export interface ZsGenericFunctionDef<
     Vars extends ZsTypeVarTuple,

@@ -1,7 +1,7 @@
 import { ZodOptional, ZodTypeAny } from "zod"
+import { ZsMemberKind } from "../../../core/member-kind"
 import { ZsStructural } from "../../../core/misc-node"
 import { ZsMonoLike } from "../../../core/mono-type"
-import { ZsMemberKind } from "./kind"
 
 export interface ZsIndexerDef<
     Key extends ZsMonoLike<PropertyKey> | ZodOptional<ZsMonoLike<PropertyKey>>,

@@ -2,8 +2,8 @@ import { AnyZodTuple, ZodOptional, ZodTypeAny } from "zod"
 import { ZsMonoLike } from "../../core/mono-type"
 import { ZsShapedRef } from "../../core/types"
 import { ZsFunction } from "../../expressions/function"
-import { ZsGenericSelfref, ZsTypeSelfref } from "../zenesis-self"
-import { ZsClassItems } from "./body"
+import { ZsGenericSelfref } from "../../generics/generic-selfref"
+import { ZsTypeSelfref } from "../selfref"
 import { ZsConstructor } from "./members/constructor"
 import { ZsImplements } from "./members/implements"
 import { ZsIndexer } from "./members/indexer"
@@ -11,7 +11,7 @@ import { ZsProperty } from "./members/member"
 import { ZsOverloads } from "./members/overloads"
 import { ZsThis } from "./this"
 
-export class ClassScopedFactory<Self extends ZsGenericSelfref | ZsTypeSelfref> {
+export class ClassScopeContext<Self extends ZsGenericSelfref | ZsTypeSelfref> {
     constructor(readonly self: Self) {}
     get this() {
         return ZsThis.create()
@@ -56,5 +56,3 @@ export class ClassScopedFactory<Self extends ZsGenericSelfref | ZsTypeSelfref> {
         return ZsConstructor.create(params)
     }
 }
-
-export type ClassScope<Decl extends ZsClassItems> = () => Iterable<Decl>

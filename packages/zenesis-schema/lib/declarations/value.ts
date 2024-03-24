@@ -1,6 +1,6 @@
 import { ZodTypeAny } from "zod"
+import { ZsDeclKind } from "../core/declaration-kind"
 import { ZsStructural } from "../core/misc-node"
-import { ZsDeclKind } from "./kind"
 
 export enum ZsValueKind {
     const = "const",

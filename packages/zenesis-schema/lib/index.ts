@@ -1,22 +1,21 @@
 import { z } from "zod"
-import { ZsWorld } from "./containers/world"
 import { ZsAstExpr } from "./expressions/ast-expr"
 import { ZsFunction } from "./expressions/function"
 import { ZsIf } from "./expressions/if"
 import { ZsKeyof } from "./expressions/keyof"
 import { ZsLookup } from "./expressions/lookup"
 import { ZsMapped } from "./expressions/mapped"
-import { Forall } from "./generics/forall-builder"
+import { ForallClause } from "./generics/forall-builder"
 import { ZsTypeVar } from "./generics/type-var"
 
-export { ZsClassBody } from "./declarations/classlike/body"
+export { ZsClassBody } from "./declarations/classlike/class-body"
 export {
     ZsConstructor,
     ZsConstructorDef
 } from "./declarations/classlike/members/constructor"
 
-export { AnyTypeKind, ZsTypeKind } from "./core/kinds"
 export { ZsMonoLike, ZsMonoType } from "./core/mono-type"
+export { AnyTypeKind, ZsTypeKind } from "./core/type-kind"
 export {
     KindedAny,
     ZodDefOf,
@@ -47,29 +46,29 @@ export {
 export { ZsEnum, ZsEnumDef } from "./declarations/enum"
 export { ZsValue, ZsValueDef } from "./declarations/value"
 export { ZsAstExpr, ZsAstExprDef } from "./expressions/ast-expr"
-export {
-    ZsGenericFunction,
-    ZsGenericFunctionDef
-} from "./expressions/forall-function"
 export { ZsFunction, ZsFunctionDef } from "./expressions/function"
 export { ZsIf, ZsIfDef } from "./expressions/if"
 export { ZsKeyof, ZsKeyofDef } from "./expressions/keyof"
 export { ZsLookup, ZsLookupDef } from "./expressions/lookup"
-export { ZsMapVarDef, ZsMappingKeyRef } from "./expressions/map-arg"
+export { ZsMappedKeyRef, ZsMappedKeyRefDef } from "./expressions/map-arg"
 export { ZsMapped, ZsMappedDef } from "./expressions/mapped"
-export { ZsForallTypeDef, ZsGeneric } from "./generics/forall-type"
-export { ZsInstantiationDef, ZsMade } from "./generics/instantiation"
+export { ZsForallTypeDef, ZsGeneric } from "./generics/generic"
 export {
-    ZsTypeArgTuple,
-    ZsTypeVarRef,
-    ZsTypeVarRefDef
-} from "./generics/type-arg"
+    ZsGenericFunction,
+    ZsGenericFunctionDef
+} from "./generics/generic-function"
+export { ZsMade, ZsMadeDef } from "./generics/made"
 export {
     ZsTypeVar,
     ZsTypeVarDef,
     ZsTypeVarTuple,
     ZsTypeVarVariance
 } from "./generics/type-var"
+export {
+    ZsTypeVarRef,
+    ZsTypeVarRefDef,
+    ZsTypeVarRefs
+} from "./generics/type-var--ref"
 export { ZodSchemaTable, ZsSchemaTable } from "./table"
 export { zs }
 
@@ -104,8 +103,7 @@ const zs = {
         "bigint",
         "symbol"
     ),
-    World: ZsWorld.create,
-    forall: Forall.create,
+    forall: ForallClause.create,
     lookup: ZsLookup.create,
     typeVar: ZsTypeVar.create,
     if: ZsIf.create,
@@ -121,7 +119,6 @@ export {
     ZsForeignModuleDef
 } from "./containers/foreign-module"
 export { ZsModuleBody } from "./containers/module-body"
-export { ZsWorld, ZsWorldDef } from "./containers/world"
 export {
     ZsSmartZenesisImport,
     ZsZenesisAnyImport,
@@ -134,12 +131,7 @@ export {
 export { ZsZenesisModule } from "./containers/zenesis-module"
 export { Access } from "./declarations/classlike/members/member"
 export { ZsThis, ZsThisDef } from "./declarations/classlike/this"
-export {
-    ZsGenericSelfref,
-    ZsGenericSelfrefDef,
-    ZsSelfrefDef,
-    ZsTypeSelfref
-} from "./declarations/zenesis-self"
+export { ZsSelfrefDef, ZsTypeSelfref } from "./declarations/selfref"
 export { ZsModifierState } from "./expressions/mapped"
 export * from "./utils/describe"
 export * from "./utils/unions"

@@ -1,8 +1,7 @@
 import { ZodTypeAny, ZodTypeDef, ZodUnknown } from "zod"
 import { ZsStructural } from "../core/misc-node"
 import { SchemaSubtypeOf } from "../core/operators"
-import { ZsTypeVarRef } from "./type-arg"
-;``
+import { ZsTypeVarRef } from "./type-var--ref"
 export interface ZsTypeVarDef<
     Name extends string,
     Extends extends ZodTypeAny,

@@ -1,7 +1,7 @@
-import { ZsExportable } from "../utils/unions"
-import { ZsFile } from "./file"
-import { ZsForeignModule } from "./foreign-module"
-import { ZsModuleScope } from "./module-body"
+import { ZsFile } from "@zenesis/schema/lib/containers/file"
+import { ZsForeignModule } from "@zenesis/schema/lib/containers/foreign-module"
+import { ZsModuleScope } from "@zenesis/schema/lib/containers/module-body"
+import { ZsExportable } from "@zenesis/schema/lib/utils/unions"
 
 export interface ZsWorldDef {
     readonly worldName: "ZsWorld"

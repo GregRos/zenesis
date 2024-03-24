@@ -1,11 +1,10 @@
 import { ZodTypeDef } from "zod"
-import { ZsTypeKind } from "../../core/kinds"
+import { ZsDeclKind } from "../../core/declaration-kind"
 import { ZsMonoType } from "../../core/mono-type"
 import { getCombinedType } from "../../core/operators"
+import { ZsTypeKind } from "../../core/type-kind"
 import { ZsShapedRef } from "../../core/types"
-import { ZsDeclKind } from "../kind"
-import { ZsClassBody, ZsClassItems } from "./body"
-import { ClassScope } from "./class-builder"
+import { ZsClassBody, ZsClassItems } from "./class-body"
 
 export interface ZsClassDef<
     Name extends string,
@@ -68,13 +67,13 @@ export class ZsClass<
         Name extends string,
         Parent extends ZsShapedRef | null,
         Memberable extends ZsClassItems
-    >(name: Name, body: ClassScope<Memberable>) {
+    >(name: Name, body: ZsClassBody<Memberable>) {
         const result = new ZsClass({
             name,
             declName: ZsDeclKind.ZsClass,
             typeName: ZsTypeKind.ZsClass,
             abstract: false,
-            body: ZsClassBody.create(body),
+            body,
             parent: null
         })
         return result

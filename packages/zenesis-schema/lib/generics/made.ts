@@ -1,10 +1,10 @@
 import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod"
-import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
+import { ZsTypeKind } from "../core/type-kind"
 import { ZsShapedRef } from "../core/types"
 import { ZsMakable, ZsMakeResultType } from "../utils/unions"
 
-export interface ZsInstantiationDef<Instance extends ZsMakeResultType>
+export interface ZsMadeDef<Instance extends ZsMakeResultType>
     extends ZodTypeDef {
     typeName: ZsTypeKind.ZsInstantiation
     typeArgs: [ZodTypeAny, ...ZodTypeAny[]]
@@ -13,7 +13,7 @@ export interface ZsInstantiationDef<Instance extends ZsMakeResultType>
 }
 export class ZsMade<
     Ref extends ZsMakeResultType = ZsMakeResultType
-> extends ZsMonoType<TypeOf<Ref>, ZsInstantiationDef<Ref>> {
+> extends ZsMonoType<TypeOf<Ref>, ZsMadeDef<Ref>> {
     static create<Made extends ZsMakeResultType>(
         instance: Made,
         makable: ZsMakable,

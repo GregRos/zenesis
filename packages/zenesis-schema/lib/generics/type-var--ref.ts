@@ -1,6 +1,6 @@
 import { ZodAny, ZodTypeAny, ZodTypeDef } from "zod"
-import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoType } from "../core/mono-type"
+import { ZsTypeKind } from "../core/type-kind"
 
 export interface ZsTypeVarRefDef<Name extends string> extends ZodTypeDef {
     typeName: ZsTypeKind.ZsTypeVarRef
@@ -23,4 +23,4 @@ export class ZsTypeVarRef<Name extends string = string> extends ZsMonoType<
     }
 }
 
-export type ZsTypeArgTuple = [ZsTypeVarRef, ...ZsTypeVarRef[]]
+export type ZsTypeVarRefs = [ZsTypeVarRef, ...ZsTypeVarRef[]]

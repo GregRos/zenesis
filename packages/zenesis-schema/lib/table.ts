@@ -42,7 +42,7 @@ import {
 } from "zod"
 import { ZsForeignImport } from "./containers/foreign-import"
 import { ZsZenesisTypeImport } from "./containers/zenesis-import"
-import { ZsTypeKind } from "./core/kinds"
+import { ZsTypeKind } from "./core/type-kind"
 import { ZodKindedAny } from "./core/types"
 import { ZsTypeAlias } from "./declarations/alias"
 import { ZsClass } from "./declarations/classlike/class"
@@ -50,17 +50,17 @@ import { ZsInterface } from "./declarations/classlike/interface"
 import { ZsOverloads } from "./declarations/classlike/members/overloads"
 import { ZsThis } from "./declarations/classlike/this"
 import { ZsEnum } from "./declarations/enum"
-import { ZsTypeSelfref } from "./declarations/zenesis-self"
+import { ZsTypeSelfref } from "./declarations/selfref"
 import { ZsAstExpr } from "./expressions/ast-expr"
-import { ZsGenericFunction } from "./expressions/forall-function"
 import { ZsFunction } from "./expressions/function"
 import { ZsIf } from "./expressions/if"
 import { ZsKeyof } from "./expressions/keyof"
 import { ZsLookup } from "./expressions/lookup"
-import { ZsMappingKeyRef } from "./expressions/map-arg"
+import { ZsMappedKeyRef } from "./expressions/map-arg"
 import { ZsMapped } from "./expressions/mapped"
-import { ZsMade } from "./generics/instantiation"
-import { ZsTypeVarRef } from "./generics/type-arg"
+import { ZsGenericFunction } from "./generics/generic-function"
+import { ZsMade } from "./generics/made"
+import { ZsTypeVarRef } from "./generics/type-var--ref"
 
 /**
  * This is a table of all the first party schemas. It makes various types
@@ -133,7 +133,7 @@ export abstract class ZsSchemaTable extends ZodSchemaTable {
     [ZsTypeKind.ZsTypeAlias]!: ZsTypeAlias;
     [ZsTypeKind.ZsGenericFunction]!: ZsGenericFunction;
     [ZsTypeKind.ZsTypeVarRef]!: ZsTypeVarRef;
-    [ZsTypeKind.ZsMappingKeyRef]!: ZsMappingKeyRef;
+    [ZsTypeKind.ZsMappingKeyRef]!: ZsMappedKeyRef;
     [ZsTypeKind.ZsInstantiation]!: ZsMade;
     [ZsTypeKind.ZsAstExpr]!: ZsAstExpr;
 

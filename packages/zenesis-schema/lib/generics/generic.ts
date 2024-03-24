@@ -1,10 +1,10 @@
 import { ZodTypeDef } from "zod"
 
+import { ZsDeclKind } from "../core/declaration-kind"
 import { ZsStructural } from "../core/misc-node"
-import { ZsDeclKind } from "../declarations/kind"
 import { ZsMakeResultType } from "../utils/unions"
-import { Instantiable } from "./instantiable"
-import { ZsMade } from "./instantiation"
+import { ZsMade } from "./made"
+import { Makable } from "./makable"
 import { ZsTypeVarTuple } from "./type-var"
 
 export interface ZsForallTypeDef<
@@ -21,11 +21,11 @@ export class ZsGeneric<
         Vars extends ZsTypeVarTuple = ZsTypeVarTuple
     >
     extends ZsStructural<ZsForallTypeDef<Vars, Instance>>
-    implements Instantiable<Vars, Instance>
+    implements Makable<Vars, Instance>
 {
     readonly name = this._def.innerType.name
 
-    make: Instantiable<Vars, Instance>["make"] = (...args) => {
+    make: Makable<Vars, Instance>["make"] = (...args) => {
         return ZsMade.create(this._def.innerType, this, args)
     }
 

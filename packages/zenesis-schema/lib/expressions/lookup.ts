@@ -1,6 +1,6 @@
 import { TypeOf, z, ZodTypeAny, ZodTypeDef } from "zod"
-import { ZsTypeKind } from "../core/kinds"
 import { ZsMonoLike, ZsMonoType } from "../core/mono-type"
+import { ZsTypeKind } from "../core/type-kind"
 import { ZodKindedAny } from "../core/types"
 
 export interface ZsLookupDef<

@@ -1,7 +1,7 @@
 import { EnumLike, ZodFirstPartyTypeKind, ZodNativeEnum, ZodTypeDef } from "zod"
-import { ZsTypeKind } from "../core/kinds"
+import { ZsDeclKind } from "../core/declaration-kind"
 import { ZsMonoType } from "../core/mono-type"
-import { ZsDeclKind } from "./kind"
+import { ZsTypeKind } from "../core/type-kind"
 
 export interface ZsEnumDef<Name extends string, Type extends EnumLike>
     extends ZodTypeDef {

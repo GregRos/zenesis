@@ -1,6 +1,6 @@
 import { ZodOptional, ZodTypeAny } from "zod"
+import { ZsMemberKind } from "../../../core/member-kind"
 import { ZsStructural } from "../../../core/misc-node"
-import { ZsMemberKind } from "./kind"
 
 export interface ZsClassMemberDef<
     Name extends string,

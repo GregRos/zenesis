@@ -1,4 +1,4 @@
-import { ZsModuleKind } from "../core/kinds"
+import { ZsModuleKind } from "../core/type-kind"
 
 export interface ZsModuleDef {
     readonly moduleName: ZsModuleKind
