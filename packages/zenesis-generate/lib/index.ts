@@ -1,2 +1,2 @@
 export * from "@zenesis/schema"
-export { generateWorld } from "./generate"
+export { generateWorld } from "./modules/generate"

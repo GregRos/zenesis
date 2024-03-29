@@ -1,13 +1,3 @@
-import { z } from "zod"
-import { ZsAstExpr } from "./expressions/ast-expr"
-import { ZsFunction } from "./expressions/function"
-import { ZsIf } from "./expressions/if"
-import { ZsKeyof } from "./expressions/keyof"
-import { ZsLookup } from "./expressions/lookup"
-import { ZsMapped } from "./expressions/mapped"
-import { ForallClause } from "./generics/forall-builder"
-import { TypeVar } from "./generics/type-var"
-
 export { ZsClassBody } from "./declarations/classlike/class-body"
 export {
     ZsConstructor,
@@ -59,6 +49,15 @@ export {
 } from "./generics/generic-function"
 export { Instantiated, InstantiationDef } from "./generics/made"
 
+export { ZsForeignDef, ZsForeignImport } from "./containers/foreign-import"
+export {
+    ZsForeignModule,
+    ZsForeignModuleDef
+} from "./containers/foreign-module"
+export { ZsModuleBody } from "./containers/module-body"
+export { ZsImportDef, ZsImported } from "./containers/zenesis-import"
+export { ZsDeclKind } from "./core/declaration-kind"
+export { ForallClause, ZsForallDef } from "./generics/forall-builder"
 export {
     FromVar,
     TypeVar,
@@ -68,56 +67,6 @@ export {
     ZsTypeVarVariance
 } from "./generics/type-var"
 export { ZodSchemaTable, ZsSchemaTable } from "./table"
-export { zs }
-
-function pick<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K> {
-    const result: any = {}
-    for (const key of keys) {
-        result[key] = obj[key]
-    }
-    return result
-}
-
-const zs = {
-    ...pick(
-        z,
-        "literal",
-        "void",
-        "tuple",
-        "unknown",
-        "string",
-        "number",
-        "boolean",
-        "null",
-        "undefined",
-        "object",
-        "array",
-        "record",
-        "map",
-        "set",
-        "function",
-        "promise",
-        "date",
-        "bigint",
-        "symbol"
-    ),
-    forall: ForallClause.create,
-    lookup: ZsLookup.create,
-    typeVar: TypeVar.create,
-    if: ZsIf.create,
-    function: ZsFunction.create,
-    fun: ZsFunction.create,
-    keyof: ZsKeyof.create,
-    map: ZsMapped.create,
-    ast: ZsAstExpr.create
-}
-export { ZsForeignDef, ZsForeignImport } from "./containers/foreign-import"
-export {
-    ZsForeignModule,
-    ZsForeignModuleDef
-} from "./containers/foreign-module"
-export { ZsModuleBody } from "./containers/module-body"
-export { ZsImportDef, ZsImported } from "./containers/zenesis-import"
 
 export { ZsZenesisModule } from "./containers/zenesis-module"
 export { Access } from "./declarations/classlike/members/member"

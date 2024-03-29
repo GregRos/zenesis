@@ -121,7 +121,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Docs/Scopes & Subscopes/Scopes and Declarations.md",
+                "file": "Docs/Generic types.md",
                 "mode": "source",
                 "source": false
               }
@@ -194,7 +194,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Docs/Scopes & Subscopes/Scopes and Declarations.md",
+                "file": "Docs/Generic types.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -211,7 +211,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Docs/Scopes & Subscopes/Scopes and Declarations.md",
+                "file": "Docs/Generic types.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -234,7 +234,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Docs/Scopes & Subscopes/Scopes and Declarations.md"
+                "file": "Docs/Generic types.md"
               }
             }
           },
@@ -269,21 +269,26 @@
   },
   "active": "60147e3cc3c15bd8",
   "lastOpenFiles": [
+    "Docs/forall.md",
+    "Docs/detached.md",
+    "Docs/builder.md",
+    "Docs/zs.md",
+    "Docs/Untitled.md",
+    "Docs/Type expressions.md",
     "Docs/Scope.md",
+    "Docs/Making a world.md",
+    "Docs/Limited recursive inference.md",
+    "Docs/Scopes & Subscopes/Scopes and Declarations.md",
     "Docs/Expressions/Conditional Type.md",
     "Docs/Expressions/Lookup.md",
     "Docs/Expressions/Generic Function.md",
     "Docs/Expressions/Keyof.md",
     "Docs/Expressions/This.md",
-    "Docs/Type expressions.md",
-    "Docs/zs.md",
     "Docs/Generic types.md",
     "Docs/Expressions",
     "Untitled",
     "README.md",
     "Docs/~syncthing~Type expressions.md.tmp",
-    "Docs/Limited recursive inference.md",
-    "Docs/Making a world.md",
     "node_modules/lazies/dist/lib/seq/wrapper.js.map",
     "node_modules/lazies/dist/lib/seq/wrapper.js",
     "node_modules/lazies/dist/lib/seq/wrapper.d.ts.map",
@@ -292,9 +297,6 @@
     "node_modules/lazies/dist/lib/seq/types.js.map",
     "node_modules/lazies/dist/lib/seq/types.js",
     "node_modules/lazies/README.md",
-    "Docs/forall.md",
-    "Docs/builder.md",
-    "Docs/detached.md",
     "node_modules/seqs/README.md",
     "node_modules/itertools-ts/README.md",
     "Zenesis Schema (1).svg",

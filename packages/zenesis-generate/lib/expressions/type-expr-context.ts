@@ -15,7 +15,7 @@ import {
     TypeParameterDeclaration,
     TypeReferenceNode
 } from "typescript"
-import { tf } from "./tf"
+import { tf } from "../utils/tf"
 
 import {
     AnyZodTuple,
@@ -26,9 +26,9 @@ import {
     ZodUnknown
 } from "zod"
 
-import { extractModifiers } from "./extract-modifiers"
-import { getParamInfo } from "./get-param-info"
-import { getAccess, toVarianceToken } from "./tokens"
+import { extractModifiers } from "../utils/extract-modifiers"
+import { getParamInfo } from "../utils/get-param-info"
+import { getAccess, toVarianceToken } from "../utils/tokens"
 
 import {
     AnyTypeKind,
@@ -55,9 +55,9 @@ import {
 } from "@zenesis/schema"
 
 import { seq } from "lazies"
+import { NodeMap } from "../utils/node-map"
 import { cases } from "./cases"
-import { NodeMap } from "./node-map"
-import { ZsTsTable } from "./table"
+import { ZsToTsExprTable } from "./table"
 function createMethodSignature(
     modifiers: Modifier[],
     questionToken: QuestionToken | undefined,
@@ -87,9 +87,9 @@ export class TypeExprContext {
     }
     recurse<Node extends ZodKindedAny>(
         node: Node
-    ): Node["_def"]["typeName"] extends keyof ZsTsTable
-        ? ZsTsTable[Node["_def"]["typeName"]]
-        : ZsTsTable[keyof ZsTsTable] {
+    ): Node["_def"]["typeName"] extends keyof ZsToTsExprTable
+        ? ZsToTsExprTable[Node["_def"]["typeName"]]
+        : ZsToTsExprTable[keyof ZsToTsExprTable] {
         if (node._def.typeName in cases) {
             return (cases as any)[node._def.typeName].call(this, node) as any
         }

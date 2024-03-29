@@ -27,9 +27,9 @@ import {
     TypeReferenceNode,
     VariableStatement
 } from "typescript"
-import { NodeMap } from "./node-map"
-import { tf } from "./tf"
-import { TypeExprContext } from "./type-expr-context"
+import { TypeExprContext } from "../expressions/type-expr-context"
+import { NodeMap } from "../utils/node-map"
+import { tf } from "../utils/tf"
 
 export class ScopeEscapeError extends Error {
     constructor(node: ZsMappedKeyRef | ZsTypeVarRef) {
@@ -51,7 +51,7 @@ export type MixedDeclarations =
     | EnumDeclaration
     | VariableStatement
 
-export interface ModuleBlueprint {
+export interface FileBlueprint {
     imports: Map<string, Set<string>>
     declarations: Map<string, MixedDeclarations>
 }
@@ -63,7 +63,7 @@ export class ImportContext {
         ) => string
     ) {}
 
-    generateModule(body: ZsModuleBody): ModuleBlueprint {
+    generateModule(body: ZsModuleBody): FileBlueprint {
         let schemaToReference = Map<
             ZsReferableTypeLike,
             TypeReferenceNode | Lazy<TypeReferenceNode>

@@ -6,10 +6,10 @@ import {
     ZsSchemaTable,
     ZsTypeKind
 } from "@zenesis/schema"
-import { extractModifiers } from "./extract-modifiers"
-import { ZsTsTable } from "./table"
-import { tf } from "./tf"
-import { getOptional, getReadonly } from "./tokens"
+import { extractModifiers } from "../utils/extract-modifiers"
+import { tf } from "../utils/tf"
+import { getOptional, getReadonly } from "../utils/tokens"
+import { ZsToTsExprTable } from "./table"
 import { TypeExprContext } from "./type-expr-context"
 
 function getLiteralNode(value: any) {
@@ -26,10 +26,10 @@ function getLiteralNode(value: any) {
 }
 
 export const cases: {
-    [Kind in keyof ZsTsTable]: (
+    [Kind in keyof ZsToTsExprTable]: (
         this: TypeExprContext,
         node: ZsSchemaTable[Kind]
-    ) => ZsTsTable[Kind]
+    ) => ZsToTsExprTable[Kind]
 } = {
     [ZsTypeKind.ZsThis](node) {
         return tf.createThisTypeNode()

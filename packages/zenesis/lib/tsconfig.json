@@ -1,5 +1,10 @@
 {
     "extends": "../../tsconfig.base.json",
+    "references": [{
+        "path": "../../zenesis-schema/lib/tsconfig.json"
+    }, {
+        "path": "../../zenesis-generate/lib/tsconfig.json"
+    }],
     "compilerOptions": {
         "outDir": "../dist/lib",
         "rootDir": ".",

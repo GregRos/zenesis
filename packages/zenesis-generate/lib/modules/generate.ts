@@ -1,10 +1,3 @@
-import {
-    ZsForeignModule,
-    ZsImport,
-    ZsZenesisModule,
-    describeZenesisNode,
-    zenesisError
-} from "@zenesis/schema"
 import { Map, Set, Stack } from "immutable"
 import {
     ImportDeclaration,
@@ -12,9 +5,8 @@ import {
     SourceFile,
     SyntaxKind
 } from "typescript"
-import { ImportContext, ModuleBlueprint } from "./module"
-import { tf } from "./tf"
-import { ZsWorld } from "./world"
+import { tf } from "../utils/tf"
+import { FileBlueprint } from "./module"
 
 function generateImportDeclaration(from: string, names: Set<string>) {
     let specifiers = Stack<ImportSpecifier>()
@@ -45,38 +37,11 @@ function generateImportDeclarations(imports: Map<string, Set<string>>) {
     return declarations.toArray()
 }
 
-export function fromBlueprint(blueprint: ModuleBlueprint): SourceFile {
+export function fromBlueprint(blueprint: FileBlueprint): SourceFile {
     const imports = generateImportDeclarations(blueprint.imports)
     const declarations = blueprint.declarations.valueSeq().toArray()
     const declStatements = [...imports, ...declarations]
     const eof = tf.createToken(SyntaxKind.EndOfFileToken)
     const sf = tf.createSourceFile(declStatements, eof, 0)
     return sf
-}
-
-export function generateWorld(w: ZsWorld) {
-    let foreignModules = Set<ZsForeignModule>()
-    let zenesisModules = Set<ZsZenesisModule>()
-    const ctx = new ImportContext((node: ZsImport) => {
-        const origin = node.origin
-        if (origin instanceof ZsForeignModule) {
-            foreignModules = foreignModules.add(origin)
-            return origin.name
-        } else if (origin instanceof ZsZenesisModule) {
-            zenesisModules = zenesisModules.add(origin)
-            return `./${origin.name}`
-        } else {
-            throw zenesisError({
-                code: "import/invalid-origin",
-                message: `Import ${node.name} has an invalid origin type: ${describeZenesisNode(node)}`
-            })
-        }
-    })
-    let files = Map<string, SourceFile>()
-    for (const file of w) {
-        const blueprint = ctx.generateModule(file.body)
-        const sourceFile = fromBlueprint(blueprint)
-        files = files.set(file.name, sourceFile)
-    }
-    return files.toArray()
 }
