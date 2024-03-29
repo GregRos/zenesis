@@ -57,12 +57,15 @@ export {
     ZsGenericFunction,
     ZsGenericFunctionDef
 } from "./generics/generic-function"
-export { InstantiationDef } from "./generics/made"
+export { Instantiated, InstantiationDef } from "./generics/made"
 
 export {
+    FromVar,
+    TypeVar,
     ZsTypeVarRef,
     ZsTypeVarRefDef,
-    ZsTypeVarRefs
+    ZsTypeVarRefs,
+    ZsTypeVarVariance
 } from "./generics/type-var"
 export { ZodSchemaTable, ZsSchemaTable } from "./table"
 export { zs }
@@ -114,18 +117,20 @@ export {
     ZsForeignModuleDef
 } from "./containers/foreign-module"
 export { ZsModuleBody } from "./containers/module-body"
+export { ZsImportDef, ZsImported } from "./containers/zenesis-import"
 
 export { ZsZenesisModule } from "./containers/zenesis-module"
 export { Access } from "./declarations/classlike/members/member"
 export { ZsThis, ZsThisDef } from "./declarations/classlike/this"
 export {
     ZsGenericSelfref,
-    ZsGenericSelfrefDef,
-    ZsSelfref,
-    ZsSelfrefDef
-} from "./declarations/selfref"
+    ZsGenericSelfrefDef
+} from "./declarations/generic-selfref"
+export { ZsSelfrefDef, ZsTypeSelfref } from "./declarations/selfref"
+export * from "./errors"
 export { ZsModifierState } from "./expressions/mapped"
 export * from "./utils/describe"
 export * from "./utils/unions"
 export * from "./utils/validate/is-member"
+export * from "./utils/validate/is-reference"
 export * from "./utils/validate/is-type"

@@ -1,8 +1,9 @@
 import {
     ZsForeignModule,
     ZsImport,
-    ZsWorld,
-    ZsZenesisModule
+    ZsZenesisModule,
+    describeZenesisNode,
+    zenesisError
 } from "@zenesis/schema"
 import { Map, Set, Stack } from "immutable"
 import {
@@ -13,6 +14,7 @@ import {
 } from "typescript"
 import { ImportContext, ModuleBlueprint } from "./module"
 import { tf } from "./tf"
+import { ZsWorld } from "./world"
 
 function generateImportDeclaration(from: string, names: Set<string>) {
     let specifiers = Stack<ImportSpecifier>()
@@ -64,7 +66,10 @@ export function generateWorld(w: ZsWorld) {
             zenesisModules = zenesisModules.add(origin)
             return `./${origin.name}`
         } else {
-            throw new Error("Unknown origin")
+            throw zenesisError({
+                code: "import/invalid-origin",
+                message: `Import ${node.name} has an invalid origin type: ${describeZenesisNode(node)}`
+            })
         }
     })
     let files = Map<string, SourceFile>()

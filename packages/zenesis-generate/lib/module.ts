@@ -2,16 +2,18 @@ import {
     ZsDeclarableTypeLike,
     ZsForeignImport,
     ZsImport,
+    ZsImported,
     ZsMappedKeyRef,
     ZsModuleBody,
     ZsReferableTypeLike,
     ZsTypeVarRef,
-    ZsZenesisImport,
+    describeZenesisNode,
     isDeclarableType,
     isImport,
     isModuleDeclarableTypeLike,
     isSelfref,
-    isValue
+    isValue,
+    zenesisError
 } from "@zenesis/schema"
 
 import { Map, Set } from "immutable"
@@ -57,7 +59,7 @@ export interface ModuleBlueprint {
 export class ImportContext {
     constructor(
         private readonly _importResolver: (
-            node: ZsZenesisImport | ZsForeignImport
+            node: ZsImport | ZsForeignImport
         ) => string
     ) {}
 
@@ -72,15 +74,22 @@ export class ImportContext {
 
         const registerReferable = (node: ZsReferableTypeLike) => {
             if (schemaToReference.has(node)) {
-                throw new Error("Node already registered")
+                throw zenesisError({
+                    code: "module/duplicate-node",
+                    message: `Module body has already declared this node: ${describeZenesisNode(node)}`
+                })
             }
             if (isSelfref(node)) {
-                throw new Error(
-                    "Tried to register a selfref! Is it out of scope?"
-                )
+                throw zenesisError({
+                    code: "selfref/out-of-scope",
+                    message: `Selfref node ${describeZenesisNode(node)} has escaped its scope!`
+                })
             }
             if (namespace.has(node.name)) {
-                throw new NameCollisionError(node.name)
+                throw zenesisError({
+                    code: "module/name-collision",
+                    message: `Module body already has a declaration with the name: ${node.name}`
+                })
             }
             const typeReferenceNode = tf.createTypeReferenceNode(node.name)
             const newSchemaToReference = schemaToReference.set(
@@ -88,17 +97,17 @@ export class ImportContext {
                 typeReferenceNode
             )
             const newNamespace = namespace.add(node.name)
-            if (isDeclarableType(node)) {
-                addDeclaration(node, false)
-            } else if (isImport(node)) {
+            if (isImport(node)) {
                 addImport(node)
+            } else if (isDeclarableType(node)) {
+                addDeclaration(node, false)
             }
             schemaToReference = newSchemaToReference
             namespace = newNamespace
             return typeReferenceNode
         }
 
-        const addImport = (schema: ZsImport) => {
+        const addImport = (schema: ZsImported) => {
             const relativePath = this._importResolver(schema)
             let existing = imports.get(relativePath)
             if (!existing) {

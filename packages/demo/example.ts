@@ -1,7 +1,8 @@
 import { generateWorld, zs } from "@zenesis/generate"
+import { ZsWorld } from "@zenesis/generate/lib/world"
 import { mkdir, writeFileSync } from "fs"
 import { createPrinter } from "typescript"
-const W = zs.World("example")
+const W = ZsWorld.create("example")
 
 const f1 = W.File("hello", function* () {
     const iface1 = this.Interface("Iface1", function* () {

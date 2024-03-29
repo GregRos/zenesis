@@ -6,15 +6,15 @@ import { ClassContext } from "../declarations/classlike/class-builder"
 import { ZsInterface } from "../declarations/classlike/interface"
 import {
     ZsGenericSelfref,
-    ZsSelfref,
-    createGenericSelfref,
-    createSelfref
-} from "../declarations/selfref"
+    createGenericSelfref
+} from "../declarations/generic-selfref"
+import { ZsTypeSelfref, createSelfref } from "../declarations/selfref"
 import { ZsValue, ZsValueKind } from "../declarations/value"
 import { ZsGeneric } from "../generics/generic"
 import { TypeVarRefsByName, getTypeArgObject } from "../generics/ref-objects"
 import {
     FromVar,
+    ToVar,
     TypeVar,
     ZsTypeVarRef,
     ZsTypeVarRefs
@@ -30,7 +30,7 @@ export class GenericModuleScopedFactory<Vars extends ZsTypeVarRefs> {
     where<Name extends Vars[number]["name"], NewVar extends TypeVar<Name>>(
         name: Name,
         declarator: (
-            cur: Extract<Vars[number], { name: Name }>,
+            cur: ToVar<Extract<Vars[number], { name: Name }>>,
             others: TypeVarRefsByName<Vars>
         ) => NewVar
     ): GenericModuleScopedFactory<{
@@ -150,13 +150,15 @@ export class ModuleScopedFactory {
 
     Class<Name extends string, Decl extends ZsClassItems>(
         name: Name,
-        declarations: (this: ClassContext<ZsSelfref<ZsClass>>) => Iterable<Decl>
+        declarations: (
+            this: ClassContext<ZsTypeSelfref<ZsClass>>
+        ) => Iterable<Decl>
     ) {
         const selfref = createSelfref({
             deref: () => result,
             name: name,
             text: name
-        }) as ZsSelfref<ZsClass>
+        }) as ZsTypeSelfref<ZsClass>
         const body = ZsClassBody.create(declarations, selfref)
         const result = ZsClass.create(name, body)
         return result
@@ -164,14 +166,14 @@ export class ModuleScopedFactory {
 
     TypeAlias<Name extends string, T extends ZodTypeAny>(
         name: Name,
-        type: T | ((this: { self: ZsSelfref<ZsTypeAlias> }) => T)
+        type: T | ((this: { self: ZsTypeSelfref<ZsTypeAlias> }) => T)
     ) {
         const result = typeof type === "function" ? type : () => type
         const selfref = createSelfref({
             deref: () => alias,
             name: name,
             text: name
-        }) as ZsSelfref<ZsTypeAlias>
+        }) as ZsTypeSelfref<ZsTypeAlias>
         const alias = ZsTypeAlias.create(
             name,
             result.bind({

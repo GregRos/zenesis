@@ -47,6 +47,12 @@ export type FromVar<V extends TypeVar> =
         ? ZsTypeVarRef<Name, Extends, Default>
         : never
 
+export type ToVar<V extends ZsTypeVarRef> = TypeVar<
+    V["_def"]["name"],
+    V["_def"]["extends"],
+    V["_def"]["default"]
+>
+
 export class TypeVar<
     Name extends string = string,
     Extends extends ZodTypeAny = ZodTypeAny,

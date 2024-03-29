@@ -4,8 +4,6 @@
     }, {
         "path": "./packages/zenesis-generate/lib/tsconfig.json"
     },{
-        "path": "./packages/zenesis/lib/tsconfig.json"
-    }, {
         "path": "./packages/demo/tsconfig.json"
     }],
     "compilerOptions": {

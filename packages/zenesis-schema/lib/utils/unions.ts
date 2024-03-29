@@ -1,5 +1,6 @@
 import { ZodFunction, ZodTypeAny } from "zod"
 import { ZsForeignImport } from "../containers/foreign-import"
+import { ZsImported } from "../containers/zenesis-import"
 import { ZsTypeAlias } from "../declarations/alias"
 import { ZsClass } from "../declarations/classlike/class"
 import { ZsInterface } from "../declarations/classlike/interface"
@@ -8,7 +9,8 @@ import { ZsImplements } from "../declarations/classlike/members/implements"
 import { ZsIndexer } from "../declarations/classlike/members/indexer"
 import { ZsProperty } from "../declarations/classlike/members/member"
 import { ZsEnum } from "../declarations/enum"
-import { ZsGenericSelfref, ZsSelfref } from "../declarations/selfref"
+import { ZsGenericSelfref } from "../declarations/generic-selfref"
+import { ZsTypeSelfref } from "../declarations/selfref"
 import { ZsValue } from "../declarations/value"
 import { ZsFunction } from "../expressions/function"
 import { ZsMappedKeyRef } from "../expressions/map-arg"
@@ -57,9 +59,11 @@ export type ZsMakeResultType = ZsGeneralizableType | ZsForeignImport
  */
 export type ZsModuleDeclarableType = ZsMakeResultType | ZsEnum
 
-export type ZsAnySelfref =
-    | ZsSelfref<ZsModuleDeclarableType>
+export type ZsSelfref =
+    | ZsTypeSelfref<ZsModuleDeclarableType>
     | ZsGenericSelfref<ZsGeneralizableType, ZsTypeVarRefs>
+
+export type ZsImport = ZsForeignImport | ZsImported
 
 /**
  * Any type node that needs to be declared in one place and referenced somewhere else. Includes

@@ -14,7 +14,7 @@
     "watch:generate": "tsc -b packages/zenesis-generate/lib --watch",
     "watch:schema": "tsc -b packages/zenesis-schema/lib --watch",
     "watch:main": "tsc -b packages/zenesis/lib --watch",
-    "watch": "run-p watch:generate watch:schema watch:main watch:demo",
+    "watch": "run-p watch:generate watch:schema watch:demo",
     "build": "run-s build:schema build:generate build:main build:demo",
     "clean": "shx rm -rf packages/*/dist",
     "rebuild": "run-s clean build",

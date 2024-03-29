@@ -49,7 +49,7 @@ import {
     ZsReferableTypeLike,
     ZsSchemaTable,
     ZsTypeAlias,
-    ZsTypeVar,
+    ZsTypeVarRef,
     ZsValue,
     describeZenesisNode
 } from "@zenesis/schema"
@@ -361,7 +361,7 @@ export class TypeExprContext {
             returns: TypeNode
         ) => T
     ) {
-        let typeVars: ZsTypeVar[]
+        let typeVars: ZsTypeVarRef[]
         let f: ZsFunction
         if (signature instanceof ZsGenericFunction) {
             typeVars = signature._def.vars
@@ -377,18 +377,15 @@ export class TypeExprContext {
         return mapper(typeArgs, args, returns)
     }
 
-    withTypeVars(typeVars: ZsTypeVar[]) {
+    withTypeVars(typeVars: ZsTypeVarRef[]) {
         let refs = this._refs
         for (const typeVar of typeVars) {
-            refs = refs.set(
-                typeVar.arg,
-                tf.createTypeReferenceNode(typeVar.name)
-            )
+            refs = refs.set(typeVar, tf.createTypeReferenceNode(typeVar.name))
         }
         return new TypeExprContext(refs)
     }
 
-    convertTypeVarToDeclaration(typeVar: ZsTypeVar["_def"]) {
+    convertTypeVarToDeclaration(typeVar: ZsTypeVarRef["_def"]) {
         const constraint =
             typeVar.extends && !(typeVar.extends instanceof ZodUnknown)
                 ? this.recurse(typeVar.extends)
@@ -405,14 +402,14 @@ export class TypeExprContext {
         }
         const typeParameter = tf.createTypeParameterDeclaration(
             modifiers,
-            typeVar.arg.name,
+            typeVar.name,
             constraint,
             defaultType
         )
         return typeParameter
     }
 
-    convertTypeVarsToDeclarations(typeVars: ZsTypeVar[]) {
+    convertTypeVarsToDeclarations(typeVars: ZsTypeVarRef[]) {
         const typeVarDeclarations = [] as TypeParameterDeclaration[]
         for (const typeVar of typeVars) {
             typeVarDeclarations.push(

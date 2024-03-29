@@ -23,10 +23,8 @@ export type JsDocHandler = (node: JSDoc) => void
 export type MissingDeclHandler = (node: ZodKindedAny) => TypeReferenceNode
 
 export abstract class ZsTsTable {
-    [AnyTypeKind.ZsZenesisImport]!: TypeReferenceNode;
     [AnyTypeKind.ZsGenericFunction]!: FunctionTypeNode;
     [AnyTypeKind.ZsThis]!: ThisTypeNode;
-    [AnyTypeKind.ZsSelfref]!: TypeReferenceNode;
     [AnyTypeKind.ZodEffects]!: never;
     [AnyTypeKind.ZodPipeline]!: never;
     [AnyTypeKind.ZodNativeEnum]!: UnionTypeNode;
@@ -36,7 +34,6 @@ export abstract class ZsTsTable {
     [AnyTypeKind.ZsInterface]!: TypeReferenceNode;
     [AnyTypeKind.ZsTypeVarRef]!: TypeReferenceNode;
     [AnyTypeKind.ZsMappingKeyRef]!: TypeReferenceNode;
-    [AnyTypeKind.ZsInstantiation]!: TypeReferenceNode;
     [AnyTypeKind.ZsTypeAlias]!: TypeReferenceNode;
     [AnyTypeKind.ZsForeignImport]!: TypeReferenceNode;
     [AnyTypeKind.ZodDate]!: TypeReferenceNode;

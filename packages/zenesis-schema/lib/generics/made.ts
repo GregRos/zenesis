@@ -1,10 +1,10 @@
 import { ZodTypeAny } from "zod"
 import { ZsRefKind } from "../core/ref-kind"
-import { ReferenceDef, createReference } from "../core/reference"
+import { ZsReferenceDef, createReference } from "../core/reference"
 import { ZsMakeResultType } from "../utils/unions"
 
 export interface InstantiationDef<Ref extends ZsMakeResultType>
-    extends ReferenceDef<Ref> {
+    extends ZsReferenceDef<Ref> {
     readonly typeArgs: [ZodTypeAny, ...ZodTypeAny[]]
 }
 

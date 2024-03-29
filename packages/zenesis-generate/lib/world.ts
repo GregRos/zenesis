@@ -4,19 +4,18 @@ import { ZsModuleScope } from "@zenesis/schema/lib/containers/module-body"
 import { ZsExportable } from "@zenesis/schema/lib/utils/unions"
 
 export interface ZsWorldDef {
-    readonly worldName: "ZsWorld"
-    readonly name: string
+    ctor: string
+    name: string
 }
 
-export class ZsWorld {
+export class ZsWorld implements ZsWorldDef {
+    readonly ctor: string
+    readonly name: string
     private _files: ZsFile[] = []
     private _imports: ZsForeignModule[] = []
-    constructor(private readonly _def: ZsWorldDef) {}
-    static create(name: string) {
-        return new ZsWorld({
-            worldName: "ZsWorld",
-            name
-        })
+    constructor(def: ZsWorldDef) {
+        this.ctor = def.ctor
+        this.name = def.name
     }
     File<Exports extends ZsExportable>(
         name: string,

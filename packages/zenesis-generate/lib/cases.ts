@@ -1,7 +1,11 @@
 import { SyntaxKind, TypeNode } from "typescript"
 
-import { AnyTypeKind, ZsSchemaTable, ZsTypeKind } from "@zenesis/schema"
-import { ZenesisBuildError } from "@zenesis/schema/lib/errors"
+import {
+    AnyTypeKind,
+    ZenesisError,
+    ZsSchemaTable,
+    ZsTypeKind
+} from "@zenesis/schema"
 import { extractModifiers } from "./extract-modifiers"
 import { ZsTsTable } from "./table"
 import { tf } from "./tf"
@@ -17,10 +21,7 @@ function getLiteralNode(value: any) {
         case "boolean":
             return value ? tf.createTrue() : tf.createFalse()
         default:
-            throw new ZenesisBuildError(
-                "",
-                `Unsupported literal type: ${typeof value}`
-            )
+            throw ZenesisError
     }
 }
 
@@ -32,12 +33,6 @@ export const cases: {
 } = {
     [ZsTypeKind.ZsThis](node) {
         return tf.createThisTypeNode()
-    },
-    [ZsTypeKind.ZsSelfref](node) {
-        return this.get(node._def.resolving())
-    },
-    [ZsTypeKind.ZsZenesisImport](node) {
-        return this.get(node)
     },
     [ZsTypeKind.ZsEnum](node) {
         return this.get(node)
@@ -202,13 +197,7 @@ export const cases: {
     [AnyTypeKind.ZodLazy](node) {
         return this.recurse(node._def.getter())
     },
-    [AnyTypeKind.ZsInstantiation](node) {
-        // An instantiation will always be of a declared type that must be in scope
-        const instance = node._def.instance
-        const type = this.get(instance)
-        const typeArgs = node._def.typeArgs.map(arg => this.recurse(arg))
-        return tf.createTypeReferenceNode(type.typeName, typeArgs)
-    },
+
     [AnyTypeKind.ZsIndexedAccess](node) {
         const targetType = this.recurse(node._def.target)
         const indexType = this.recurse(node._def.index)

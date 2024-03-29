@@ -12,7 +12,13 @@ import {
     getTypeArgArray,
     getTypeArgObject
 } from "./ref-objects"
-import { FromVar, TypeVar, ZsTypeVarRef, ZsTypeVarRefs } from "./type-var"
+import {
+    FromVar,
+    ToVar,
+    TypeVar,
+    ZsTypeVarRef,
+    ZsTypeVarRefs
+} from "./type-var"
 
 export interface ZsForallDef<Vars extends ZsTypeVarRefs> {
     vars: Vars
@@ -37,7 +43,7 @@ export class ForallClause<
     where<Name extends Vars[number]["name"], NewVar extends TypeVar<Name>>(
         name: Name,
         declarator: (
-            cur: Extract<Vars[number], { name: Name }>,
+            cur: ToVar<Extract<Vars[number], { name: Name }>>,
             others: TypeVarRefsByName<Vars>
         ) => NewVar
     ): ForallClause<{

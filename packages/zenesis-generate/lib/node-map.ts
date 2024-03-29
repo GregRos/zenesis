@@ -39,7 +39,7 @@ export class NodeMap {
             }
             return ref
         }
-        if (!isDeclarableType(node) && !isImport(node)) {
+        if (!isImport(node) && !isDeclarableType(node)) {
             throw new Error(
                 `Node ${describeZenesisNode(node)} is not declarable`
             )

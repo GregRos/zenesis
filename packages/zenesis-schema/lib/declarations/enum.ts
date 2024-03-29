@@ -13,7 +13,7 @@ export interface ZsEnumDef<Name extends string, Type extends EnumLike>
 
 export class ZsEnum<
     Name extends string = string,
-    Enum extends EnumLike = EnumLike
+    Enum extends EnumLike = any
 > extends ZsMonoType<Enum[keyof Enum], ZsEnumDef<Name, Enum>> {
     readonly name = this._def.name
     readonly actsLike = new ZodNativeEnum({
