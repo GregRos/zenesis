@@ -41,7 +41,6 @@ import {
     ZodVoid
 } from "zod"
 import { ZsForeignImport } from "./containers/foreign-import"
-import { ZsZenesisTypeImport } from "./containers/zenesis-import"
 import { ZsTypeKind } from "./core/type-kind"
 import { ZodKindedAny } from "./core/types"
 import { ZsTypeAlias } from "./declarations/alias"
@@ -50,7 +49,6 @@ import { ZsInterface } from "./declarations/classlike/interface"
 import { ZsOverloads } from "./declarations/classlike/members/overloads"
 import { ZsThis } from "./declarations/classlike/this"
 import { ZsEnum } from "./declarations/enum"
-import { ZsTypeSelfref } from "./declarations/selfref"
 import { ZsAstExpr } from "./expressions/ast-expr"
 import { ZsFunction } from "./expressions/function"
 import { ZsIf } from "./expressions/if"
@@ -59,8 +57,7 @@ import { ZsLookup } from "./expressions/lookup"
 import { ZsMappedKeyRef } from "./expressions/map-arg"
 import { ZsMapped } from "./expressions/mapped"
 import { ZsGenericFunction } from "./generics/generic-function"
-import { ZsMade } from "./generics/made"
-import { ZsTypeVarRef } from "./generics/type-var--ref"
+import { ZsTypeVarRef } from "./generics/type-var"
 
 /**
  * This is a table of all the first party schemas. It makes various types
@@ -123,9 +120,7 @@ export abstract class ZodSchemaTable {
 
 export abstract class ZsSchemaTable extends ZodSchemaTable {
     [ZsTypeKind.ZsEnum]!: ZsEnum;
-    [ZsTypeKind.ZsZenesisImport]!: ZsZenesisTypeImport;
     [ZsTypeKind.ZsForeignImport]!: ZsForeignImport;
-    [ZsTypeKind.ZsSelfref]!: ZsTypeSelfref;
     [ZsTypeKind.ZsThis]!: ZsThis;
 
     [ZsTypeKind.ZsClass]!: ZsClass;
@@ -134,7 +129,6 @@ export abstract class ZsSchemaTable extends ZodSchemaTable {
     [ZsTypeKind.ZsGenericFunction]!: ZsGenericFunction;
     [ZsTypeKind.ZsTypeVarRef]!: ZsTypeVarRef;
     [ZsTypeKind.ZsMappingKeyRef]!: ZsMappedKeyRef;
-    [ZsTypeKind.ZsInstantiation]!: ZsMade;
     [ZsTypeKind.ZsAstExpr]!: ZsAstExpr;
 
     [ZsTypeKind.ZsFunction]!: ZsFunction;

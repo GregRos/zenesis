@@ -1,6 +1,7 @@
 import { SyntaxKind, TypeNode } from "typescript"
 
 import { AnyTypeKind, ZsSchemaTable, ZsTypeKind } from "@zenesis/schema"
+import { ZenesisBuildError } from "@zenesis/schema/lib/errors"
 import { extractModifiers } from "./extract-modifiers"
 import { ZsTsTable } from "./table"
 import { tf } from "./tf"
@@ -16,7 +17,10 @@ function getLiteralNode(value: any) {
         case "boolean":
             return value ? tf.createTrue() : tf.createFalse()
         default:
-            throw new Error(`Unsupported literal type: ${typeof value}`)
+            throw new ZenesisBuildError(
+                "",
+                `Unsupported literal type: ${typeof value}`
+            )
     }
 }
 

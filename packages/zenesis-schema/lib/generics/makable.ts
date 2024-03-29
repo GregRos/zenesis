@@ -3,20 +3,22 @@ import { ZsFunction } from "../expressions/function"
 import { ZsMakeResultType } from "../utils/unions"
 import { ZsGeneric } from "./generic"
 import { ZsGenericFunction } from "./generic-function"
-import { ZsMade } from "./made"
-import { ZsTypeVarTuple } from "./type-var"
+import { Instantiated } from "./made"
+import { ZsTypeVarRefs } from "./type-var"
 
 export interface Makable<
-    Vars extends ZsTypeVarTuple,
-    Instance extends ZsMakeResultType
+    Vars extends ZsTypeVarRefs = ZsTypeVarRefs,
+    Instance extends ZsMakeResultType = ZsMakeResultType
 > {
     readonly name: string
     make(
         ...args: {
             [I in keyof Vars]: SchemaSubtypeOf<Vars[I]["_def"]["extends"]>
         }
-    ): ZsMade<Instance>
-} /**
+    ): Instantiated<Instance>
+}
+
+/**
  * Given a concrete, non-generic type, and a set of variables will return a generic type
  * with those variables.
  *
@@ -24,7 +26,7 @@ export interface Makable<
  */
 
 export type Generalize<
-    Vars extends ZsTypeVarTuple,
+    Vars extends ZsTypeVarRefs,
     Schema extends ZsMakeResultType | ZsFunction
 > = Schema extends ZsMakeResultType
     ? ZsGeneric<Schema, Vars>

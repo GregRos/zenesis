@@ -3,6 +3,8 @@ import { ZsDeclKind } from "../../core/declaration-kind"
 import { ZsMonoType } from "../../core/mono-type"
 import { getCombinedType } from "../../core/operators"
 import { ZsTypeKind } from "../../core/type-kind"
+import { eraseInterface } from "../../utils/erasure"
+import { createSelfref } from "../selfref"
 import { ZsClassBody, ZsClassItems } from "./class-body"
 
 export interface ZsInterfaceDef<Name extends string, Body extends ZsClassBody>
@@ -36,12 +38,18 @@ export class ZsInterface<
         name: Name,
         body: () => Iterable<Memberable>
     ) {
+        const selfref = createSelfref({
+            deref: () => erased,
+            name,
+            text: name
+        })
         const result = new ZsInterface({
             name,
             declName: ZsDeclKind.ZsInterface,
             typeName: ZsTypeKind.ZsInterface,
-            body: ZsClassBody.create(body)
+            body: ZsClassBody.create(body, selfref)
         })
+        const erased = eraseInterface(result)
         return result
     }
 }

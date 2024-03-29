@@ -20,7 +20,7 @@ export class ZsForeignModule extends ZsModule<ZsForeignModuleDef> {
         return this._def.name
     }
 
-    import<As = any>(name: string): ZsForeignImport<As> {
+    import<As extends object = any>(name: string): ZsForeignImport<As> {
         return ZsForeignImport.create(this, name)
     }
 }

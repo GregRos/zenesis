@@ -2,9 +2,9 @@ import { memoize, seq } from "lazies"
 import { ZodTypeAny, z } from "zod"
 import { foreignShape } from "../../containers/foreign-import"
 import { ZsShape } from "../../core/types"
-import { ZsImplementable, ZsSelfref } from "../../utils/unions"
+import { ZsClassTypeLike, ZsImplementable } from "../../utils/unions"
 import { isImplements } from "../../utils/validate/is-member"
-import { ClassScopeContext } from "./class-builder"
+import { ClassContext } from "./class-builder"
 import { ZsConstructor } from "./members/constructor"
 import { ZsImplements } from "./members/implements"
 import { ZsIndexer } from "./members/indexer"
@@ -40,11 +40,10 @@ export class ZsClassBody<Decl extends ZsClassItems = ZsClassItems> {
         return this._def.decls
     }
 
-    static create<Decl extends ZsClassItems, Selfref extends ZsSelfref>(
-        decl: (this: ClassScopeContext<Selfref>) => Iterable<Decl>,
-        futureSelf: Selfref
+    static create<Decl extends ZsClassItems, Self extends ZsClassTypeLike>(
+        decl: (this: ClassContext<Self>) => Iterable<Decl>,
+        futureSelf: Self
     ) {
-        const scopeContext = new ClassScopeContext<Selfref>(futureSelf)
         const decls = seq(decl).cache()
         return new ZsClassBody<Decl>({
             definition: memoize(() => {

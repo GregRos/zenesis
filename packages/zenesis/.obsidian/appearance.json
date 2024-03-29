@@ -1,7 +1,9 @@
 {
   "accentColor": "",
   "cssTheme": "Royal Velvet",
-  "enabledCssSnippets": [],
+  "enabledCssSnippets": [
+    "gregros"
+  ],
   "baseFontSize": 18,
   "monospaceFontFamily": "FiraCode Nerd Font"
 }

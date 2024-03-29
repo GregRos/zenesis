@@ -1,31 +1,67 @@
-import { ZodTypeAny, ZodTypeDef, ZodUnknown } from "zod"
-import { ZsStructural } from "../core/misc-node"
+import { TypeOf, ZodAny, ZodTypeAny, ZodTypeDef, ZodUnknown } from "zod"
+import { ZsMonoType } from "../core/mono-type"
 import { SchemaSubtypeOf } from "../core/operators"
-import { ZsTypeVarRef } from "./type-var--ref"
-export interface ZsTypeVarDef<
+import { ZsTypeKind } from "../core/type-kind"
+
+export interface ZsTypeVarRefDef<
     Name extends string,
     Extends extends ZodTypeAny,
     Default extends SchemaSubtypeOf<Extends> | null
 > extends ZodTypeDef {
-    readonly arg: ZsTypeVarRef<Name>
+    readonly typeName: ZsTypeKind.ZsTypeVarRef
+    readonly name: Name
     readonly extends: Extends
     readonly default: Default
     readonly const: boolean
     readonly variance: ZsTypeVarVariance
 }
-export class ZsTypeVar<
+
+export class ZsTypeVarRef<
     Name extends string = string,
     Extends extends ZodTypeAny = ZodTypeAny,
     Default extends
         SchemaSubtypeOf<Extends> | null = SchemaSubtypeOf<Extends> | null
-> extends ZsStructural<ZsTypeVarDef<Name, Extends, Default>> {
-    readonly name = this._def.arg.name
-    readonly arg = this._def.arg as ZsTypeVarRef<Name>
+> extends ZsMonoType<TypeOf<Extends>, ZsTypeVarRefDef<Name, Extends, Default>> {
+    readonly actsLike = ZodAny.create()
+    readonly name = this._def.name
+    static create<Name extends string, Extends extends ZodTypeAny>(
+        name: Name
+    ): ZsTypeVarRef<Name> {
+        return new ZsTypeVarRef({
+            typeName: ZsTypeKind.ZsTypeVarRef,
+            name,
+            const: false,
+            extends: ZodUnknown.create(),
+            default: null,
+            variance: ""
+        })
+    }
+}
+
+export type ZsTypeVarRefs = [ZsTypeVarRef, ...ZsTypeVarRef[]]
+
+export type ZsTypeVarVariance = "" | "in" | "out" | "inout"
+
+export type FromVar<V extends TypeVar> =
+    V extends TypeVar<infer Name, infer Extends, infer Default>
+        ? ZsTypeVarRef<Name, Extends, Default>
+        : never
+
+export class TypeVar<
+    Name extends string = string,
+    Extends extends ZodTypeAny = ZodTypeAny,
+    Default extends
+        SchemaSubtypeOf<Extends> | null = SchemaSubtypeOf<Extends> | null
+> {
+    constructor(
+        private readonly _inner: ZsTypeVarRefDef<Name, Extends, Default>
+    ) {}
+
     default<NewDefault extends SchemaSubtypeOf<Extends> | null>(
         newDefault: NewDefault
     ) {
-        return new ZsTypeVar({
-            ...this._def,
+        return new TypeVar({
+            ...this._inner,
             default: newDefault
         })
     }
@@ -34,36 +70,33 @@ export class ZsTypeVar<
             ? ZodTypeAny
             : never
     >(extends_: NewExtends) {
-        return new ZsTypeVar({
-            ...this._def,
+        return new TypeVar({
+            ...this._inner,
             extends: extends_
         })
     }
     static create<Name extends string>(name: Name) {
-        return new ZsTypeVar({
-            arg: ZsTypeVarRef.create(name),
+        return new TypeVar({
+            typeName: ZsTypeKind.ZsTypeVarRef,
+            name,
+            const: false,
             extends: ZodUnknown.create(),
             default: null,
-            const: false,
             variance: ""
         })
     }
 
     const(flag: boolean) {
-        return new ZsTypeVar({
-            ...this._def,
+        return new TypeVar({
+            ...this._inner,
             const: flag
         })
     }
 
     variance(variance: ZsTypeVarVariance) {
-        return new ZsTypeVar({
-            ...this._def,
+        return new TypeVar({
+            ...this._inner,
             variance
         })
     }
 }
-
-export type ZsTypeVarTuple = [ZsTypeVar, ...ZsTypeVar[]]
-
-export type ZsTypeVarVariance = "" | "in" | "out" | "inout"

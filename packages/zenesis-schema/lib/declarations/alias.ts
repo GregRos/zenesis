@@ -20,6 +20,7 @@ export class ZsTypeAlias<
     get actsLike() {
         return this._def.definition()
     }
+
     readonly declaration = "alias"
     static create<Name extends string, T extends ZodTypeAny>(
         name: Name,

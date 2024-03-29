@@ -1,40 +1,21 @@
-import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod"
-import { ZsMonoType } from "../core/mono-type"
-import { ZsTypeKind } from "../core/type-kind"
-import { ZsShapedRef } from "../core/types"
-import { ZsMakable, ZsMakeResultType } from "../utils/unions"
+import { ZodTypeAny } from "zod"
+import { ZsRefKind } from "../core/ref-kind"
+import { ReferenceDef, createReference } from "../core/reference"
+import { ZsMakeResultType } from "../utils/unions"
 
-export interface ZsMadeDef<Instance extends ZsMakeResultType>
-    extends ZodTypeDef {
-    typeName: ZsTypeKind.ZsInstantiation
-    typeArgs: [ZodTypeAny, ...ZodTypeAny[]]
-    instance: Instance
-    makable: ZsMakable
+export interface InstantiationDef<Ref extends ZsMakeResultType>
+    extends ReferenceDef<Ref> {
+    readonly typeArgs: [ZodTypeAny, ...ZodTypeAny[]]
 }
-export class ZsMade<
-    Ref extends ZsMakeResultType = ZsMakeResultType
-> extends ZsMonoType<TypeOf<Ref>, ZsMadeDef<Ref>> {
-    static create<Made extends ZsMakeResultType>(
-        instance: Made,
-        makable: ZsMakable,
-        typeArgs: [ZodTypeAny, ...ZodTypeAny[]]
-    ): ZsMade<Made> {
-        return new ZsMade({
-            typeName: ZsTypeKind.ZsInstantiation,
-            typeArgs,
-            instance,
-            makable
-        })
-    }
 
-    get shape(): Ref extends ZsShapedRef ? Ref["shape"] : undefined {
-        if ("shape" in this.actsLike) {
-            return this.actsLike.shape as any
-        }
-        return undefined as any
-    }
+export type Instantiated<Ref extends ZsMakeResultType> = Ref &
+    InstantiationDef<Ref>
 
-    get actsLike() {
-        return this._def.instance
-    }
+export function createInstantiation<Ref extends ZsMakeResultType>(
+    def: Omit<InstantiationDef<Ref>, "via">
+): Instantiated<Ref> {
+    return createReference({
+        ...def,
+        via: ZsRefKind.ZsInstantiation
+    })
 }

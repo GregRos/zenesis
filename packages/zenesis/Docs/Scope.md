@@ -1,4 +1,16 @@
-TypeScript involves multiple levels of nesting:
+Programming languages almost always have some notion of a *scope* — a part of the code in which certain kinds of syntax elements can appear and special identifiers are available.
+
+I’m not talking about the runtime scoping of variables, but rather the syntactic scope of something like a class.
+
+```typescript
+class Class {
+	// ← a class scope!
+}
+
+interface Interface {
+	// ← interface scope!
+}
+```
 
 1. A file, containing:
 2. A class, containing:

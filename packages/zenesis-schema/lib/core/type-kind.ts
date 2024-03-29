@@ -11,15 +11,13 @@ export enum ZsTypeKind {
     ZsTypeVarRef = "ZsTypeVarRef",
     ZsMapped = "ZsMapped",
     ZsMappingKeyRef = "ZsMappingKeyRef",
-    ZsInstantiation = "ZsInstantiation",
     ZsKeyof = "ZsKeyof",
     ZsEnum = "ZsEnum",
     ZsAstExpr = "ZsAstExpr",
-    ZsZenesisImport = "ZsZenesisImport",
     ZsForeignImport = "ZsZoreignImport",
     ZsGenericFunction = "ZsGenericFunction",
     ZsThis = "ZsThis",
-    ZsSelfref = "ZsSelfref"
+    ZsInferredTypeRef = "ZsInferredTypeRef"
 }
 
 export type AnyTypeKind = ZsTypeKind | ZodFirstPartyTypeKind

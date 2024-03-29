@@ -3,7 +3,7 @@ import { ZsValue } from "../declarations/value"
 
 import { ZsExportable, ZsExportableTypeLike } from "../utils/unions"
 import { ModuleScopedFactory } from "./module-builder"
-import { ZsSmartZenesisImport, ZsZenesisAnyImport } from "./zenesis-import"
+import { createImportReference, ZsImported } from "./zenesis-import"
 import { ZsZenesisModule } from "./zenesis-module"
 
 export type ZsModuleScope<Decl extends ZsExportable> = (
@@ -14,8 +14,10 @@ export type getExportName<Export extends ZsExportable> =
     Export extends ZsExportable ? Export["name"] : never
 
 export type ExportsRecord<Exports extends ZsExportable> = {
-    [Export in Extract<Exports, ZsExportableTypeLike> as getExportName<Export> &
-        string]: Export
+    [Export in Exports as getExportName<Export> &
+        string]: Export extends ZsExportableTypeLike
+        ? ZsImported<Export>
+        : Export
 }
 
 export const symActual = Symbol("actual")
@@ -28,7 +30,12 @@ export class ZsModuleBody<Exports extends ZsExportable = ZsExportable>
     implements Iterable<ZsExportable>
 {
     protected _seq: Seq<Exports>
-    _last = {} as ExportsRecord<Exports>;
+    _last = {} as {
+        [Export in Extract<
+            Exports,
+            ZsExportableTypeLike
+        > as getExportName<Export> & string]: Export
+    };
 
     [Symbol.iterator]() {
         return this._seq[Symbol.iterator]()
@@ -67,12 +74,13 @@ export class ZsModuleBody<Exports extends ZsExportable = ZsExportable>
     ref<Name extends keyof typeof this._last & string>(
         origin: ZsZenesisModule,
         name: Name
-    ): ZsSmartZenesisImport<this["_last"][Name]> {
-        return ZsZenesisAnyImport.create(
+    ): (typeof this._last)[Name] {
+        return createImportReference({
             name,
-            () => this.pull(name),
+            text: `import ${name} from ${origin.name}`,
+            deref: () => this.pull(name),
             origin
-        ) as any
+        })
     }
 
     /**

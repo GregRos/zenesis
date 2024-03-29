@@ -6,7 +6,7 @@ import { ZsKeyof } from "./expressions/keyof"
 import { ZsLookup } from "./expressions/lookup"
 import { ZsMapped } from "./expressions/mapped"
 import { ForallClause } from "./generics/forall-builder"
-import { ZsTypeVar } from "./generics/type-var"
+import { TypeVar } from "./generics/type-var"
 
 export { ZsClassBody } from "./declarations/classlike/class-body"
 export {
@@ -52,23 +52,18 @@ export { ZsKeyof, ZsKeyofDef } from "./expressions/keyof"
 export { ZsLookup, ZsLookupDef } from "./expressions/lookup"
 export { ZsMappedKeyRef, ZsMappedKeyRefDef } from "./expressions/map-arg"
 export { ZsMapped, ZsMappedDef } from "./expressions/mapped"
-export { ZsForallTypeDef, ZsGeneric } from "./generics/generic"
+export { ZsGeneric, ZsGenericDef } from "./generics/generic"
 export {
     ZsGenericFunction,
     ZsGenericFunctionDef
 } from "./generics/generic-function"
-export { ZsMade, ZsMadeDef } from "./generics/made"
-export {
-    ZsTypeVar,
-    ZsTypeVarDef,
-    ZsTypeVarTuple,
-    ZsTypeVarVariance
-} from "./generics/type-var"
+export { InstantiationDef } from "./generics/made"
+
 export {
     ZsTypeVarRef,
     ZsTypeVarRefDef,
     ZsTypeVarRefs
-} from "./generics/type-var--ref"
+} from "./generics/type-var"
 export { ZodSchemaTable, ZsSchemaTable } from "./table"
 export { zs }
 
@@ -105,7 +100,7 @@ const zs = {
     ),
     forall: ForallClause.create,
     lookup: ZsLookup.create,
-    typeVar: ZsTypeVar.create,
+    typeVar: TypeVar.create,
     if: ZsIf.create,
     function: ZsFunction.create,
     fun: ZsFunction.create,
@@ -119,19 +114,16 @@ export {
     ZsForeignModuleDef
 } from "./containers/foreign-module"
 export { ZsModuleBody } from "./containers/module-body"
-export {
-    ZsSmartZenesisImport,
-    ZsZenesisAnyImport,
-    ZsZenesisGenericImport,
-    ZsZenesisImport,
-    ZsZenesisImportDef,
-    ZsZenesisShapedImport,
-    ZsZenesisTypeImport
-} from "./containers/zenesis-import"
+
 export { ZsZenesisModule } from "./containers/zenesis-module"
 export { Access } from "./declarations/classlike/members/member"
 export { ZsThis, ZsThisDef } from "./declarations/classlike/this"
-export { ZsSelfrefDef, ZsTypeSelfref } from "./declarations/selfref"
+export {
+    ZsGenericSelfref,
+    ZsGenericSelfrefDef,
+    ZsSelfref,
+    ZsSelfrefDef
+} from "./declarations/selfref"
 export { ZsModifierState } from "./expressions/mapped"
 export * from "./utils/describe"
 export * from "./utils/unions"

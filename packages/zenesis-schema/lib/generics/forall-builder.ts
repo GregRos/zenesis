@@ -12,9 +12,9 @@ import {
     getTypeArgArray,
     getTypeArgObject
 } from "./ref-objects"
-import { ZsTypeVar, ZsTypeVarTuple } from "./type-var"
+import { FromVar, TypeVar, ZsTypeVarRef, ZsTypeVarRefs } from "./type-var"
 
-export interface ZsForallDef<Vars extends ZsTypeVarTuple> {
+export interface ZsForallDef<Vars extends ZsTypeVarRefs> {
     vars: Vars
 }
 
@@ -23,25 +23,27 @@ export interface ZsForallDef<Vars extends ZsTypeVarTuple> {
  * but this object lets you place constraints on them by name,
  */
 export class ForallClause<
-    Vars extends ZsTypeVarTuple = ZsTypeVarTuple
+    Vars extends ZsTypeVarRefs = ZsTypeVarRefs
 > extends ZsStructural<ZsForallDef<Vars>> {
     static create<Names extends [string, ...string[]]>(
         ...names: Names
     ): ForallClause<{
-        [I in keyof Names]: ZsTypeVar<Names[I], ZodAny, null>
+        [I in keyof Names]: ZsTypeVarRef<Names[I], ZodAny, null>
     }> {
         return new ForallClause({
-            vars: names.map(name => ZsTypeVar.create(name)) as any
+            vars: names.map(name => TypeVar.create(name)) as any
         }) as any
     }
-    where<Name extends Vars[number]["name"], NewVar extends ZsTypeVar<Name>>(
+    where<Name extends Vars[number]["name"], NewVar extends TypeVar<Name>>(
         name: Name,
         declarator: (
             cur: Extract<Vars[number], { name: Name }>,
             others: TypeVarRefsByName<Vars>
         ) => NewVar
     ): ForallClause<{
-        [I in keyof Vars]: Vars[I]["name"] extends Name ? NewVar : Vars[I]
+        [I in keyof Vars]: Vars[I]["name"] extends Name
+            ? FromVar<NewVar>
+            : Vars[I]
     }> {
         const refs = getTypeArgObject(this._def.vars)
         return new ForallClause({

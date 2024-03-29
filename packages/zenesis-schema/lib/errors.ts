@@ -1,8 +1,19 @@
-export class ZenesisBuildError extends Error {
+export class ZenesisError extends Error {
     constructor(
-        readonly code: string,
+        public code: string,
         message: string
     ) {
         super(message)
     }
+}
+
+export function zenesisError({
+    code,
+    message
+}: {
+    code: string
+    message: string
+}): never {
+    const fullCode = `zenesis/${code}`
+    throw new ZenesisError(fullCode, message)
 }
