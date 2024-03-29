@@ -2,14 +2,14 @@ import { ZodTypeDef } from "zod"
 
 import { ZsModuleDeclKind } from "../core/declaration-kind"
 import { ZsStructural } from "../core/misc-node"
-import { ZsMakeResultType } from "../utils/unions"
+import { ZsGeneralizableType } from "../utils/unions"
 import { createInstantiation } from "./made"
 import { Makable } from "./makable"
-import { ZsTypeVarRefs } from "./type-var"
+import { ZsTypeVars } from "./type-var"
 
 export interface ZsGenericDef<
-    Vars extends ZsTypeVarRefs,
-    Instance extends ZsMakeResultType
+    Vars extends ZsTypeVars,
+    Instance extends ZsGeneralizableType
 > extends ZodTypeDef {
     declName: ZsModuleDeclKind.ZsGeneric
     vars: Vars
@@ -17,8 +17,8 @@ export interface ZsGenericDef<
 }
 
 export class ZsGeneric<
-        Instance extends ZsMakeResultType = ZsMakeResultType,
-        Vars extends ZsTypeVarRefs = ZsTypeVarRefs
+        Instance extends ZsGeneralizableType = ZsGeneralizableType,
+        Vars extends ZsTypeVars = ZsTypeVars
     >
     extends ZsStructural<ZsGenericDef<Vars, Instance>>
     implements Makable<Vars, Instance>
@@ -36,8 +36,8 @@ export class ZsGeneric<
     }
 
     static create<
-        Instance extends ZsMakeResultType,
-        Vars extends ZsTypeVarRefs
+        Instance extends ZsGeneralizableType,
+        Vars extends ZsTypeVars
     >(innerType: Instance, vars: Vars): ZsGeneric<Instance, Vars> {
         return new ZsGeneric({
             declName: ZsModuleDeclKind.ZsGeneric,

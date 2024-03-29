@@ -1,10 +1,10 @@
 import { ZsMemberKind } from "../core/member-kind"
-import { ZsCallSignature } from "../declarations/classlike/members/call-signature"
-import { ZsConstructor } from "../declarations/classlike/members/constructor"
-import { ZsImplements } from "../declarations/classlike/members/implements"
-import { ZsIndexer } from "../declarations/classlike/members/indexer"
-import { ZsNewSignature } from "../declarations/classlike/members/new-signature"
-import { ZsProperty } from "../declarations/classlike/members/property"
+import { ZsCallSignature } from "../members/call-signature"
+import { ZsConstruct } from "../members/construct-signature"
+import { ZsConstructor } from "../members/constructor"
+import { ZsImplements } from "../members/implements"
+import { ZsIndexer } from "../members/indexer"
+import { ZsProperty } from "../members/property"
 
 export abstract class ZsMemberTable {
     [ZsMemberKind.ZsConstructor]!: ZsConstructor;
@@ -12,5 +12,5 @@ export abstract class ZsMemberTable {
     [ZsMemberKind.ZsIndexer]!: ZsIndexer;
     [ZsMemberKind.ZsImplements]!: ZsImplements;
     [ZsMemberKind.ZsCallSignature]!: ZsCallSignature;
-    [ZsMemberKind.ZsConstruct]!: ZsNewSignature
+    [ZsMemberKind.ZsConstruct]!: ZsConstruct
 }

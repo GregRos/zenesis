@@ -1,13 +1,17 @@
 import { SchemaSubtypeOf } from "../core/operators"
 import { ZsFunction } from "../expressions/function"
-import { ZsMakeResultType } from "../utils/unions"
+import {
+    ZsGeneralizable,
+    ZsGeneralizableType,
+    ZsMakeResultType
+} from "../utils/unions"
 import { ZsGeneric } from "./generic"
 import { ZsGenericFunction } from "./generic-function"
 import { Instantiated } from "./made"
-import { ZsTypeVarRefs } from "./type-var"
+import { ZsTypeVars } from "./type-var"
 
 export interface Makable<
-    Vars extends ZsTypeVarRefs = ZsTypeVarRefs,
+    Vars extends ZsTypeVars = ZsTypeVars,
     Instance extends ZsMakeResultType = ZsMakeResultType
 > {
     readonly name: string
@@ -26,9 +30,9 @@ export interface Makable<
  */
 
 export type Generalize<
-    Vars extends ZsTypeVarRefs,
-    Schema extends ZsMakeResultType | ZsFunction
-> = Schema extends ZsMakeResultType
+    Vars extends ZsTypeVars,
+    Schema extends ZsGeneralizable
+> = Schema extends ZsGeneralizableType
     ? ZsGeneric<Schema, Vars>
     : Schema extends ZsFunction
       ? ZsGenericFunction<Vars, Schema>

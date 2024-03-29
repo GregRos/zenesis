@@ -207,10 +207,12 @@ export const cases: {
         return this.recurse(this.convertZodFunctionToZsFunction(node._def))
     },
     [AnyTypeKind.ZsOverloads](node) {
+        const memberCtx = this.createMemberContext()
+
         // We're going to convert this into a callable with multiple signatures
         // Parents will unpack it and do with the contents whatever they want.
         const signatures = node._def.overloads.map(overload => {
-            const decl = this.convertZsFunctionToSomething(
+            const decl = memberCtx.convertZsFunctionToSomething(
                 overload,
                 tf.createCallSignature
             )
@@ -219,7 +221,8 @@ export const cases: {
         return tf.createTypeLiteralNode(signatures)
     },
     [AnyTypeKind.ZsFunction](node) {
-        const func = this.convertZsFunctionToSomething(
+        const memberCtx = this.createMemberContext()
+        const func = memberCtx.convertZsFunctionToSomething(
             node,
             tf.createFunctionTypeNode
         )
@@ -281,7 +284,8 @@ export const cases: {
         )
     },
     [AnyTypeKind.ZsGenericFunction](node) {
-        const func = this.convertZsFunctionToSomething(
+        const memberCtx = this.createMemberContext()
+        const func = memberCtx.convertZsFunctionToSomething(
             node,
             tf.createFunctionTypeNode
         )

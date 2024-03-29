@@ -1,15 +1,18 @@
 import { ZsMemberKind } from "@zenesis/schema"
 import {
     CallSignatureDeclaration,
+    ConstructSignatureDeclaration,
     ConstructorDeclaration,
+    HeritageClause,
     IndexSignatureDeclaration,
-    MethodDeclaration,
-    PropertyDeclaration
+    MethodSignature,
+    PropertySignature
 } from "typescript"
 export abstract class ZsToTsMemberTable {
-    [ZsMemberKind.ZsCallSignature]!: CallSignatureDeclaration;
-    [ZsMemberKind.ZsProperty]!: PropertyDeclaration | MethodDeclaration;
+    [ZsMemberKind.ZsCallSignature]!: CallSignatureDeclaration[];
+    [ZsMemberKind.ZsProperty]!: (PropertySignature | MethodSignature)[];
     [ZsMemberKind.ZsIndexer]!: IndexSignatureDeclaration;
     [ZsMemberKind.ZsConstructor]!: ConstructorDeclaration;
-    [ZsMemberKind.ZsConstruct]!: ConstructorDeclaration
+    [ZsMemberKind.ZsConstruct]!: ConstructSignatureDeclaration[];
+    [ZsMemberKind.ZsImplements]!: HeritageClause
 }

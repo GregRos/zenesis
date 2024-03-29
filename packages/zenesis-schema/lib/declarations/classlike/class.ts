@@ -4,7 +4,9 @@ import { ZsMonoType } from "../../core/mono-type"
 import { getCombinedType } from "../../core/operators"
 import { ZsTypeKind } from "../../core/type-kind"
 import { ZsShapedRef } from "../../core/types"
-import { ZsClassBody, ZsClassItems } from "./class-body"
+import { ZsConstructor } from "../../members/constructor"
+import { ZsClassBody, ZsClassItem } from "./class-body"
+import { ZsInterfaceItem } from "./interface"
 
 export interface ZsClassDef<
     Name extends string,
@@ -18,6 +20,7 @@ export interface ZsClassDef<
     parent: Parent
     abstract: boolean
 }
+export type ZsClassItem = ZsInterfaceItem | ZsConstructor
 
 export class ZsClass<
     Name extends string = string,
@@ -67,7 +70,7 @@ export class ZsClass<
     static create<
         Name extends string,
         Parent extends ZsShapedRef | null,
-        Memberable extends ZsClassItems
+        Memberable extends ZsClassItem
     >(name: Name, body: ZsClassBody<Memberable>) {
         const result = new ZsClass({
             name,

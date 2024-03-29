@@ -4585,12 +4585,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lazies@npm:^0.6.6":
-  version: 0.6.6
-  resolution: "lazies@npm:0.6.6"
-  checksum: 10c0/38fbfd4867688cd6862605bee1301f529c8873fb7822573e544f731c9edf0f1ee40ca33e6e6660915ed3b2d2c3d392e35f2d8a12b294e52cd3851065590736a9
+"lazies@portal:/C:/codegr/lazies::locator=root-workspace-0b6124%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "lazies@portal:/C:/codegr/lazies::locator=root-workspace-0b6124%40workspace%3A."
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "lerna@npm:^8.1.2":
   version: 8.1.2

@@ -3,9 +3,12 @@ import { ZsModuleDeclKind } from "../../core/declaration-kind"
 import { ZsMonoType } from "../../core/mono-type"
 import { getCombinedType } from "../../core/operators"
 import { ZsTypeKind } from "../../core/type-kind"
+import { ZsImplements } from "../../members/implements"
+import { ZsIndexer } from "../../members/indexer"
+import { ZsProperty } from "../../members/property"
 import { eraseInterface } from "../../utils/erasure"
 import { createSelfref } from "../selfref"
-import { ZsClassBody, ZsClassItems } from "./class-body"
+import { ZsClassBody, ZsClassItem } from "./class-body"
 
 export interface ZsInterfaceDef<Name extends string, Body extends ZsClassBody>
     extends ZodTypeDef {
@@ -14,10 +17,11 @@ export interface ZsInterfaceDef<Name extends string, Body extends ZsClassBody>
     typeName: ZsTypeKind.ZsInterface
     body: Body
 }
+export type ZsInterfaceItem = ZsImplements | ZsProperty | ZsIndexer
 
 export class ZsInterface<
     Name extends string = string,
-    Body extends ZsClassBody = ZsClassBody
+    Body extends ZsClassBody<ZsInterfaceItem> = ZsClassBody<ZsInterfaceItem>
 > extends ZsMonoType<
     getCombinedType<Body["shape"]>,
     ZsInterfaceDef<Name, Body>
@@ -34,7 +38,7 @@ export class ZsInterface<
         return this._def.body.shape
     }
 
-    static create<Name extends string, Memberable extends ZsClassItems>(
+    static create<Name extends string, Memberable extends ZsClassItem>(
         name: Name,
         body: () => Iterable<Memberable>
     ) {

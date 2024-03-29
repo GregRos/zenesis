@@ -1,7 +1,7 @@
 import { ZodOptional, ZodTypeAny } from "zod"
-import { ZsMemberKind } from "../../../core/member-kind"
-import { ZsStructural } from "../../../core/misc-node"
-
+import { ZsMemberKind } from "../core/member-kind"
+import { ZsStructural } from "../core/misc-node"
+import { Access } from "./common"
 export interface ZsClassMemberDef<
     Name extends string,
     Type extends ZodTypeAny
@@ -59,4 +59,3 @@ export class ZsProperty<
         })
     }
 }
-export type Access = "public" | "protected" | "private"

@@ -62,7 +62,7 @@ export class ZsWorld implements ZsWorldDef {
             }
         })
         let files = Map<string, SourceFile>()
-        for (const file of this) {
+        for (const file of this._files) {
             const blueprint = ctx.generateModule(file.body)
             const sourceFile = fromBlueprint(blueprint)
             files = files.set(file.name, sourceFile)

@@ -1,9 +1,9 @@
-import { ZsConstructor } from "../../declarations/classlike/members/constructor"
-import { ZsImplements } from "../../declarations/classlike/members/implements"
-import { ZsIndexer } from "../../declarations/classlike/members/indexer"
-import { ZsProperty } from "../../declarations/classlike/members/property"
 import { ZsValue } from "../../declarations/value"
 import { ZsOverloads } from "../../expressions/overloads"
+import { ZsConstructor } from "../../members/constructor"
+import { ZsImplements } from "../../members/implements"
+import { ZsIndexer } from "../../members/indexer"
+import { ZsProperty } from "../../members/property"
 
 export function isProperty(input: any): input is ZsProperty {
     return input instanceof ZsProperty

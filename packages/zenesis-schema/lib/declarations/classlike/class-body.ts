@@ -2,15 +2,11 @@ import { memoize, seq } from "lazies"
 import { ZodTypeAny, z } from "zod"
 import { foreignShape } from "../../containers/foreign-import"
 import { ZsShape } from "../../core/types"
+import { ZsImplements } from "../../members/implements"
+import { ZsProperty } from "../../members/property"
 import { ZsClassTypeLike, ZsImplementable } from "../../utils/unions"
 import { isImplements } from "../../utils/validate/is-member"
-import { ClassContext } from "./class-builder"
-import { ZsConstructor } from "./members/constructor"
-import { ZsImplements } from "./members/implements"
-import { ZsIndexer } from "./members/indexer"
-import { ZsProperty } from "./members/property"
-
-export type ZsClassItems = ZsImplements | ZsProperty | ZsConstructor | ZsIndexer
+import { ZsClassItem } from "./class"
 
 export interface ZsClassBodyDef<Shape extends ZsShape> {
     definition: () => {
@@ -18,14 +14,21 @@ export interface ZsClassBodyDef<Shape extends ZsShape> {
         schema: ZodTypeAny
         implements: ZsImplementable[]
     }
-    decls: Iterable<ZsClassItems>
+    decls: Iterable<ZsClassItem>
 }
 
-export class ZsClassBody<Decl extends ZsClassItems = ZsClassItems> {
+export class ZsClassBody<Decl extends ZsClassItem = ZsClassItem> {
     constructor(readonly _def: ZsClassBodyDef<getFullShape<Decl>>) {}
 
     get schema(): ZodTypeAny {
         return this._def.definition().schema
+    }
+
+    add(decl: ZsClassItem) {
+        return new ZsClassBody({
+            ...this._def,
+            decls: [...this._def.decls, decl]
+        })
     }
 
     get shape(): getFullShape<Decl> {
@@ -40,8 +43,8 @@ export class ZsClassBody<Decl extends ZsClassItems = ZsClassItems> {
         return this._def.decls
     }
 
-    static create<Decl extends ZsClassItems, Self extends ZsClassTypeLike>(
-        decl: (this: ClassContext<Self>) => Iterable<Decl>,
+    static create<Decl extends ZsClassItem, Self extends ZsClassTypeLike>(
+        decl: () => Iterable<Decl>,
         futureSelf: Self
     ) {
         const decls = seq(decl).cache()
@@ -88,14 +91,14 @@ export class ZsClassBody<Decl extends ZsClassItems = ZsClassItems> {
     }
 }
 
-export type getParentShape<Decls extends ZsClassItems> = {
+export type getParentShape<Decls extends ZsClassItem> = {
     [Decl in Extract<
         Decls,
         ZsImplements
     > as ""]: Decl["_def"]["implemented"]["shape"]
 }
 
-export type getOwnShape<Decls extends ZsClassItems> = {
+export type getOwnShape<Decls extends ZsClassItem> = {
     [Decl in Decls as Decl extends {
         name: infer Name extends string
     }
@@ -105,7 +108,7 @@ export type getOwnShape<Decls extends ZsClassItems> = {
 
 // TODO: Implement indexer static typing
 // TODO: Consider constructor static typing
-export type getFullShape<Decls extends ZsClassItems> = getOwnShape<Decls> &
+export type getFullShape<Decls extends ZsClassItem> = getOwnShape<Decls> &
     (getParentShape<Decls>[""] extends never ? {} : getParentShape<Decls>[""])
 
 export function unpackMemberSchemas<Shape extends ZsShape>(

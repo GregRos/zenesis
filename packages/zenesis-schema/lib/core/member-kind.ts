@@ -4,5 +4,6 @@ export enum ZsMemberKind {
     ZsIndexer = "ZsIndexer",
     ZsConstructor = "ZsConstructor",
     ZsCallSignature = "ZsCallSignature",
-    ZsConstruct = "ZsConstruct"
+    ZsConstruct = "ZsConstruct",
+    ZsTypeVar = "ZsTypeVar"
 }

@@ -4,13 +4,13 @@ import { ZsShapedRef } from "../../core/types"
 import { ZsFunction } from "../../expressions/function"
 import { ZsOverloads } from "../../expressions/overloads"
 import { ZsThis } from "../../expressions/this"
+import { ZsConstructor } from "../../members/constructor"
+import { ZsImplements } from "../../members/implements"
+import { ZsIndexer } from "../../members/indexer"
+import { ZsProperty } from "../../members/property"
 import { ZsClassTypeLike } from "../../utils/unions"
-import { ZsConstructor } from "./members/constructor"
-import { ZsImplements } from "./members/implements"
-import { ZsIndexer } from "./members/indexer"
-import { ZsProperty } from "./members/property"
 
-export class ClassContext<Self extends ZsClassTypeLike> {
+export class ClasslikeContext<Self extends ZsClassTypeLike> {
     constructor(readonly self: Self) {}
     get this() {
         return ZsThis.create()
@@ -35,13 +35,6 @@ export class ClassContext<Self extends ZsClassTypeLike> {
         return ZsProperty.create(name, overloads)
     }
 
-    Implements<ZShaped extends ZsShapedRef>(
-        type: ZShaped,
-        auto = true
-    ): ZsImplements<ZShaped["shape"]> {
-        return ZsImplements.create(type, auto)
-    }
-
     Indexer<
         Key extends
             | ZsMonoLike<PropertyKey>
@@ -50,8 +43,28 @@ export class ClassContext<Self extends ZsClassTypeLike> {
     >(keyType: Key, valueType: Value): ZsIndexer<Key, Value> {
         return ZsIndexer.create(keyType, valueType)
     }
+}
+
+export class ClassContext<
+    Self extends ZsClassTypeLike
+> extends ClasslikeContext<Self> {
+    AutoImplements<ZShaped extends ZsShapedRef>(
+        type: ZShaped
+    ): ZsImplements<ZShaped["shape"]> {
+        return ZsImplements.create(type, "auto implement")
+    }
 
     Constructor<ZTuple extends AnyZodTuple>(params: ZTuple) {
         return ZsConstructor.create(params)
+    }
+}
+
+export class InterfaceContext<
+    Self extends ZsClassTypeLike
+> extends ClasslikeContext<Self> {
+    Extends<ZShaped extends ZsShapedRef>(
+        type: ZShaped
+    ): ZsImplements<ZShaped["shape"]> {
+        return ZsImplements.create(type, "extend")
     }
 }

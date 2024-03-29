@@ -1,14 +1,13 @@
 import {
-    ZsDeclarableTypeLike,
     ZsForeignImport,
     ZsImport,
     ZsImported,
     ZsMappedKeyRef,
     ZsModuleBody,
+    ZsModuleDeclarableTypeLike,
     ZsReferableTypeLike,
     ZsTypeVarRef,
     describeZenesisNode,
-    isDeclarableType,
     isImport,
     isModuleDeclarableTypeLike,
     isSelfref,
@@ -23,11 +22,12 @@ import {
     EnumDeclaration,
     FunctionDeclaration,
     InterfaceDeclaration,
+    SyntaxKind,
     TypeAliasDeclaration,
     TypeReferenceNode,
     VariableStatement
 } from "typescript"
-import { TypeExprContext } from "../expressions/type-expr-context"
+import { TypeDeclContext } from "../declarations/type-decl-context"
 import { NodeMap } from "../utils/node-map"
 import { tf } from "../utils/tf"
 
@@ -99,7 +99,7 @@ export class ImportContext {
             const newNamespace = namespace.add(node.name)
             if (isImport(node)) {
                 addImport(node)
-            } else if (isDeclarableType(node)) {
+            } else if (isModuleDeclarableTypeLike(node)) {
                 addDeclaration(node, false)
             }
             schemaToReference = newSchemaToReference
@@ -121,17 +121,21 @@ export class ImportContext {
         }
 
         const addDeclaration = (
-            schema: ZsDeclarableTypeLike,
+            schema: ZsModuleDeclarableTypeLike,
             exported: boolean = false
         ) => {
             if (schemaToReference.has(schema)) {
                 throw new NameCollisionError(schema.name)
             }
             const declaration = lazy(() => {
-                const ctx = new TypeExprContext(
+                const ctx = new TypeDeclContext(
                     new NodeMap(schemaToReference, x => registerReferable(x))
                 )
-                return ctx.convertDeclaration(exported, schema)
+                const modifiers = exported
+                    ? [tf.createModifier(SyntaxKind.ExportKeyword)]
+                    : []
+
+                return ctx.convert(modifiers, schema)
             })
             delayedDeclarations = delayedDeclarations.set(
                 schema.name,

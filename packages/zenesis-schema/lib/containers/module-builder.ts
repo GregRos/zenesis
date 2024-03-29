@@ -1,8 +1,11 @@
 import { ZodTypeAny } from "zod"
 import { ZsTypeAlias } from "../declarations/alias"
 import { ZsClass } from "../declarations/classlike/class"
-import { ZsClassBody, ZsClassItems } from "../declarations/classlike/class-body"
-import { ClassContext } from "../declarations/classlike/class-builder"
+import { ZsClassBody, ZsClassItem } from "../declarations/classlike/class-body"
+import {
+    ClassContext,
+    InterfaceContext
+} from "../declarations/classlike/class-builder"
 import { ZsInterface } from "../declarations/classlike/interface"
 import {
     ZsGenericSelfref,
@@ -12,31 +15,23 @@ import { ZsTypeSelfref, createSelfref } from "../declarations/selfref"
 import { ZsValue, ZsValueKind } from "../declarations/value"
 import { ZsGeneric } from "../generics/generic"
 import { TypeVarRefsByName, getTypeArgObject } from "../generics/ref-objects"
-import {
-    FromVar,
-    ToVar,
-    TypeVar,
-    ZsTypeVarRef,
-    ZsTypeVarRefs
-} from "../generics/type-var"
+import { ZsTypeVar, ZsTypeVars } from "../generics/type-var"
 
-export class GenericModuleScopedFactory<Vars extends ZsTypeVarRefs> {
+export class GenericModuleScopedFactory<Vars extends ZsTypeVars> {
     constructor(readonly _vars: Vars) {}
 
     private get _typeArgsByName() {
-        return getTypeArgObject(this._vars)
+        return getTypeArgObject(this._vars.map(x => x.ref) as any)
     }
 
-    where<Name extends Vars[number]["name"], NewVar extends TypeVar<Name>>(
+    where<Name extends Vars[number]["name"], NewVar extends ZsTypeVar<Name>>(
         name: Name,
         declarator: (
-            cur: ToVar<Extract<Vars[number], { name: Name }>>,
+            cur: Extract<Vars[number], { name: Name }>,
             others: TypeVarRefsByName<Vars>
         ) => NewVar
     ): GenericModuleScopedFactory<{
-        [I in keyof Vars]: Vars[I]["name"] extends Name
-            ? FromVar<NewVar>
-            : Vars[I]
+        [I in keyof Vars]: Vars[I]["name"] extends Name ? NewVar : Vars[I]
     }> {
         return new GenericModuleScopedFactory(
             this._vars.map(v =>
@@ -45,7 +40,7 @@ export class GenericModuleScopedFactory<Vars extends ZsTypeVarRefs> {
         )
     }
 
-    Interface<Name extends string, Decl extends ZsClassItems>(
+    Interface<Name extends string, Decl extends ZsClassItem>(
         name: Name,
         declarations: (
             this: Omit<
@@ -71,7 +66,7 @@ export class GenericModuleScopedFactory<Vars extends ZsTypeVarRefs> {
         return generic
     }
 
-    Class<Name extends string, Decl extends ZsClassItems>(
+    Class<Name extends string, Decl extends ZsClassItem>(
         name: Name,
         declarations: (
             this: ClassContext<ZsGenericSelfref<ZsClass, Vars>>,
@@ -126,16 +121,16 @@ export class ModuleScopedFactory {
     forall<Names extends [string, ...string[]]>(
         ...names: Names
     ): GenericModuleScopedFactory<{
-        [I in keyof Names]: ZsTypeVarRef<Names[I], ZodTypeAny, null>
+        [I in keyof Names]: ZsTypeVar<Names[I], ZodTypeAny, null>
     }> {
         return new GenericModuleScopedFactory(
-            names.map(name => TypeVar.create(name)) as any
+            names.map(name => ZsTypeVar.create(name)) as any
         ) as any
     }
-    Interface<Name extends string, Decl extends ZsClassItems>(
+    Interface<Name extends string, Decl extends ZsClassItem>(
         name: Name,
         declarations: (
-            this: Omit<ClassContext<ZsInterface>, "Constructor">
+            this: InterfaceContext<ZsTypeSelfref<ZsInterface>>
         ) => Iterable<Decl>
     ) {
         const selfref = createSelfref({
@@ -143,12 +138,15 @@ export class ModuleScopedFactory {
             name: name,
             text: name
         })
-        const body = ZsClassBody.create(declarations, selfref) as any
+        const body = ZsClassBody.create(
+            declarations.bind(new InterfaceContext(selfref)),
+            selfref
+        ) as any
         const result = ZsInterface.create(name, body)
         return result
     }
 
-    Class<Name extends string, Decl extends ZsClassItems>(
+    Class<Name extends string, Decl extends ZsClassItem>(
         name: Name,
         declarations: (
             this: ClassContext<ZsTypeSelfref<ZsClass>>

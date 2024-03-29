@@ -1,14 +1,25 @@
 import { TypeOf, ZodAny, ZodTypeAny, ZodTypeDef, ZodUnknown } from "zod"
+import { ZsMemberKind } from "../core/member-kind"
+import { ZsStructural } from "../core/misc-node"
 import { ZsMonoType } from "../core/mono-type"
 import { SchemaSubtypeOf } from "../core/operators"
 import { ZsTypeKind } from "../core/type-kind"
 
 export interface ZsTypeVarRefDef<
     Name extends string,
-    Extends extends ZodTypeAny,
-    Default extends SchemaSubtypeOf<Extends> | null
+    Extends extends ZodTypeAny
 > extends ZodTypeDef {
     readonly typeName: ZsTypeKind.ZsTypeVarRef
+    readonly declaration: ZsTypeVar<Name, Extends>
+}
+
+export interface ZsTypeVarDef<
+    Name extends string = string,
+    Extends extends ZodTypeAny = ZodTypeAny,
+    Default extends
+        SchemaSubtypeOf<Extends> | null = SchemaSubtypeOf<Extends> | null
+> {
+    readonly memberName: ZsMemberKind.ZsTypeVar
     readonly name: Name
     readonly extends: Extends
     readonly default: Default
@@ -18,56 +29,38 @@ export interface ZsTypeVarRefDef<
 
 export class ZsTypeVarRef<
     Name extends string = string,
-    Extends extends ZodTypeAny = ZodTypeAny,
-    Default extends
-        SchemaSubtypeOf<Extends> | null = SchemaSubtypeOf<Extends> | null
-> extends ZsMonoType<TypeOf<Extends>, ZsTypeVarRefDef<Name, Extends, Default>> {
+    Extends extends ZodTypeAny = ZodTypeAny
+> extends ZsMonoType<TypeOf<Extends>, ZsTypeVarRefDef<Name, Extends>> {
+    readonly declaration = this._def.declaration
     readonly actsLike = ZodAny.create()
-    readonly name = this._def.name
+    readonly name = this._def.declaration.name
     static create<Name extends string, Extends extends ZodTypeAny>(
-        name: Name
-    ): ZsTypeVarRef<Name> {
+        typeVar: ZsTypeVar<Name, Extends>
+    ) {
         return new ZsTypeVarRef({
             typeName: ZsTypeKind.ZsTypeVarRef,
-            name,
-            const: false,
-            extends: ZodUnknown.create(),
-            default: null,
-            variance: ""
+            declaration: typeVar
         })
     }
 }
 
 export type ZsTypeVarRefs = [ZsTypeVarRef, ...ZsTypeVarRef[]]
-
+export type ZsTypeVars = [ZsTypeVar, ...ZsTypeVar[]]
 export type ZsTypeVarVariance = "" | "in" | "out" | "inout"
 
-export type FromVar<V extends TypeVar> =
-    V extends TypeVar<infer Name, infer Extends, infer Default>
-        ? ZsTypeVarRef<Name, Extends, Default>
-        : never
-
-export type ToVar<V extends ZsTypeVarRef> = TypeVar<
-    V["_def"]["name"],
-    V["_def"]["extends"],
-    V["_def"]["default"]
->
-
-export class TypeVar<
+export class ZsTypeVar<
     Name extends string = string,
     Extends extends ZodTypeAny = ZodTypeAny,
     Default extends
         SchemaSubtypeOf<Extends> | null = SchemaSubtypeOf<Extends> | null
-> {
-    constructor(
-        private readonly _inner: ZsTypeVarRefDef<Name, Extends, Default>
-    ) {}
-
+> extends ZsStructural<ZsTypeVarDef<Name, Extends, Default>> {
+    readonly ref = ZsTypeVarRef.create(this)
+    readonly name = this._def.name
     default<NewDefault extends SchemaSubtypeOf<Extends> | null>(
         newDefault: NewDefault
     ) {
-        return new TypeVar({
-            ...this._inner,
+        return new ZsTypeVar({
+            ...this._def,
             default: newDefault
         })
     }
@@ -76,14 +69,14 @@ export class TypeVar<
             ? ZodTypeAny
             : never
     >(extends_: NewExtends) {
-        return new TypeVar({
-            ...this._inner,
+        return new ZsTypeVar({
+            ...this._def,
             extends: extends_
         })
     }
     static create<Name extends string>(name: Name) {
-        return new TypeVar({
-            typeName: ZsTypeKind.ZsTypeVarRef,
+        return new ZsTypeVar({
+            memberName: ZsMemberKind.ZsTypeVar,
             name,
             const: false,
             extends: ZodUnknown.create(),
@@ -93,15 +86,15 @@ export class TypeVar<
     }
 
     const(flag: boolean) {
-        return new TypeVar({
-            ...this._inner,
+        return new ZsTypeVar({
+            ...this._def,
             const: flag
         })
     }
 
     variance(variance: ZsTypeVarVariance) {
-        return new TypeVar({
-            ...this._inner,
+        return new ZsTypeVar({
+            ...this._def,
             variance
         })
     }
