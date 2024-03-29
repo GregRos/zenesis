@@ -1,13 +1,13 @@
 import { memoize } from "lazies"
 import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod"
-import { ZsDeclKind } from "../core/declaration-kind"
+import { ZsModuleDeclKind } from "../core/declaration-kind"
 import { ZsMonoType } from "../core/mono-type"
 import { ZsTypeKind } from "../core/type-kind"
 
 export interface ZsTypeAliasDef<Name extends string, Type extends ZodTypeAny>
     extends ZodTypeDef {
     name: Name
-    declName: ZsDeclKind.ZsTypeAlias
+    declName: ZsModuleDeclKind.ZsTypeAlias
     typeName: ZsTypeKind.ZsTypeAlias
     definition: () => Type
 }
@@ -27,7 +27,7 @@ export class ZsTypeAlias<
         definition: () => T
     ) {
         return new ZsTypeAlias({
-            declName: ZsDeclKind.ZsTypeAlias,
+            declName: ZsModuleDeclKind.ZsTypeAlias,
             typeName: ZsTypeKind.ZsTypeAlias,
             name,
             definition: memoize(definition) as () => T

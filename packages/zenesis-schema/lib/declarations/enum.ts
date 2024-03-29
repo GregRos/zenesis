@@ -1,11 +1,11 @@
 import { EnumLike, ZodFirstPartyTypeKind, ZodNativeEnum, ZodTypeDef } from "zod"
-import { ZsDeclKind } from "../core/declaration-kind"
+import { ZsModuleDeclKind } from "../core/declaration-kind"
 import { ZsMonoType } from "../core/mono-type"
 import { ZsTypeKind } from "../core/type-kind"
 
 export interface ZsEnumDef<Name extends string, Type extends EnumLike>
     extends ZodTypeDef {
-    declName: ZsDeclKind.ZsEnum
+    declName: ZsModuleDeclKind.ZsEnum
     name: Name
     typeName: ZsTypeKind.ZsEnum
     definition: Type
@@ -27,7 +27,7 @@ export class ZsEnum<
         definition: Enum
     ) {
         return new ZsEnum({
-            declName: ZsDeclKind.ZsEnum,
+            declName: ZsModuleDeclKind.ZsEnum,
             typeName: ZsTypeKind.ZsEnum,
             name,
             definition

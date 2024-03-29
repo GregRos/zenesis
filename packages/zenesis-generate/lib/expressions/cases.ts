@@ -3,13 +3,13 @@ import { SyntaxKind, TypeNode } from "typescript"
 import {
     AnyTypeKind,
     ZenesisError,
-    ZsSchemaTable,
-    ZsTypeKind
+    ZsTypeKind,
+    ZsTypeTable
 } from "@zenesis/schema"
 import { extractModifiers } from "../utils/extract-modifiers"
 import { tf } from "../utils/tf"
 import { getOptional, getReadonly } from "../utils/tokens"
-import { ZsToTsExprTable } from "./table"
+import { ZsTsTable } from "./table"
 import { TypeExprContext } from "./type-expr-context"
 
 function getLiteralNode(value: any) {
@@ -26,10 +26,10 @@ function getLiteralNode(value: any) {
 }
 
 export const cases: {
-    [Kind in keyof ZsToTsExprTable]: (
+    [Kind in keyof ZsTsTable]: (
         this: TypeExprContext,
-        node: ZsSchemaTable[Kind]
-    ) => ZsToTsExprTable[Kind]
+        node: ZsTypeTable[Kind]
+    ) => ZsTsTable[Kind]
 } = {
     [ZsTypeKind.ZsThis](node) {
         return tf.createThisTypeNode()

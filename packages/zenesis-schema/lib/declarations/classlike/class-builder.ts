@@ -2,13 +2,13 @@ import { AnyZodTuple, ZodOptional, ZodTypeAny } from "zod"
 import { ZsMonoLike } from "../../core/mono-type"
 import { ZsShapedRef } from "../../core/types"
 import { ZsFunction } from "../../expressions/function"
+import { ZsOverloads } from "../../expressions/overloads"
+import { ZsThis } from "../../expressions/this"
 import { ZsClassTypeLike } from "../../utils/unions"
 import { ZsConstructor } from "./members/constructor"
 import { ZsImplements } from "./members/implements"
 import { ZsIndexer } from "./members/indexer"
-import { ZsProperty } from "./members/member"
-import { ZsOverloads } from "./members/overloads"
-import { ZsThis } from "./this"
+import { ZsProperty } from "./members/property"
 
 export class ClassContext<Self extends ZsClassTypeLike> {
     constructor(readonly self: Self) {}

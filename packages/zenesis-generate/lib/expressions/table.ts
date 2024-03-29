@@ -22,7 +22,7 @@ import { AnyTypeKind, ZodKindedAny } from "@zenesis/schema"
 export type JsDocHandler = (node: JSDoc) => void
 export type MissingDeclHandler = (node: ZodKindedAny) => TypeReferenceNode
 
-export abstract class ZsToTsExprTable {
+export abstract class ZsTsTable {
     [AnyTypeKind.ZsGenericFunction]!: FunctionTypeNode;
     [AnyTypeKind.ZsThis]!: ThisTypeNode;
     [AnyTypeKind.ZodEffects]!: never;

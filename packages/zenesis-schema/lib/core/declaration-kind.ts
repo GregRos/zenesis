@@ -1,4 +1,4 @@
-export enum ZsDeclKind {
+export enum ZsModuleDeclKind {
     ZsClass = "ZsClass",
     ZsInterface = "ZsInterface",
     ZsEnum = "ZsEnum",

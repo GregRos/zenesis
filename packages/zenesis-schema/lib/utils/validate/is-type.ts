@@ -5,12 +5,12 @@ import { ZodKindedAny } from "../../core/types"
 import { ZsTypeAlias } from "../../declarations/alias"
 import { ZsClass } from "../../declarations/classlike/class"
 import { ZsInterface } from "../../declarations/classlike/interface"
-import { ZsOverloads } from "../../declarations/classlike/members/overloads"
-import { ZsThis } from "../../declarations/classlike/this"
 import { ZsEnum } from "../../declarations/enum"
 import { ZsValue } from "../../declarations/value"
 import { ZsFunction } from "../../expressions/function"
 import { ZsMappedKeyRef } from "../../expressions/map-arg"
+import { ZsOverloads } from "../../expressions/overloads"
+import { ZsThis } from "../../expressions/this"
 import { ZsGeneric } from "../../generics/generic"
 import { ZsGenericFunction } from "../../generics/generic-function"
 import { ZsTypeVarRef } from "../../generics/type-var"
@@ -22,7 +22,6 @@ import {
     ZsExportable,
     ZsExportableType,
     ZsExportableTypeLike,
-    ZsFunctionLike,
     ZsGeneralizable,
     ZsGeneralizableType,
     ZsImplementable,
@@ -31,6 +30,7 @@ import {
     ZsModuleDeclarableType,
     ZsModuleDeclarableTypeLike,
     ZsOrZodFunction,
+    ZsOrZodFunctionLike,
     ZsReferableType,
     ZsReferableTypeLike
 } from "../unions"
@@ -43,7 +43,7 @@ export function isZsOrZodFunction(obj: any): obj is ZsOrZodFunction {
     return obj instanceof ZsFunction || obj instanceof ZodFunction
 }
 
-export function isZsFunctionLike(obj: any): obj is ZsFunctionLike {
+export function isZsFunctionLike(obj: any): obj is ZsOrZodFunctionLike {
     return isZsOrZodFunction(obj) || obj instanceof ZsGenericFunction
 }
 

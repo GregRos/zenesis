@@ -1,6 +1,6 @@
 import { ZodTypeDef } from "zod"
 
-import { ZsDeclKind } from "../core/declaration-kind"
+import { ZsModuleDeclKind } from "../core/declaration-kind"
 import { ZsStructural } from "../core/misc-node"
 import { ZsMakeResultType } from "../utils/unions"
 import { createInstantiation } from "./made"
@@ -11,7 +11,7 @@ export interface ZsGenericDef<
     Vars extends ZsTypeVarRefs,
     Instance extends ZsMakeResultType
 > extends ZodTypeDef {
-    declName: ZsDeclKind.ZsGeneric
+    declName: ZsModuleDeclKind.ZsGeneric
     vars: Vars
     innerType: Instance
 }
@@ -40,7 +40,7 @@ export class ZsGeneric<
         Vars extends ZsTypeVarRefs
     >(innerType: Instance, vars: Vars): ZsGeneric<Instance, Vars> {
         return new ZsGeneric({
-            declName: ZsDeclKind.ZsGeneric,
+            declName: ZsModuleDeclKind.ZsGeneric,
             innerType,
             vars
         })

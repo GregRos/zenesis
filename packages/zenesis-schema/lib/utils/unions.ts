@@ -7,7 +7,7 @@ import { ZsInterface } from "../declarations/classlike/interface"
 import { ZsConstructor } from "../declarations/classlike/members/constructor"
 import { ZsImplements } from "../declarations/classlike/members/implements"
 import { ZsIndexer } from "../declarations/classlike/members/indexer"
-import { ZsProperty } from "../declarations/classlike/members/member"
+import { ZsProperty } from "../declarations/classlike/members/property"
 import { ZsEnum } from "../declarations/enum"
 import { ZsGenericSelfref } from "../declarations/generic-selfref"
 import { ZsTypeSelfref } from "../declarations/selfref"
@@ -30,7 +30,9 @@ export type NormalizeFunctions<F extends ZsOrZodFunction> =
 /**
  * A `zod` or `zenesis` function node, or a `zenesis` generic function node.
  */
-export type ZsFunctionLike = ZsOrZodFunction | ZsGenericFunction
+export type ZsOrZodFunctionLike = ZsOrZodFunction | ZsGenericFunction
+
+export type ZsFunctionLike = ZsFunction | ZsGenericFunction
 
 /**
  * Any declaration or reference to a class-like object-oriented type. That is, a class or interface.

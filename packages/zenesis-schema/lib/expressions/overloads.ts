@@ -1,9 +1,10 @@
 import { TypeOf, ZodTypeDef } from "zod"
-import { ZsMonoLike, ZsMonoType } from "../../../core/mono-type"
-import { ZsTypeKind } from "../../../core/type-kind"
-import { ZsFunction } from "../../../expressions/function"
+import { ZsMonoLike, ZsMonoType } from "../core/mono-type"
+import { ZsTypeKind } from "../core/type-kind"
+import { ZsFunctionLike } from "../utils/unions"
+import { ZsFunction } from "./function"
 
-export interface ZsOverloadsDef<ZOverloads extends ZsFunction>
+export interface ZsOverloadsDef<ZOverloads extends ZsFunctionLike>
     extends ZodTypeDef {
     typeName: ZsTypeKind.ZsOverloads
     overloads: ZOverloads[]
@@ -14,7 +15,7 @@ export type UnionToIntersection<U> = (
     ? I
     : never
 export class ZsOverloads<
-    ZOverloads extends ZsFunction = ZsFunction
+    ZOverloads extends ZsFunctionLike = ZsFunctionLike
 > extends ZsMonoType<
     UnionToIntersection<TypeOf<ZOverloads>>,
     ZsOverloadsDef<ZOverloads>

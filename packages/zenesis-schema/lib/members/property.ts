@@ -6,7 +6,7 @@ export interface ZsClassMemberDef<
     Name extends string,
     Type extends ZodTypeAny
 > {
-    memberName: ZsMemberKind.ZsField
+    memberName: ZsMemberKind.ZsProperty
     access?: Access
     name: Name
     innerType: Type
@@ -31,7 +31,7 @@ export class ZsProperty<
         type: Type
     ) {
         return new ZsProperty({
-            memberName: ZsMemberKind.ZsField,
+            memberName: ZsMemberKind.ZsProperty,
             access: "public",
             name,
             innerType: type

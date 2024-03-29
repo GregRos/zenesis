@@ -1,5 +1,5 @@
 import { ZodTypeDef } from "zod"
-import { ZsDeclKind } from "../../core/declaration-kind"
+import { ZsModuleDeclKind } from "../../core/declaration-kind"
 import { ZsMonoType } from "../../core/mono-type"
 import { getCombinedType } from "../../core/operators"
 import { ZsTypeKind } from "../../core/type-kind"
@@ -12,7 +12,7 @@ export interface ZsClassDef<
     Body extends ZsClassBody
 > extends ZodTypeDef {
     name: Name
-    declName: ZsDeclKind.ZsClass
+    declName: ZsModuleDeclKind.ZsClass
     typeName: ZsTypeKind.ZsClass
     body: Body
     parent: Parent
@@ -56,7 +56,7 @@ export class ZsClass<
     ) {
         return new ZsClass({
             name: name,
-            declName: ZsDeclKind.ZsClass,
+            declName: ZsModuleDeclKind.ZsClass,
             typeName: ZsTypeKind.ZsClass,
             abstract: false,
             body: body,
@@ -71,7 +71,7 @@ export class ZsClass<
     >(name: Name, body: ZsClassBody<Memberable>) {
         const result = new ZsClass({
             name,
-            declName: ZsDeclKind.ZsClass,
+            declName: ZsModuleDeclKind.ZsClass,
             typeName: ZsTypeKind.ZsClass,
             abstract: false,
             body,

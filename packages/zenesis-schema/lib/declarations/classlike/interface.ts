@@ -1,5 +1,5 @@
 import { ZodTypeDef } from "zod"
-import { ZsDeclKind } from "../../core/declaration-kind"
+import { ZsModuleDeclKind } from "../../core/declaration-kind"
 import { ZsMonoType } from "../../core/mono-type"
 import { getCombinedType } from "../../core/operators"
 import { ZsTypeKind } from "../../core/type-kind"
@@ -10,7 +10,7 @@ import { ZsClassBody, ZsClassItems } from "./class-body"
 export interface ZsInterfaceDef<Name extends string, Body extends ZsClassBody>
     extends ZodTypeDef {
     name: Name
-    declName: ZsDeclKind.ZsInterface
+    declName: ZsModuleDeclKind.ZsInterface
     typeName: ZsTypeKind.ZsInterface
     body: Body
 }
@@ -45,7 +45,7 @@ export class ZsInterface<
         })
         const result = new ZsInterface({
             name,
-            declName: ZsDeclKind.ZsInterface,
+            declName: ZsModuleDeclKind.ZsInterface,
             typeName: ZsTypeKind.ZsInterface,
             body: ZsClassBody.create(body, selfref)
         })

@@ -28,11 +28,7 @@ export {
 export {
     ZsClassMemberDef,
     ZsProperty
-} from "./declarations/classlike/members/member"
-export {
-    ZsOverloads,
-    ZsOverloadsDef
-} from "./declarations/classlike/members/overloads"
+} from "./declarations/classlike/members/property"
 export { ZsEnum, ZsEnumDef } from "./declarations/enum"
 export { ZsValue, ZsValueDef } from "./declarations/value"
 export { ZsAstExpr, ZsAstExprDef } from "./expressions/ast-expr"
@@ -42,6 +38,7 @@ export { ZsKeyof, ZsKeyofDef } from "./expressions/keyof"
 export { ZsLookup, ZsLookupDef } from "./expressions/lookup"
 export { ZsMappedKeyRef, ZsMappedKeyRefDef } from "./expressions/map-arg"
 export { ZsMapped, ZsMappedDef } from "./expressions/mapped"
+export { ZsOverloads, ZsOverloadsDef } from "./expressions/overloads"
 export { ZsGeneric, ZsGenericDef } from "./generics/generic"
 export {
     ZsGenericFunction,
@@ -56,7 +53,8 @@ export {
 } from "./containers/foreign-module"
 export { ZsModuleBody } from "./containers/module-body"
 export { ZsImportDef, ZsImported } from "./containers/zenesis-import"
-export { ZsDeclKind } from "./core/declaration-kind"
+export { ZsModuleDeclKind } from "./core/declaration-kind"
+export { ZsMemberKind } from "./core/member-kind"
 export { ForallClause, ZsForallDef } from "./generics/forall-builder"
 export {
     FromVar,
@@ -66,11 +64,9 @@ export {
     ZsTypeVarRefs,
     ZsTypeVarVariance
 } from "./generics/type-var"
-export { ZodSchemaTable, ZsSchemaTable } from "./table"
+export { ZodSchemaTable, ZsTypeTable } from "./tables/types"
 
 export { ZsZenesisModule } from "./containers/zenesis-module"
-export { Access } from "./declarations/classlike/members/member"
-export { ZsThis, ZsThisDef } from "./declarations/classlike/this"
 export {
     ZsGenericSelfref,
     ZsGenericSelfrefDef
@@ -78,6 +74,10 @@ export {
 export { ZsSelfrefDef, ZsTypeSelfref } from "./declarations/selfref"
 export * from "./errors"
 export { ZsModifierState } from "./expressions/mapped"
+export { ZsThis, ZsThisDef } from "./expressions/this"
+export { ZsDeclarationsTable } from "./tables/declarations"
+
+export { ZsMemberTable } from "./tables/members"
 export * from "./utils/describe"
 export * from "./utils/unions"
 export * from "./utils/validate/is-member"

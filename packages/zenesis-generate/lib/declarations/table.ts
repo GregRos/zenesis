@@ -1,4 +1,4 @@
-import { ZsDeclKind } from "@zenesis/schema/lib/core/declaration-kind"
+import { ZsModuleDeclKind } from "@zenesis/schema"
 import {
     ClassDeclaration,
     EnumDeclaration,
@@ -9,13 +9,13 @@ import {
 } from "typescript"
 
 export abstract class ZsToTsDeclTable {
-    [ZsDeclKind.ZsClass]!: ClassDeclaration;
-    [ZsDeclKind.ZsInterface]!: InterfaceDeclaration;
-    [ZsDeclKind.ZsEnum]!: EnumDeclaration;
-    [ZsDeclKind.ZsTypeAlias]!: TypeAliasDeclaration;
-    [ZsDeclKind.ZsValue]!: FunctionDeclaration | VariableStatement;
-    [ZsDeclKind.ZsGeneric]!: this[
-        | ZsDeclKind.ZsClass
-        | ZsDeclKind.ZsInterface
-        | ZsDeclKind.ZsTypeAlias]
+    [ZsModuleDeclKind.ZsClass]!: ClassDeclaration;
+    [ZsModuleDeclKind.ZsInterface]!: InterfaceDeclaration;
+    [ZsModuleDeclKind.ZsEnum]!: EnumDeclaration;
+    [ZsModuleDeclKind.ZsTypeAlias]!: TypeAliasDeclaration;
+    [ZsModuleDeclKind.ZsValue]!: FunctionDeclaration | VariableStatement;
+    [ZsModuleDeclKind.ZsGeneric]!: this[
+        | ZsModuleDeclKind.ZsClass
+        | ZsModuleDeclKind.ZsInterface
+        | ZsModuleDeclKind.ZsTypeAlias]
 }

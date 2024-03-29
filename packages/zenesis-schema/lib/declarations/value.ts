@@ -1,5 +1,5 @@
 import { ZodTypeAny } from "zod"
-import { ZsDeclKind } from "../core/declaration-kind"
+import { ZsModuleDeclKind } from "../core/declaration-kind"
 import { ZsStructural } from "../core/misc-node"
 
 export enum ZsValueKind {
@@ -9,7 +9,7 @@ export enum ZsValueKind {
     function = "function"
 }
 export interface ZsValueDef<Annotation extends ZodTypeAny> {
-    declName: ZsDeclKind.ZsValue
+    declName: ZsModuleDeclKind.ZsValue
     name: string
     style: ZsValueKind
     annotation: Annotation
@@ -29,7 +29,7 @@ export class ZsValue<
         annotation: Annotation
     ) {
         return new ZsValue({
-            declName: ZsDeclKind.ZsValue,
+            declName: ZsModuleDeclKind.ZsValue,
             name,
             style: kind,
             annotation

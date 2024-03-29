@@ -15,7 +15,7 @@ import {
     TypeParameterDeclaration,
     TypeReferenceNode
 } from "typescript"
-import { tf } from "../utils/tf"
+import { tf } from "../tf"
 
 import {
     AnyZodTuple,
@@ -47,8 +47,8 @@ import {
     ZsOverloads,
     ZsProperty,
     ZsReferableTypeLike,
-    ZsSchemaTable,
     ZsTypeAlias,
+    ZsTypeTable,
     ZsTypeVarRef,
     ZsValue,
     describeZenesisNode
@@ -57,7 +57,7 @@ import {
 import { seq } from "lazies"
 import { NodeMap } from "../utils/node-map"
 import { cases } from "./cases"
-import { ZsToTsExprTable } from "./table"
+import { ZsTsTable } from "./table"
 function createMethodSignature(
     modifiers: Modifier[],
     questionToken: QuestionToken | undefined,
@@ -87,9 +87,9 @@ export class TypeExprContext {
     }
     recurse<Node extends ZodKindedAny>(
         node: Node
-    ): Node["_def"]["typeName"] extends keyof ZsToTsExprTable
-        ? ZsToTsExprTable[Node["_def"]["typeName"]]
-        : ZsToTsExprTable[keyof ZsToTsExprTable] {
+    ): Node["_def"]["typeName"] extends keyof ZsTsTable
+        ? ZsTsTable[Node["_def"]["typeName"]]
+        : ZsTsTable[keyof ZsTsTable] {
         if (node._def.typeName in cases) {
             return (cases as any)[node._def.typeName].call(this, node) as any
         }
@@ -488,7 +488,7 @@ export class TypeExprContext {
 
         const name = member.name
         const memberType = member._def
-            .innerType as ZsSchemaTable[keyof ZsSchemaTable]
+            .innerType as ZsTypeTable[keyof ZsTypeTable]
         const { optional, readonly, innerType } = extractModifiers(memberType)
         if (readonly) {
             modifiers.push(readonly)

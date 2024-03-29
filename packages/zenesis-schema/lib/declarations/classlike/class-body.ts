@@ -8,7 +8,7 @@ import { ClassContext } from "./class-builder"
 import { ZsConstructor } from "./members/constructor"
 import { ZsImplements } from "./members/implements"
 import { ZsIndexer } from "./members/indexer"
-import { ZsProperty } from "./members/member"
+import { ZsProperty } from "./members/property"
 
 export type ZsClassItems = ZsImplements | ZsProperty | ZsConstructor | ZsIndexer
 

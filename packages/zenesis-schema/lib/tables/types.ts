@@ -40,24 +40,24 @@ import {
     ZodUnknown,
     ZodVoid
 } from "zod"
-import { ZsForeignImport } from "./containers/foreign-import"
-import { ZsTypeKind } from "./core/type-kind"
-import { ZodKindedAny } from "./core/types"
-import { ZsTypeAlias } from "./declarations/alias"
-import { ZsClass } from "./declarations/classlike/class"
-import { ZsInterface } from "./declarations/classlike/interface"
-import { ZsOverloads } from "./declarations/classlike/members/overloads"
-import { ZsThis } from "./declarations/classlike/this"
-import { ZsEnum } from "./declarations/enum"
-import { ZsAstExpr } from "./expressions/ast-expr"
-import { ZsFunction } from "./expressions/function"
-import { ZsIf } from "./expressions/if"
-import { ZsKeyof } from "./expressions/keyof"
-import { ZsLookup } from "./expressions/lookup"
-import { ZsMappedKeyRef } from "./expressions/map-arg"
-import { ZsMapped } from "./expressions/mapped"
-import { ZsGenericFunction } from "./generics/generic-function"
-import { ZsTypeVarRef } from "./generics/type-var"
+import { ZsForeignImport } from "../containers/foreign-import"
+import { ZsTypeKind } from "../core/type-kind"
+import { ZodKindedAny } from "../core/types"
+import { ZsTypeAlias } from "../declarations/alias"
+import { ZsClass } from "../declarations/classlike/class"
+import { ZsInterface } from "../declarations/classlike/interface"
+import { ZsEnum } from "../declarations/enum"
+import { ZsAstExpr } from "../expressions/ast-expr"
+import { ZsFunction } from "../expressions/function"
+import { ZsIf } from "../expressions/if"
+import { ZsKeyof } from "../expressions/keyof"
+import { ZsLookup } from "../expressions/lookup"
+import { ZsMappedKeyRef } from "../expressions/map-arg"
+import { ZsMapped } from "../expressions/mapped"
+import { ZsOverloads } from "../expressions/overloads"
+import { ZsThis } from "../expressions/this"
+import { ZsGenericFunction } from "../generics/generic-function"
+import { ZsTypeVarRef } from "../generics/type-var"
 
 /**
  * This is a table of all the first party schemas. It makes various types
@@ -118,7 +118,7 @@ export abstract class ZodSchemaTable {
     [ZodFirstPartyTypeKind.ZodArray]!: ZodArray<ZodKindedAny>
 }
 
-export abstract class ZsSchemaTable extends ZodSchemaTable {
+export abstract class ZsTypeTable extends ZodSchemaTable {
     [ZsTypeKind.ZsEnum]!: ZsEnum;
     [ZsTypeKind.ZsForeignImport]!: ZsForeignImport;
     [ZsTypeKind.ZsThis]!: ZsThis;
