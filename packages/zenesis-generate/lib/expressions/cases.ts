@@ -173,7 +173,7 @@ export const cases: {
     [AnyTypeKind.ZsTypeAlias](node) {
         return this.get(node)
     },
-    [AnyTypeKind.ZsTypeVarRef](node) {
+    [AnyTypeKind.ZsTypeArg](node) {
         return this.get(node)
     },
     [AnyTypeKind.ZsMappingKeyRef](node) {

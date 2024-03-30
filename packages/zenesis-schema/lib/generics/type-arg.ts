@@ -5,7 +5,7 @@ import { ZsTypeVar } from "./type-var"
 
 export interface ZsTypeArgDef<Name extends string, Extends extends ZodTypeAny>
     extends ZodTypeDef {
-    readonly typeName: ZsTypeKind.ZsTypeVarRef
+    readonly typeName: ZsTypeKind.ZsTypeArg
     readonly declaration: ZsTypeVar<Name, Extends>
 }
 export class ZsTypeArg<
@@ -19,7 +19,7 @@ export class ZsTypeArg<
         typeVar: ZsTypeVar<Name, Extends>
     ) {
         return new ZsTypeArg({
-            typeName: ZsTypeKind.ZsTypeVarRef,
+            typeName: ZsTypeKind.ZsTypeArg,
             declaration: typeVar
         })
     }

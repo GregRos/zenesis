@@ -1,5 +1,5 @@
 import {
-    ForallClause,
+    ForallFunctionBuilder,
     ZsAstExpr,
     ZsFunction,
     ZsIf,
@@ -43,7 +43,7 @@ const zs = {
         "bigint",
         "symbol"
     ),
-    forall: ForallClause.create,
+    forall: ForallFunctionBuilder.create,
     lookup: ZsLookup.create,
     if: ZsIf.create,
     function: ZsFunction.create,

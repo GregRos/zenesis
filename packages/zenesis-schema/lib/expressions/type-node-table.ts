@@ -127,7 +127,7 @@ export abstract class ZsTypeNodeTable extends ZodTypeNodeTable {
     [ZsTypeKind.ZsInterface]!: ZsInterface;
     [ZsTypeKind.ZsTypeAlias]!: ZsTypeAlias;
     [ZsTypeKind.ZsGenericFunction]!: ZsGenericFunction;
-    [ZsTypeKind.ZsTypeVarRef]!: ZsTypeArg;
+    [ZsTypeKind.ZsTypeArg]!: ZsTypeArg;
     [ZsTypeKind.ZsMappingKeyRef]!: ZsMappedKeyRef;
     [ZsTypeKind.ZsAstExpr]!: ZsAstExpr;
 

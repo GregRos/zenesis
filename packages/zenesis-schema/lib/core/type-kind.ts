@@ -8,7 +8,7 @@ export enum ZsTypeKind {
     ZsTypeAlias = "ZsTypeAlias",
     ZsFunction = "ZsFunction",
     ZsConditional = "ZsConditional",
-    ZsTypeVarRef = "ZsTypeVarRef",
+    ZsTypeArg = "ZsTypeVarRef",
     ZsMapped = "ZsMapped",
     ZsMappingKeyRef = "ZsMappingKeyRef",
     ZsKeyof = "ZsKeyof",

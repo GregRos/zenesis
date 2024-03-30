@@ -67,7 +67,7 @@ export {
     ZodTypeNodeTable,
     ZsTypeNodeTable
 } from "./expressions/type-node-table"
-export { ForallClause, ZsForallDef } from "./generics/forall-builder"
+export { ForallFunctionBuilder, ZsForallDef } from "./generics/forall-builder"
 export { ZsTypeArg, ZsTypeArgDef, ZsTypeArgs } from "./generics/type-arg"
 export {
     ZsTypeVar,

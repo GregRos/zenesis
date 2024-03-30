@@ -3,12 +3,7 @@ import { ZsStructural } from "../core/misc-node"
 import { ZsFunction } from "../expressions/function"
 import { ZsGenericFunction } from "../expressions/generic-function"
 import { ZsGeneralizable } from "../utils/unions"
-import {
-    TypeVarRefs,
-    TypeVarRefsByName,
-    getTypeArgArray,
-    getTypeArgObject
-} from "./ref-objects"
+import { TypeVarRefsByName, getTypeArgObject } from "./ref-objects"
 import { ZsTypeVar, ZsTypeVars } from "./type-var"
 
 export interface ZsForallDef<Vars extends ZsTypeVars> {
@@ -19,15 +14,15 @@ export interface ZsForallDef<Vars extends ZsTypeVars> {
  * Builds a set of type variables. The number and names of the type vars is predetermined,
  * but this object lets you place constraints on them by name,
  */
-export class ForallClause<
+export class ForallFunctionBuilder<
     Vars extends ZsTypeVars = ZsTypeVars
 > extends ZsStructural<ZsForallDef<Vars>> {
     static create<Names extends [string, ...string[]]>(
         ...names: Names
-    ): ForallClause<{
+    ): ForallFunctionBuilder<{
         [I in keyof Names]: ZsTypeVar<Names[I], ZodAny, null>
     }> {
-        return new ForallClause({
+        return new ForallFunctionBuilder({
             vars: names.map(name => ZsTypeVar.create(name)) as any
         }) as any
     }
@@ -37,11 +32,11 @@ export class ForallClause<
             cur: Extract<Vars[number], { name: Name }>,
             others: TypeVarRefsByName<Vars>
         ) => NewVar
-    ): ForallClause<{
+    ): ForallFunctionBuilder<{
         [I in keyof Vars]: Vars[I]["name"] extends Name ? NewVar : Vars[I]
     }> {
         const refs = getTypeArgObject(this._def.vars)
-        return new ForallClause({
+        return new ForallFunctionBuilder({
             vars: this._def.vars.map(v =>
                 v.name === name ? declarator(v as any, refs) : v
             ) as any
@@ -57,11 +52,11 @@ export class ForallClause<
     }
 
     define<Result extends ZsFunction>(
-        builder: (...args: TypeVarRefs<Vars>) => Result
+        builder: (args: TypeVarRefsByName<Vars>) => Result
     ): ZsGenericFunction<Vars, Result>
     define(builder: Function): any {
-        const refs = getTypeArgArray(this._def.vars)
-        let result = builder(...refs)
+        const refs = getTypeArgObject(this._def.vars)
+        let result = builder(refs)
         return [...result].map(x => this._wrapOne(x))
     }
 }
