@@ -57,7 +57,7 @@ import { ZsMapped } from "../expressions/mapped"
 import { ZsOverloads } from "../expressions/overloads"
 import { ZsThis } from "../expressions/this"
 import { ZsGenericFunction } from "../generics/generic-function"
-import { ZsTypeVarRef } from "../generics/type-var"
+import { ZsTypeArg } from "../generics/type-arg"
 
 /**
  * This is a table of all the first party schemas. It makes various types
@@ -127,7 +127,7 @@ export abstract class ZsTypeTable extends ZodSchemaTable {
     [ZsTypeKind.ZsInterface]!: ZsInterface;
     [ZsTypeKind.ZsTypeAlias]!: ZsTypeAlias;
     [ZsTypeKind.ZsGenericFunction]!: ZsGenericFunction;
-    [ZsTypeKind.ZsTypeVarRef]!: ZsTypeVarRef;
+    [ZsTypeKind.ZsTypeVarRef]!: ZsTypeArg;
     [ZsTypeKind.ZsMappingKeyRef]!: ZsMappedKeyRef;
     [ZsTypeKind.ZsAstExpr]!: ZsAstExpr;
 

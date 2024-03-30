@@ -6,7 +6,7 @@ import {
     ZsModuleBody,
     ZsModuleDeclarableTypeLike,
     ZsReferableTypeLike,
-    ZsTypeVarRef,
+    ZsTypeArg,
     describeZenesisNode,
     isImport,
     isModuleDeclarableTypeLike,
@@ -32,7 +32,7 @@ import { NodeMap } from "../utils/node-map"
 import { tf } from "../utils/tf"
 
 export class ScopeEscapeError extends Error {
-    constructor(node: ZsMappedKeyRef | ZsTypeVarRef) {
+    constructor(node: ZsMappedKeyRef | ZsTypeArg) {
         super(`${node.constructor.name}(${node.name}) has escaped its scope!`)
     }
 }

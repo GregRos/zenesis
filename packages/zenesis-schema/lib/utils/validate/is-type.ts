@@ -13,7 +13,7 @@ import { ZsOverloads } from "../../expressions/overloads"
 import { ZsThis } from "../../expressions/this"
 import { ZsGeneric } from "../../generics/generic"
 import { ZsGenericFunction } from "../../generics/generic-function"
-import { ZsTypeVarRef } from "../../generics/type-var"
+import { ZsTypeArg } from "../../generics/type-arg"
 import {
     ZsClassLike,
     ZsDeclarable,
@@ -78,7 +78,7 @@ export function isModuleDeclarableType(
 export function isDeclarableType(obj: any): obj is ZsDeclarableType {
     return (
         isModuleDeclarableType(obj) ||
-        obj instanceof ZsTypeVarRef ||
+        obj instanceof ZsTypeArg ||
         obj instanceof ZsMappedKeyRef
     )
 }

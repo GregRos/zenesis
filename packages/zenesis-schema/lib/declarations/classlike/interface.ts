@@ -6,8 +6,6 @@ import { ZsTypeKind } from "../../core/type-kind"
 import { ZsImplements } from "../../members/implements"
 import { ZsIndexer } from "../../members/indexer"
 import { ZsProperty } from "../../members/property"
-import { eraseInterface } from "../../utils/erasure"
-import { createSelfref } from "../selfref"
 import { ZsClassBody } from "./class-body"
 
 export interface ZsInterfaceDef<Name extends string, Body extends ZsClassBody>
@@ -40,20 +38,14 @@ export class ZsInterface<
 
     static create<Name extends string, Memberable extends ZsInterfaceItem>(
         name: Name,
-        body: () => Iterable<Memberable>
+        body: ZsClassBody
     ) {
-        const selfref = createSelfref({
-            deref: () => erased,
-            name,
-            text: name
-        })
         const result = new ZsInterface({
             name,
             declName: ZsModuleDeclKind.ZsInterface,
             typeName: ZsTypeKind.ZsInterface,
-            body: ZsClassBody.create(body, selfref)
+            body
         })
-        const erased = eraseInterface(result)
         return result
     }
 }

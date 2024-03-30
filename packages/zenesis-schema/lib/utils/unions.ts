@@ -5,14 +5,12 @@ import { ZsTypeAlias } from "../declarations/alias"
 import { ZsClass } from "../declarations/classlike/class"
 import { ZsInterface } from "../declarations/classlike/interface"
 import { ZsEnum } from "../declarations/enum"
-import { ZsGenericSelfref } from "../declarations/generic-selfref"
-import { ZsTypeSelfref } from "../declarations/selfref"
 import { ZsValue } from "../declarations/value"
 import { ZsFunction } from "../expressions/function"
 import { ZsMappedKeyRef } from "../expressions/map-arg"
 import { ZsGeneric } from "../generics/generic"
 import { ZsGenericFunction } from "../generics/generic-function"
-import { ZsTypeVarRef, ZsTypeVars } from "../generics/type-var"
+import { ZsTypeArg } from "../generics/type-arg"
 import { ZsCallSignature } from "../members/call-signature"
 import { ZsConstruct } from "../members/construct-signature"
 import { ZsConstructor } from "../members/constructor"
@@ -63,10 +61,6 @@ export type ZsMakeResultType = ZsGeneralizableType | ZsForeignImport
  */
 export type ZsModuleDeclarableType = ZsGeneralizableType | ZsEnum
 
-export type ZsSelfref =
-    | ZsTypeSelfref<ZsModuleDeclarableType>
-    | ZsGenericSelfref<ZsGeneralizableType, ZsTypeVars>
-
 export type ZsImport = ZsForeignImport | ZsImported
 
 /**
@@ -75,7 +69,7 @@ export type ZsImport = ZsForeignImport | ZsImported
  */
 export type ZsDeclarableType =
     | ZsModuleDeclarableType
-    | ZsTypeVarRef
+    | ZsTypeArg
     | ZsMappedKeyRef
 
 /**

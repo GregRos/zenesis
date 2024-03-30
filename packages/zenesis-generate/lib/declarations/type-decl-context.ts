@@ -72,18 +72,20 @@ export class TypeDeclContext extends BaseContext {
             .pull()
         const converted = wrapped
             .concatMap(function* (x) {
-                if (x instanceof ZsImplements) {
-                    for (const prop of self.getAutoProperties(x)) {
-                        if (prop instanceof ZsProperty) {
-                            if (names.has(prop.name)) {
-                                continue
-                            }
-                            names.add(prop.name)
-                        }
-                        yield prop
-                    }
-                }
                 yield x
+                if (!(x instanceof ZsImplements)) {
+                    return
+                }
+                for (const prop of self.getAutoProperties(x)) {
+                    if (!(prop instanceof ZsProperty)) {
+                        yield prop
+                        continue
+                    }
+                    if (names.has(prop.name)) {
+                        continue
+                    }
+                    names.add(prop.name)
+                }
             })
             .map(x => memberCtx.convert(x))
             .concatMap(x => (Array.isArray(x) ? x : [x]))

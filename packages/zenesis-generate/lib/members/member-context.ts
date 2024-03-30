@@ -17,7 +17,6 @@ import {
     ParameterDeclaration,
     PropertyDeclaration,
     PropertySignature,
-    QuestionToken,
     SyntaxKind,
     TypeNode,
     TypeParameterDeclaration,
@@ -140,26 +139,7 @@ export class MemberContext extends BaseContext {
         const returns = nested.createExpressionContext().recurse(f._def.returns)
         return mapper(typeArgs, args, returns)
     }
-    createMethodSignature(
-        modifiers: Modifier[],
-        questionToken: QuestionToken | undefined,
-        name: string
-    ) {
-        return (
-            typeArgs: TypeParameterDeclaration[] | undefined,
-            args: ParameterDeclaration[],
-            returns: TypeNode
-        ) => {
-            return tf.createMethodSignature(
-                modifiers,
-                name,
-                questionToken,
-                typeArgs,
-                args,
-                returns
-            )
-        }
-    }
+
     convertParamsToDeclarations(tuple: AnyZodTuple) {
         const exprContext = this.createExpressionContext()
         const params = tuple.items.map((param, i) => {

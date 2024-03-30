@@ -8,16 +8,16 @@ export function getTypeArgObject<Vars extends ZsTypeVars>(
 export function getTypeArgArray<Vars extends ZsTypeVars>(
     vars: Vars
 ): TypeVarRefs<Vars> {
-    return vars.map(v => v.ref) as TypeVarRefs<Vars>
+    return vars.map(v => v.arg) as TypeVarRefs<Vars>
 }
 export type TypeVarRefsByName<Vars extends ZsTypeVars> = {
-    [Var in Vars[number] as Var["name"]]: Var["ref"]
+    [Var in Vars[number] as Var["name"]]: Var["arg"]
 }
 export type TypeVarRefsByNameOrNumber<Vars extends ZsTypeVars> = {
-    [Var in Vars[number] as Var["name"]]: Var["ref"]
+    [Var in Vars[number] as Var["name"]]: Var["arg"]
 } & {
-    [I in keyof Vars]: Vars[I]["ref"]
+    [I in keyof Vars]: Vars[I]["arg"]
 }
 export type TypeVarRefs<Vars extends ZsTypeVars> = {
-    [I in keyof Vars]: Vars[I]["ref"]
+    [I in keyof Vars]: Vars[I]["arg"]
 }

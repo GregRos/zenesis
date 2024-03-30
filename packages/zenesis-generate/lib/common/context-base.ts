@@ -11,7 +11,7 @@ export abstract class BaseContext {
         let refs = this._refs
         for (const typeVar of typeVars) {
             refs = refs.set(
-                typeVar.ref,
+                typeVar.arg,
                 tf.createTypeReferenceNode(typeVar.name)
             )
         }

@@ -19,12 +19,13 @@ import { ZsValue, ZsValueKind } from "../declarations/value"
 import { ZsGeneric } from "../generics/generic"
 import { TypeVarRefsByName, getTypeArgObject } from "../generics/ref-objects"
 import { ZsTypeVar, ZsTypeVars } from "../generics/type-var"
+import { ZsExportable } from "../utils/unions"
 
 export class GenericModuleScopedFactory<Vars extends ZsTypeVars> {
     constructor(readonly _vars: Vars) {}
 
     private get _typeArgsByName() {
-        return getTypeArgObject(this._vars.map(x => x.ref) as any)
+        return getTypeArgObject(this._vars.map(x => x.arg) as any)
     }
 
     where<Name extends Vars[number]["name"], NewVar extends ZsTypeVar<Name>>(
@@ -58,10 +59,8 @@ export class GenericModuleScopedFactory<Vars extends ZsTypeVars> {
         }) as ZsGenericSelfref<ZsInterface, Vars>
         const factory = new InterfaceContext(self)
         const args = this._typeArgsByName
-        const makeResult = ZsInterface.create(
-            name,
-            declarations.bind(factory, args)
-        )
+        const body = ZsClassBody.create(declarations.bind(factory, args), self)
+        const makeResult = ZsInterface.create(name, body)
         const generic = ZsGeneric.create(makeResult, this._vars)
         return generic
     }
@@ -81,10 +80,8 @@ export class GenericModuleScopedFactory<Vars extends ZsTypeVars> {
         }) as ZsGenericSelfref<ZsClass, Vars>
         const factory = new ClassContext(self)
         const args = this._typeArgsByName
-        const makeResult = ZsClass.create(
-            name,
-            ZsClassBody.create(declarations.bind(factory, args), self)
-        )
+        const body = ZsClassBody.create(declarations.bind(factory, args), self)
+        const makeResult = ZsClass.create(name, body)
         const generic = ZsGeneric.create(makeResult, this._vars)
         return generic
     }
@@ -137,11 +134,11 @@ export class ModuleScopedFactory {
             deref: () => result,
             name: name,
             text: name
-        })
+        }) as ZsTypeSelfref<ZsInterface>
         const body = ZsClassBody.create(
             declarations.bind(new InterfaceContext(selfref)),
             selfref
-        ) as any
+        )
         const result = ZsInterface.create(name, body)
         return result
     }
@@ -197,3 +194,6 @@ export class ModuleScopedFactory {
         return ZsValue.create(name, ZsValueKind.var, type)
     }
 }
+export type ZsModuleScope<Decl extends ZsExportable> = (
+    this: ModuleScopedFactory
+) => Iterable<Decl>

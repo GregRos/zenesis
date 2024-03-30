@@ -9,12 +9,11 @@ const f1 = W.File("hello", function* () {
 
     const cl1 = this.Class("Hello", function* (this) {
         yield this.Property("a", zs.string())
-        const a = yield this.Property("b", zs.number())
         yield this.Property("self", this.self)
         yield this.Property("thisType", this.this)
         yield this.Method("hello", zs.fun(zs.string()).returns(zs.string()))
 
-        yield this.Implements(iface1)
+        yield this.AutoImplements(iface1)
     })
 
     yield this.forall("A", "B")
@@ -49,4 +48,6 @@ const f2 = W.File("hello2", function* () {
     })
 })
 
-const outs = generateWorld(W)
+W.emitSync({
+    outDir: "out"
+})

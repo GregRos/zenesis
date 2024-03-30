@@ -1,17 +1,8 @@
-import { TypeOf, ZodAny, ZodTypeAny, ZodTypeDef, ZodUnknown } from "zod"
+import { ZodTypeAny, ZodUnknown } from "zod"
 import { ZsMemberKind } from "../core/member-kind"
 import { ZsStructural } from "../core/misc-node"
-import { ZsMonoType } from "../core/mono-type"
 import { SchemaSubtypeOf } from "../core/operators"
-import { ZsTypeKind } from "../core/type-kind"
-
-export interface ZsTypeVarRefDef<
-    Name extends string,
-    Extends extends ZodTypeAny
-> extends ZodTypeDef {
-    readonly typeName: ZsTypeKind.ZsTypeVarRef
-    readonly declaration: ZsTypeVar<Name, Extends>
-}
+import { ZsTypeArg } from "./type-arg"
 
 export interface ZsTypeVarDef<
     Name extends string = string,
@@ -27,24 +18,6 @@ export interface ZsTypeVarDef<
     readonly variance: ZsTypeVarVariance
 }
 
-export class ZsTypeVarRef<
-    Name extends string = string,
-    Extends extends ZodTypeAny = ZodTypeAny
-> extends ZsMonoType<TypeOf<Extends>, ZsTypeVarRefDef<Name, Extends>> {
-    readonly declaration = this._def.declaration
-    readonly actsLike = ZodAny.create()
-    readonly name = this._def.declaration.name
-    static create<Name extends string, Extends extends ZodTypeAny>(
-        typeVar: ZsTypeVar<Name, Extends>
-    ) {
-        return new ZsTypeVarRef({
-            typeName: ZsTypeKind.ZsTypeVarRef,
-            declaration: typeVar
-        })
-    }
-}
-
-export type ZsTypeVarRefs = [ZsTypeVarRef, ...ZsTypeVarRef[]]
 export type ZsTypeVars = [ZsTypeVar, ...ZsTypeVar[]]
 export type ZsTypeVarVariance = "" | "in" | "out" | "inout"
 
@@ -54,7 +27,7 @@ export class ZsTypeVar<
     Default extends
         SchemaSubtypeOf<Extends> | null = SchemaSubtypeOf<Extends> | null
 > extends ZsStructural<ZsTypeVarDef<Name, Extends, Default>> {
-    readonly ref = ZsTypeVarRef.create(this)
+    readonly arg = ZsTypeArg.create(this)
     readonly name = this._def.name
     default<NewDefault extends SchemaSubtypeOf<Extends> | null>(
         newDefault: NewDefault

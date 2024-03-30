@@ -4,15 +4,9 @@ import {
     TypeReferenceNode
 } from "typescript"
 
-import { AnyZodTuple, ZodFunctionDef, ZodRawShape, ZodTypeAny } from "zod"
+import { ZodRawShape } from "zod"
 
-import {
-    AnyTypeKind,
-    ZodKindedAny,
-    ZsFunction,
-    ZsProperty,
-    ZsReferableTypeLike
-} from "@zenesis/schema"
+import { ZodKindedAny, ZsProperty, ZsReferableTypeLike } from "@zenesis/schema"
 
 import { BaseContext } from "../common/context-base"
 import { MemberContext } from "../members/member-context"
@@ -28,18 +22,7 @@ export class TypeExprContext extends BaseContext {
     get(node: ZsReferableTypeLike) {
         return this._refs.get(node)
     }
-    convertZodFunctionToZsFunction(
-        zodFunction: ZodFunctionDef<AnyZodTuple, ZodTypeAny>
-    ): ZsFunction {
-        const zsFunction = new ZsFunction({
-            typeName: AnyTypeKind.ZsFunction,
-            args: zodFunction.args,
-            returns: zodFunction.returns,
-            description: zodFunction.description,
-            errorMap: zodFunction.errorMap
-        })
-        return zsFunction
-    }
+
     recurse<Node extends ZodKindedAny>(
         node: Node
     ): Node["_def"]["typeName"] extends keyof ZsTsTable

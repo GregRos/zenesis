@@ -2,13 +2,8 @@ import { seq, Seq } from "lazies"
 import { ZsValue } from "../declarations/value"
 
 import { ZsExportable, ZsExportableTypeLike } from "../utils/unions"
-import { ModuleScopedFactory } from "./module-builder"
 import { createImportReference } from "./zenesis-import"
 import { ZsZenesisModule } from "./zenesis-module"
-
-export type ZsModuleScope<Decl extends ZsExportable> = (
-    this: ModuleScopedFactory
-) => Iterable<Decl>
 
 export type getExportName<Export extends ZsExportable> =
     Export extends ZsExportable ? Export["name"] : never

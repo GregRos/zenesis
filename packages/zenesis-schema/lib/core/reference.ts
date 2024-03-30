@@ -30,6 +30,9 @@ export function createReference<Ref extends ZsReferenceDef<{}>>(
         },
         {
             get(target, prop) {
+                if (prop === "equals") {
+                    return undefined
+                }
                 if (prop === symVia) {
                     return reference.via
                 }

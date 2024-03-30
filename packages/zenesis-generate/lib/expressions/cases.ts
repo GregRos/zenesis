@@ -3,6 +3,7 @@ import { SyntaxKind, TypeNode } from "typescript"
 import {
     AnyTypeKind,
     ZenesisError,
+    ZsFunction,
     ZsTypeKind,
     ZsTypeTable
 } from "@zenesis/schema"
@@ -203,22 +204,27 @@ export const cases: {
         const indexType = this.recurse(node._def.index)
         return tf.createIndexedAccessTypeNode(targetType, indexType)
     },
-    [AnyTypeKind.ZodFunction](node) {
-        return this.recurse(this.convertZodFunctionToZsFunction(node._def))
+    [AnyTypeKind.ZodFunction](zodFunctionNode) {
+        const zodFunction = zodFunctionNode._def
+        const zsFunction = new ZsFunction({
+            typeName: AnyTypeKind.ZsFunction,
+            args: zodFunction.args,
+            returns: zodFunction.returns,
+            description: zodFunction.description,
+            errorMap: zodFunction.errorMap
+        })
+        return this.recurse(zsFunction)
     },
     [AnyTypeKind.ZsOverloads](node) {
         const memberCtx = this.createMemberContext()
 
         // We're going to convert this into a callable with multiple signatures
         // Parents will unpack it and do with the contents whatever they want.
-        const signatures = node._def.overloads.map(overload => {
-            const decl = memberCtx.convertZsFunctionToSomething(
-                overload,
-                tf.createCallSignature
-            )
-            return decl
-        })
-        return tf.createTypeLiteralNode(signatures)
+        const sigs = memberCtx.convertOverloadsToSomethings(
+            node,
+            tf.createCallSignature
+        )
+        return tf.createTypeLiteralNode(sigs)
     },
     [AnyTypeKind.ZsFunction](node) {
         const memberCtx = this.createMemberContext()

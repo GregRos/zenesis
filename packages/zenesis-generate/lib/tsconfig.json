@@ -1,13 +1,15 @@
 {
     "extends": "../../tsconfig.base.json",
-    "references": [{
-        "path": "../../zenesis-schema/lib/tsconfig.json"
-    }],
+    "references": [
+        {
+            "path": "../../zenesis-schema/lib/tsconfig.json"
+        }
+    ],
     "compilerOptions": {
         "outDir": "../dist/lib",
         "rootDir": ".",
         "noEmit": false
     },
     "include": ["**/*.ts"],
-    "exclude": ["node_modules", "**/node_modules/*", "**/dist"] 
+    "exclude": ["**/dist/*/*.ts", "**/node_modules"]
 }

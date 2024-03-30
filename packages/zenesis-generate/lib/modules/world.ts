@@ -1,14 +1,18 @@
 import {
+    ZsExportable,
+    ZsFile,
+    ZsForeignModule,
+    ZsImport,
+    ZsModuleScope,
     ZsZenesisModule,
     describeZenesisNode,
     zenesisError
 } from "@zenesis/schema"
-import { ZsFile } from "@zenesis/schema/lib/containers/file"
-import { ZsForeignModule } from "@zenesis/schema/lib/containers/foreign-module"
-import { ZsModuleScope } from "@zenesis/schema/lib/containers/module-body"
-import { ZsExportable, ZsImport } from "@zenesis/schema/lib/utils/unions"
+
+import { existsSync, mkdirSync, writeFileSync } from "fs"
 import { Map, Set } from "immutable"
-import { SourceFile } from "typescript"
+import { join } from "path"
+import { SourceFile, createPrinter } from "typescript"
 import { fromBlueprint } from "./generate"
 import { ImportContext } from "./module"
 export interface ZsWorldDef {
@@ -77,6 +81,19 @@ export class ZsWorld implements ZsWorldDef {
     }
 
     emitSync(config: ZsWorldEmitConfig) {
+        const outDir = config.outDir
         console.log("emitting world", this.name)
+        const printer = createPrinter()
+        if (!existsSync(outDir)) {
+            mkdirSync(outDir)
+        }
+
+        for (const [fileName, sourceFile] of this._generate()) {
+            console.log(`writing ${fileName}.ts`)
+            writeFileSync(
+                join(outDir, `${fileName}.ts`),
+                printer.printFile(sourceFile)
+            )
+        }
     }
 }

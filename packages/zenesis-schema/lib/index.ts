@@ -37,11 +37,18 @@ export { ZsImplements, ZsImplementsDef } from "./members/implements"
 export { ZsIndexer, ZsIndexerDef } from "./members/indexer"
 export { ZsClassMemberDef, ZsProperty } from "./members/property"
 
+export { ZsFile, ZsFileDef } from "./containers/file"
 export { ZsForeignDef, ZsForeignImport } from "./containers/foreign-import"
 export {
     ZsForeignModule,
     ZsForeignModuleDef
 } from "./containers/foreign-module"
+export {
+    GenericModuleScopedFactory,
+    ModuleScopedFactory,
+    ZsModuleScope
+} from "./containers/module-builder"
+
 export { ZsModuleBody } from "./containers/module-body"
 export { ZsImportDef, ZsImported } from "./containers/zenesis-import"
 export { ZsZenesisModule } from "./containers/zenesis-module"
@@ -56,20 +63,17 @@ export * from "./errors"
 export { ZsModifierState } from "./expressions/mapped"
 export { ZsThis, ZsThisDef } from "./expressions/this"
 export { ForallClause, ZsForallDef } from "./generics/forall-builder"
+export { ZsTypeArg, ZsTypeArgDef, ZsTypeArgs } from "./generics/type-arg"
 export {
     ZsTypeVar,
     ZsTypeVarDef,
-    ZsTypeVarRef,
-    ZsTypeVarRefDef,
-    ZsTypeVarRefs,
     ZsTypeVarVariance,
     ZsTypeVars
 } from "./generics/type-var"
 export { Access } from "./members/common"
 export { ZsDeclarationsTable } from "./tables/declarations"
-export { ZodSchemaTable, ZsTypeTable } from "./tables/types"
-
 export { ZsMemberTable } from "./tables/members"
+export { ZodSchemaTable, ZsTypeTable } from "./tables/types"
 export * from "./utils/describe"
 export * from "./utils/unions"
 export * from "./utils/validate/is-member"

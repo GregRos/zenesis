@@ -1,6 +1,6 @@
 export enum ZsMemberKind {
     ZsImplements = "ZsImplements",
-    ZsProperty = "ZsField",
+    ZsProperty = "ZsProperty",
     ZsIndexer = "ZsIndexer",
     ZsConstructor = "ZsConstructor",
     ZsCallSignature = "ZsCallSignature",

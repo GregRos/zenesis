@@ -1,7 +1,7 @@
 import { ZsModuleKind } from "../core/type-kind"
 import { ZsExportable } from "../utils/unions"
-import { ZsModuleBody, ZsModuleScope } from "./module-body"
-import { ModuleScopedFactory } from "./module-builder"
+import { ZsModuleBody } from "./module-body"
+import { ModuleScopedFactory, ZsModuleScope } from "./module-builder"
 import { ZsZenesisModule } from "./zenesis-module"
 
 export interface ZsFileDef<Exports extends ZsExportable> {

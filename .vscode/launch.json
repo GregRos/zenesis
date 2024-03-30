@@ -4,7 +4,7 @@
         {
             "type": "node",
             "request": "launch",
-            "runtimeArgs": ["--enable-source-maps"],
+            "runtimeArgs": ["--enable-source-maps", "--stack-trace-limit=1000"],
             "name": "Start Example (Debug)",
             "program": "${workspaceFolder}/packages/demo/dist/example.js",
             "console": "integratedTerminal",

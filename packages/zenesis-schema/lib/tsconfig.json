@@ -6,6 +6,6 @@
         "noEmit": false,
         "experimentalDecorators": true
     },
-    "include": ["**/*.ts"],
-    "exclude": ["**/dist", "**/node_modules"]
+    "include": ["**/*.ts", "containers/file.ts"],
+    "exclude": ["**/dist/*/*.ts", "**/node_modules"]
 }
