@@ -1,12 +1,12 @@
 import { ZsModuleDeclKind } from "../core/declaration-kind"
-import { ZsTypeAlias } from "../declarations/alias"
-import { ZsClass } from "../declarations/classlike/class"
-import { ZsInterface } from "../declarations/classlike/interface"
-import { ZsEnum } from "../declarations/enum"
-import { ZsValue } from "../declarations/value"
 import { ZsGeneric } from "../generics/generic"
+import { ZsTypeAlias } from "./alias"
+import { ZsClass } from "./classlike/class"
+import { ZsInterface } from "./classlike/interface"
+import { ZsEnum } from "./enum"
+import { ZsValue } from "./value"
 
-export abstract class ZsDeclarationsTable {
+export abstract class ZsDeclarationNodeTable {
     [ZsModuleDeclKind.ZsClass]!: ZsClass;
     [ZsModuleDeclKind.ZsInterface]!: ZsInterface;
     [ZsModuleDeclKind.ZsEnum]!: ZsEnum;

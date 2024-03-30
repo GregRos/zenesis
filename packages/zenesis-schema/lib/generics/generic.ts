@@ -2,9 +2,9 @@ import { ZodTypeDef } from "zod"
 
 import { ZsModuleDeclKind } from "../core/declaration-kind"
 import { ZsStructural } from "../core/misc-node"
+import { SchemaSubtypeOf } from "../core/operators"
 import { ZsGeneralizableType } from "../utils/unions"
-import { createInstantiation } from "./made"
-import { Makable } from "./makable"
+import { ZsInstantiated, createInstantiation } from "./made"
 import { ZsTypeVars } from "./type-var"
 
 export interface ZsGenericDef<
@@ -17,16 +17,17 @@ export interface ZsGenericDef<
 }
 
 export class ZsGeneric<
-        Instance extends ZsGeneralizableType = ZsGeneralizableType,
-        Vars extends ZsTypeVars = ZsTypeVars
-    >
-    extends ZsStructural<ZsGenericDef<Vars, Instance>>
-    implements Makable<Vars, Instance>
-{
+    Instance extends ZsGeneralizableType = ZsGeneralizableType,
+    Vars extends ZsTypeVars = ZsTypeVars
+> extends ZsStructural<ZsGenericDef<Vars, Instance>> {
     readonly _Instance!: Instance
     readonly name = this._def.innerType.name
     readonly vars = this._def.vars
-    make: Makable<Vars, Instance>["make"] = (...args) => {
+    make(
+        ...args: {
+            [I in keyof Vars]: SchemaSubtypeOf<Vars[I]["_def"]["extends"]>
+        }
+    ): ZsInstantiated<Instance> {
         return createInstantiation({
             deref: () => this._def.innerType,
             text: this._def.innerType.name,

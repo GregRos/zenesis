@@ -1,26 +1,8 @@
-import { SchemaSubtypeOf } from "../core/operators"
 import { ZsFunction } from "../expressions/function"
-import {
-    ZsGeneralizable,
-    ZsGeneralizableType,
-    ZsMakeResultType
-} from "../utils/unions"
+import { ZsGenericFunction } from "../expressions/generic-function"
+import { ZsGeneralizable, ZsGeneralizableType } from "../utils/unions"
 import { ZsGeneric } from "./generic"
-import { ZsGenericFunction } from "./generic-function"
-import { Instantiated } from "./made"
 import { ZsTypeVars } from "./type-var"
-
-export interface Makable<
-    Vars extends ZsTypeVars = ZsTypeVars,
-    Instance extends ZsMakeResultType = ZsMakeResultType
-> {
-    readonly name: string
-    make(
-        ...args: {
-            [I in keyof Vars]: SchemaSubtypeOf<Vars[I]["_def"]["extends"]>
-        }
-    ): Instantiated<Instance>
-}
 
 /**
  * Given a concrete, non-generic type, and a set of variables will return a generic type

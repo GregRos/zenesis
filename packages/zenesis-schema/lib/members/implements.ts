@@ -2,11 +2,11 @@ import { ZsMemberKind } from "../core/member-kind"
 import { ZsStructural } from "../core/misc-node"
 import { ZsShape, ZsShapedRef } from "../core/types"
 
-export type ImplementsKind = "auto implement" | "extend"
+export type ZsImplementsKind = "auto implement" | "extend"
 
 export interface ZsImplementsDef<Shape extends ZsShape> {
     memberName: ZsMemberKind.ZsImplements
-    kind: ImplementsKind
+    kind: ZsImplementsKind
     implemented: ZsShapedRef<Shape>
 }
 
@@ -22,7 +22,7 @@ export class ZsImplements<Shape extends ZsShape = ZsShape> extends ZsStructural<
 
     static create<Shape extends ZsShape>(
         shaped: ZsShapedRef<Shape>,
-        kind: ImplementsKind = "auto implement"
+        kind: ZsImplementsKind = "auto implement"
     ) {
         return new ZsImplements({
             memberName: ZsMemberKind.ZsImplements,

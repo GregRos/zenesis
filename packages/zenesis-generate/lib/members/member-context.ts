@@ -5,7 +5,7 @@ import {
     ZsGenericFunction,
     ZsImplements,
     ZsInterface,
-    ZsMemberTable,
+    ZsMemberNodeTable,
     ZsOverloads,
     ZsTypeVar
 } from "@zenesis/schema"
@@ -49,7 +49,7 @@ export class MemberContext extends BaseContext {
     create(refs: NodeMap): this {
         return new MemberContext(refs) as this
     }
-    convert<Node extends ZsMemberTable[keyof ZsMemberTable]>(
+    convert<Node extends ZsMemberNodeTable[keyof ZsMemberNodeTable]>(
         member: Node
     ): ZsToTsMemberTable[Node["_def"]["memberName"]] {
         return (cases as any)[member._def.memberName].call(this, member)

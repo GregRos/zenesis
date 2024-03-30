@@ -1,11 +1,8 @@
 import { ZodAny } from "zod"
 import { ZsStructural } from "../core/misc-node"
 import { ZsFunction } from "../expressions/function"
+import { ZsGenericFunction } from "../expressions/generic-function"
 import { ZsGeneralizable } from "../utils/unions"
-import { isGeneralizableType } from "../utils/validate/is-type"
-import { ZsGeneric } from "./generic"
-import { ZsGenericFunction } from "./generic-function"
-import { Generalize } from "./makable"
 import {
     TypeVarRefs,
     TypeVarRefsByName,
@@ -54,16 +51,14 @@ export class ForallClause<
     private _wrapOne(input: ZsGeneralizable) {
         if (input instanceof ZsFunction) {
             return ZsGenericFunction.create(this._def.vars, input)
-        } else if (isGeneralizableType(input)) {
-            return ZsGeneric.create(input, this._def.vars)
         } else {
             throw new Error("Invalid forallable")
         }
     }
 
-    define<Result extends ZsGeneralizable>(
+    define<Result extends ZsFunction>(
         builder: (...args: TypeVarRefs<Vars>) => Result
-    ): Generalize<Vars, Result>
+    ): ZsGenericFunction<Vars, Result>
     define(builder: Function): any {
         const refs = getTypeArgArray(this._def.vars)
         let result = builder(...refs)

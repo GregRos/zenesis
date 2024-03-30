@@ -5,7 +5,7 @@ import {
     ZenesisError,
     ZsFunction,
     ZsTypeKind,
-    ZsTypeTable
+    ZsTypeNodeTable
 } from "@zenesis/schema"
 import { extractModifiers } from "../utils/extract-modifiers"
 import { tf } from "../utils/tf"
@@ -29,7 +29,7 @@ function getLiteralNode(value: any) {
 export const cases: {
     [Kind in keyof ZsTsTable]: (
         this: TypeExprContext,
-        node: ZsTypeTable[Kind]
+        node: ZsTypeNodeTable[Kind]
     ) => ZsTsTable[Kind]
 } = {
     [ZsTypeKind.ZsThis](node) {

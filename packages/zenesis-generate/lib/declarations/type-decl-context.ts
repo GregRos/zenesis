@@ -1,6 +1,6 @@
 import {
     ZsClassBody,
-    ZsDeclarationsTable,
+    ZsDeclarationNodeTable,
     ZsImplements,
     ZsIndexer,
     ZsProperty,
@@ -28,7 +28,7 @@ export class TypeDeclContext extends BaseContext {
     }
     convert(
         modifiers: Modifier[],
-        decl: ZsDeclarationsTable[keyof ZsDeclarationsTable],
+        decl: ZsDeclarationNodeTable[keyof ZsDeclarationNodeTable],
         typeVars?: TypeParameterDeclaration[] | undefined
     ) {
         return (cases as any)[decl._def.declName].call(
@@ -49,9 +49,6 @@ export class TypeDeclContext extends BaseContext {
         body: ZsImplements,
         depth = 0
     ): Iterable<ZsProperty | ZsIndexer> {
-        if (body._def.kind !== "auto implement") {
-            return
-        }
         for (const decl of body._def.implemented.body.declarations) {
             if (decl instanceof ZsProperty || decl instanceof ZsIndexer) {
                 yield decl
@@ -73,9 +70,13 @@ export class TypeDeclContext extends BaseContext {
         const converted = wrapped
             .concatMap(function* (x) {
                 yield x
-                if (!(x instanceof ZsImplements)) {
+                if (
+                    !(x instanceof ZsImplements) ||
+                    x._def.kind !== "auto implement"
+                ) {
                     return
                 }
+
                 for (const prop of self.getAutoProperties(x)) {
                     if (!(prop instanceof ZsProperty)) {
                         yield prop

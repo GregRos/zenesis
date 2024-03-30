@@ -47,17 +47,17 @@ import { ZsTypeAlias } from "../declarations/alias"
 import { ZsClass } from "../declarations/classlike/class"
 import { ZsInterface } from "../declarations/classlike/interface"
 import { ZsEnum } from "../declarations/enum"
-import { ZsAstExpr } from "../expressions/ast-expr"
-import { ZsFunction } from "../expressions/function"
-import { ZsIf } from "../expressions/if"
-import { ZsKeyof } from "../expressions/keyof"
-import { ZsLookup } from "../expressions/lookup"
-import { ZsMappedKeyRef } from "../expressions/map-arg"
-import { ZsMapped } from "../expressions/mapped"
-import { ZsOverloads } from "../expressions/overloads"
-import { ZsThis } from "../expressions/this"
-import { ZsGenericFunction } from "../generics/generic-function"
 import { ZsTypeArg } from "../generics/type-arg"
+import { ZsAstExpr } from "./ast-expr"
+import { ZsFunction } from "./function"
+import { ZsGenericFunction } from "./generic-function"
+import { ZsIf } from "./if"
+import { ZsKeyof } from "./keyof"
+import { ZsLookup } from "./lookup"
+import { ZsMappedKeyRef } from "./map-arg"
+import { ZsMapped } from "./mapped"
+import { ZsOverloads } from "./overloads"
+import { ZsThis } from "./this"
 
 /**
  * This is a table of all the first party schemas. It makes various types
@@ -65,7 +65,7 @@ import { ZsTypeArg } from "../generics/type-arg"
  *
  * You will never need to make instances of this class.
  */
-export abstract class ZodSchemaTable {
+export abstract class ZodTypeNodeTable {
     [ZodFirstPartyTypeKind.ZodEffects]!: ZodEffects<ZodKindedAny>;
     [ZodFirstPartyTypeKind.ZodPipeline]!: ZodPipeline<
         ZodKindedAny,
@@ -118,7 +118,7 @@ export abstract class ZodSchemaTable {
     [ZodFirstPartyTypeKind.ZodArray]!: ZodArray<ZodKindedAny>
 }
 
-export abstract class ZsTypeTable extends ZodSchemaTable {
+export abstract class ZsTypeNodeTable extends ZodTypeNodeTable {
     [ZsTypeKind.ZsEnum]!: ZsEnum;
     [ZsTypeKind.ZsForeignImport]!: ZsForeignImport;
     [ZsTypeKind.ZsThis]!: ZsThis;

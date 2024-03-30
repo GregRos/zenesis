@@ -8,11 +8,11 @@ import { ZsInterface } from "../../declarations/classlike/interface"
 import { ZsEnum } from "../../declarations/enum"
 import { ZsValue } from "../../declarations/value"
 import { ZsFunction } from "../../expressions/function"
+import { ZsGenericFunction } from "../../expressions/generic-function"
 import { ZsMappedKeyRef } from "../../expressions/map-arg"
 import { ZsOverloads } from "../../expressions/overloads"
 import { ZsThis } from "../../expressions/this"
 import { ZsGeneric } from "../../generics/generic"
-import { ZsGenericFunction } from "../../generics/generic-function"
 import { ZsTypeArg } from "../../generics/type-arg"
 import {
     ZsClassLike,

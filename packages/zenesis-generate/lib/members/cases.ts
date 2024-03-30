@@ -1,8 +1,8 @@
 import {
     ZsMemberKind,
-    ZsMemberTable,
+    ZsMemberNodeTable,
     ZsOverloads,
-    ZsTypeTable,
+    ZsTypeNodeTable,
     zenesisError
 } from "@zenesis/schema"
 import { CallSignatureDeclaration, Modifier, SyntaxKind } from "typescript"
@@ -16,7 +16,7 @@ import { ZsToTsMemberTable } from "./table"
 export const cases: {
     [Kind in keyof ZsToTsMemberTable]: (
         this: MemberContext,
-        node: ZsMemberTable[Kind]
+        node: ZsMemberNodeTable[Kind]
     ) => ZsToTsMemberTable[Kind]
 } = {
     [ZsMemberKind.ZsCallSignature](node) {
@@ -37,7 +37,7 @@ export const cases: {
 
         const name = member.name
         const memberType = member._def
-            .innerType as ZsTypeTable[keyof ZsTypeTable]
+            .innerType as ZsTypeNodeTable[keyof ZsTypeNodeTable]
         const { optional, readonly, innerType } = extractModifiers(memberType)
         if (readonly) {
             modifiers.push(readonly)

@@ -1,5 +1,5 @@
 import {
-    ZsDeclarationsTable,
+    ZsDeclarationNodeTable,
     ZsImplements,
     ZsModuleDeclKind,
     zenesisError
@@ -18,7 +18,7 @@ export const cases: {
     [Kind in keyof ZsToTsDeclTable]: (
         this: TypeDeclContext,
         modifiers: Modifier[],
-        node: ZsDeclarationsTable[Kind],
+        node: ZsDeclarationNodeTable[Kind],
         typeVars?: TypeParameterDeclaration[] | undefined
     ) => ZsToTsDeclTable[Kind]
 } = {
