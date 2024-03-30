@@ -1,5 +1,9 @@
 import { ZsRefKind } from "../core/ref-kind"
-import { ZsReferenceDef, createReference } from "../core/reference"
+import {
+    ZsReferenceDef,
+    ZsReferenceInput,
+    createReference
+} from "../core/reference"
 import { ZsExportableTypeLike } from "../utils/unions"
 import { ZsZenesisModule } from "./zenesis-module"
 
@@ -14,10 +18,7 @@ export type ZsImported<
 > = ZType & ZsImportDef<ZType>
 
 export function createImportReference<ZType extends ZsExportableTypeLike>(
-    importInfo: Omit<ZsImportDef<ZType>, "via">
+    importInfo: ZsReferenceInput<ZsImportDef<ZType>>
 ): ZsImported<ZType> {
-    return createReference({
-        ...importInfo,
-        via: ZsRefKind.ZsImport
-    })
+    return createReference(ZsRefKind.ZsImport, importInfo)
 }

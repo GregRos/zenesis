@@ -1,5 +1,9 @@
 import { ZsRefKind } from "../core/ref-kind"
-import { ZsReferenceDef, createReference } from "../core/reference"
+import {
+    ZsReferenceDef,
+    ZsReferenceInput,
+    createReference
+} from "../core/reference"
 import { ZsGeneric } from "../generics/generic"
 import { ZsTypeVars } from "../generics/type-var"
 import { ZsGeneralizableType } from "../utils/unions"
@@ -20,10 +24,7 @@ export function createGenericSelfref<
     Instance extends ZsGeneralizableType,
     Vars extends ZsTypeVars
 >(
-    def: Omit<ZsGenericSelfrefDef<Instance, Vars>, "via">
+    def: ZsReferenceInput<ZsGenericSelfrefDef<Instance, Vars>>
 ): ZsGenericSelfref<Instance, Vars> {
-    return createReference({
-        ...def,
-        via: ZsRefKind.ZsSelfref
-    })
+    return createReference(ZsRefKind.ZsGenericSelfref, def)
 }

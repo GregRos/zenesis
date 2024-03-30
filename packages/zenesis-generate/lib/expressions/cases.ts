@@ -199,7 +199,7 @@ export const cases: {
         return this.recurse(node._def.getter())
     },
 
-    [AnyTypeKind.ZsIndexedAccess](node) {
+    [AnyTypeKind.ZsLookup](node) {
         const targetType = this.recurse(node._def.target)
         const indexType = this.recurse(node._def.index)
         return tf.createIndexedAccessTypeNode(targetType, indexType)

@@ -7,7 +7,7 @@ export interface ZsLookupDef<
     ZTarget extends ZodTypeAny,
     TKey extends keyof TypeOf<ZTarget>
 > extends ZodTypeDef {
-    typeName: ZsTypeKind.ZsIndexedAccess
+    typeName: ZsTypeKind.ZsLookup
     target: ZTarget
     index: ZsMonoLike<TKey>
 }
@@ -22,7 +22,7 @@ export class ZsLookup<
         TKey extends keyof TypeOf<ZTarget>
     >(what: ZTarget, key: ZsMonoLike<TKey>) {
         return new ZsLookup<ZTarget, TKey>({
-            typeName: ZsTypeKind.ZsIndexedAccess,
+            typeName: ZsTypeKind.ZsLookup,
             target: what,
             index: key
         })

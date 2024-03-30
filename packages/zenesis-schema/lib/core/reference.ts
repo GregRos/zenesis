@@ -1,3 +1,4 @@
+import { lazy } from "lazies"
 import { zenesisError } from "../errors"
 import { ZsRefKind } from "./ref-kind"
 
@@ -7,14 +8,31 @@ export interface ZsReferenceDef<Referenced> {
     readonly via: ZsRefKind
     readonly name: string
     readonly text: string
+    readonly isResolved: boolean
     deref(): Referenced
 }
 
-export type ZsBaseReference<T> = T & ZsReferenceDef<T>
+export type ZsReferenceInput<Ref extends ZsReferenceDef<unknown>> = Omit<
+    Ref,
+    "via" | "isResolved"
+>
 
+export type ZsBaseReference<T> = T & ZsReferenceDef<T>
 export function createReference<Ref extends ZsReferenceDef<{}>>(
-    reference: Ref
+    kind: ZsRefKind,
+    referenceInput: ZsReferenceInput<Ref>
 ): Ref & ReturnType<Ref["deref"]> {
+    const refTarget = lazy(referenceInput.deref)
+    const reference = {
+        ...referenceInput,
+        [symVia]: kind,
+        deref: refTarget.pull,
+        via: kind,
+        equals: undefined,
+        get isResolved() {
+            return refTarget.stage === "ready"
+        }
+    }
     function raiseIllegal(action: string): () => never {
         return () => {
             throw zenesisError({
@@ -30,9 +48,6 @@ export function createReference<Ref extends ZsReferenceDef<{}>>(
         },
         {
             get(target, prop) {
-                if (prop === "equals") {
-                    return undefined
-                }
                 if (prop === symVia) {
                     return reference.via
                 }

@@ -4,8 +4,8 @@ import { foreignShape } from "../../containers/foreign-import"
 import { ZsShape } from "../../core/types"
 import { ZsImplements } from "../../members/implements"
 import { ZsProperty } from "../../members/property"
+import { isImplements } from "../../utils/check/is-member"
 import { ZsClassTypeLike, ZsImplementable } from "../../utils/unions"
-import { isImplements } from "../../utils/validate/is-member"
 import { ZsClassItem } from "./class"
 
 export interface ZsClassBodyDef<Shape extends ZsShape> {

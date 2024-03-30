@@ -1,5 +1,9 @@
 import { ZsRefKind } from "../core/ref-kind"
-import { ZsReferenceDef, createReference } from "../core/reference"
+import {
+    ZsReferenceDef,
+    ZsReferenceInput,
+    createReference
+} from "../core/reference"
 import { ZsModuleDeclarableType } from "../utils/unions"
 
 export interface ZsSelfrefDef<Referenced extends ZsModuleDeclarableType>
@@ -11,10 +15,7 @@ export type ZsTypeSelfref<
 > = Referenced & ZsSelfrefDef<Referenced>
 
 export function createSelfref<As extends ZsModuleDeclarableType>(
-    def: Omit<ZsSelfrefDef<As>, "via">
+    def: ZsReferenceInput<ZsSelfrefDef<As>>
 ): ZsTypeSelfref<As> {
-    return createReference({
-        ...def,
-        via: ZsRefKind.ZsSelfref
-    })
+    return createReference(ZsRefKind.ZsSelfref, def)
 }

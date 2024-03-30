@@ -1,6 +1,10 @@
 import { ZodTypeAny } from "zod"
 import { ZsRefKind } from "../core/ref-kind"
-import { ZsReferenceDef, createReference } from "../core/reference"
+import {
+    ZsReferenceDef,
+    ZsReferenceInput,
+    createReference
+} from "../core/reference"
 import { ZsMakeResultType } from "../utils/unions"
 
 export interface ZsInstantiatedDef<Ref extends ZsMakeResultType>
@@ -12,10 +16,7 @@ export type ZsInstantiated<Ref extends ZsMakeResultType> = Ref &
     ZsInstantiatedDef<Ref>
 
 export function createInstantiation<Ref extends ZsMakeResultType>(
-    def: Omit<ZsInstantiatedDef<Ref>, "via">
+    def: ZsReferenceInput<ZsInstantiatedDef<Ref>>
 ): ZsInstantiated<Ref> {
-    return createReference({
-        ...def,
-        via: ZsRefKind.ZsInstantiation
-    })
+    return createReference(ZsRefKind.ZsInstantiation, def)
 }

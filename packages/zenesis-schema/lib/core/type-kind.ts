@@ -1,7 +1,7 @@
 import { ZodFirstPartyTypeKind } from "zod"
 
 export enum ZsTypeKind {
-    ZsIndexedAccess = "ZsIndexedAccess",
+    ZsLookup = "ZsIndexedAccess",
     ZsOverloads = "ZsOverloads",
     ZsClass = "ZsClass",
     ZsInterface = "ZsInterface",
