@@ -5,7 +5,7 @@ import { getCombinedType } from "../../core/operators"
 import { ZsTypeKind } from "../../core/type-kind"
 import { ZsShapedRef } from "../../core/types"
 import { ZsConstructor } from "../../members/constructor"
-import { ZsClassBody, ZsClassItem } from "./class-body"
+import { ZsClassBody } from "./class-body"
 import { ZsInterfaceItem } from "./interface"
 
 export interface ZsClassDef<

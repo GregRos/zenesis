@@ -25,6 +25,12 @@ export class ZsWorld implements ZsWorldDef {
     readonly name: string
     private _files: ZsFile[] = []
     private _imports: ZsForeignModule[] = []
+    static create(name: string) {
+        return new ZsWorld({
+            ctor: "Custom",
+            name
+        })
+    }
     constructor(def: ZsWorldDef) {
         this.ctor = def.ctor
         this.name = def.name

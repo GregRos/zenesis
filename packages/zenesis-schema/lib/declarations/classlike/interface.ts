@@ -8,7 +8,7 @@ import { ZsIndexer } from "../../members/indexer"
 import { ZsProperty } from "../../members/property"
 import { eraseInterface } from "../../utils/erasure"
 import { createSelfref } from "../selfref"
-import { ZsClassBody, ZsClassItem } from "./class-body"
+import { ZsClassBody } from "./class-body"
 
 export interface ZsInterfaceDef<Name extends string, Body extends ZsClassBody>
     extends ZodTypeDef {
@@ -38,7 +38,7 @@ export class ZsInterface<
         return this._def.body.shape
     }
 
-    static create<Name extends string, Memberable extends ZsClassItem>(
+    static create<Name extends string, Memberable extends ZsInterfaceItem>(
         name: Name,
         body: () => Iterable<Memberable>
     ) {

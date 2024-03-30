@@ -1,8 +1,5 @@
-import { generateWorld, zs } from "@zenesis/generate"
-import { ZsWorld } from "@zenesis/generate/lib/world"
-import { mkdir, writeFileSync } from "fs"
-import { createPrinter } from "typescript"
-const W = ZsWorld.create("example")
+import { zs } from "@zenesis/generate"
+const W = zs.World("hello-world")
 
 const f1 = W.File("hello", function* () {
     const iface1 = this.Interface("Iface1", function* () {
@@ -53,9 +50,3 @@ const f2 = W.File("hello2", function* () {
 })
 
 const outs = generateWorld(W)
-const printer = createPrinter()
-mkdir("./out", () => {})
-for (const [fileName, sourceFile] of outs) {
-    console.log(`// ${fileName}`)
-    writeFileSync("./out/" + fileName + ".ts", printer.printFile(sourceFile))
-}

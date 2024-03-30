@@ -1,7 +1,6 @@
 export {
     ZsClassBody,
-    ZsClassBodyDef,
-    ZsClassItem
+    ZsClassBodyDef
 } from "./declarations/classlike/class-body"
 export { ZsConstructor, ZsConstructorDef } from "./members/constructor"
 

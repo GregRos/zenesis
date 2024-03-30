@@ -1,12 +1,15 @@
 import { ZodTypeAny } from "zod"
 import { ZsTypeAlias } from "../declarations/alias"
-import { ZsClass } from "../declarations/classlike/class"
-import { ZsClassBody, ZsClassItem } from "../declarations/classlike/class-body"
+import { ZsClass, ZsClassItem } from "../declarations/classlike/class"
+import { ZsClassBody } from "../declarations/classlike/class-body"
 import {
     ClassContext,
     InterfaceContext
 } from "../declarations/classlike/class-builder"
-import { ZsInterface } from "../declarations/classlike/interface"
+import {
+    ZsInterface,
+    ZsInterfaceItem
+} from "../declarations/classlike/interface"
 import {
     ZsGenericSelfref,
     createGenericSelfref
@@ -40,13 +43,10 @@ export class GenericModuleScopedFactory<Vars extends ZsTypeVars> {
         )
     }
 
-    Interface<Name extends string, Decl extends ZsClassItem>(
+    Interface<Name extends string, Decl extends ZsInterfaceItem>(
         name: Name,
         declarations: (
-            this: Omit<
-                ClassContext<ZsGenericSelfref<ZsInterface, Vars>>,
-                "Constructor"
-            >,
+            this: InterfaceContext<ZsGenericSelfref<ZsInterface, Vars>>,
             args: TypeVarRefsByName<Vars>
         ) => Iterable<Decl>
     ) {
@@ -56,7 +56,7 @@ export class GenericModuleScopedFactory<Vars extends ZsTypeVars> {
             text: name,
             vars: this._vars
         }) as ZsGenericSelfref<ZsInterface, Vars>
-        const factory = new ClassContext(self)
+        const factory = new InterfaceContext(self)
         const args = this._typeArgsByName
         const makeResult = ZsInterface.create(
             name,
