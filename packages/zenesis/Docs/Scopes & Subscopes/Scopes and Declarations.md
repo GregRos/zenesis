@@ -124,3 +124,70 @@ export default zs.File(function*() {
 	})
 })
 ```
+
+
+# dasfdsf
+I want to write a compile-time assertion that a type `A`, is equal to another type `B`. It’s for testing purposes. The actual error doesn’t matter and could be something to improve upon.
+
+Now, **I know there is a [feature request](https://github.com/microsoft/TypeScript/issues/12936) for exact types.** I am not looking for a type system extension, just something that will error with it’s supposed to. 
+
+For the purpose of the question, let me define equality between types as:
+
+For every type $X$:
+1. $X$ is assignable to $A$ if and only if it’s assignable to $B$
+2. $A$ is assignable to $X$ if and only if $B$ is assignable to $X$
+
+Basically, the types are indistinguishable from each other. Note that this includes `unknown` and `any`. (1) is not enough because it passes for `any` and `unknown`, but (2) doesn’t. 
+
+> However, maybe that’s the exception and it works for everything else?
+
+Here is a sketch of the API I’m looking for:
+```typescript
+// Should type check if SomeType is equal to OtherType
+// The boolean parameter lets us invert the assertion
+expectt<SomeType>().toEqual<OtherType>(true) 
+
+// And if that succeeds, this should always fail to type check:
+expectt<SomeType>().toEqual<OtherType>(false)
+```
+
+Here are statements that should pass type checking. For each one the inverse should fail to type check.
+```typescript
+expectt<5>().toEqual<number>(false)
+expectt<5>().toEqual<never>(false)
+expectt<5>().toEqual<5>(true)
+expectt<5>().toEqual<any>(false)
+expectt<5>().toEqual<unknown>(false)
+expectt<5>().toEqual<5 | 6>(false)
+
+// It should also work for any, unknown, and never:
+expectt<any>().toEqual<unknown>(false)
+expectt<never>.toEqual<any>(false)
+expectt<unknown>().toEqual<unknown>(true)
+expectt<any>().toEqual<any>(true)
+```
+So far, what I have is this:
+```typescript
+export interface Expected<T> {
+    toEqual<Exact>(
+        truth: (
+            T extends Exact ? (Exact extends T ? true : false) : false
+        ) extends true
+            ? true
+            : false
+    ): Expected<T>
+}
+```
+
+Which checks that the two types are subtypes of each other. However, it fails to distinguish between `any` and `unknown`.
+
+The final `extends true` conditional is for cases when either `T` or `Exact` are `any`, which can result in the conditional being `true | false`.
+
+
+So far, I have this:
+
+
+
+
+
+1. Yes, I know there is a feature request. I’m not talking about a generally useful feature.

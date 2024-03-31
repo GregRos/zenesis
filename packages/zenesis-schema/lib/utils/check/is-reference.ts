@@ -11,8 +11,7 @@ import {
 } from "../unions"
 
 export function isReference<T extends ZsDeclarableTypeLike>(
-    obj: any,
-    isRefTarget?: (x: ZsDeclarableTypeLike) => x is T
+    obj: any
 ): obj is ZsBaseReference<T> {
     return !!obj?.[symVia] && (!isRefTarget || isRefTarget(obj))
 }
@@ -25,12 +24,10 @@ export function isImport<Target extends ZsExportableTypeLike>(
 }
 
 export function isSelfref<Target extends ZsModuleDeclarableType>(
-    obj: any,
-    isRefTarget?: (x: ZsModuleDeclarableType) => x is Target
+    obj: any
 ): obj is ZsTypeSelfref {
     return (
-        obj[symVia] === ZsRefKind.ZsSelfref &&
-        (!isRefTarget || isRefTarget(obj))
+        obj[symVia] === ZsRefKind.ZsSelfref
     )
 }
 
@@ -39,8 +36,7 @@ export function isGenericSelfref<Generic extends ZsGeneric>(
     isRefTarget?: (x: ZsGeneric) => x is ZsGeneric
 ): obj is ZsGenericSelfref {
     return (
-        obj[symVia] === ZsRefKind.ZsGenericSelfref &&
-        (!isRefTarget || isRefTarget(obj))
+        obj[symVia] === ZsRefKind.ZsGenericSelfref
     )
 }
 
