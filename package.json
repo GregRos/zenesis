@@ -10,6 +10,7 @@
     "build:generate": "tsc -b packages/zenesis-generate/lib",
     "build:schema": "tsc -b packages/zenesis-schema/lib",
     "build:main": "tsc -b packages/zenesis/lib",
+    "build:the-type-is-right": "tsc -b packages/the-type-is-right/lib packages/the-type-is-right/test",
     "watch:demo": "tsc -b packages/demo --watch",
     "watch:generate": "tsc -b packages/zenesis-generate/lib --watch",
     "watch:schema": "tsc -b packages/zenesis-schema/lib --watch",

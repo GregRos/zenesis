@@ -57,7 +57,7 @@ export type Assert_Equal<Expected, Target> =
                 : false | 𝗘𝗾𝘂𝗮𝗹𝘀<Expected, Txt_IsNotAssignableFrom, Target>
             : false | 𝗘𝗾𝘂𝗮𝗹𝘀<Expected, Txt_IsNotAssignableTo, Target>
 
-export type Assert_Supertype<Expected, Target> =
+export type Assert_AssignsFrom<Expected, Target> =
     IsAny<Expected> extends 1
         ? IsAny<Target> extends 1
             ? 𝗔𝘀𝘀𝗶𝗴𝗻𝘀𝗙𝗿𝗼𝗺<Expected, Txt_AreBothAny, Target> | true
@@ -68,7 +68,7 @@ export type Assert_Supertype<Expected, Target> =
             ? 𝗔𝘀𝘀𝗶𝗴𝗻𝘀𝗙𝗿𝗼𝗺<Expected, Txt_IsAssignableFrom, Target> | true
             : false | 𝗔𝘀𝘀𝗶𝗴𝗻𝘀𝗙𝗿𝗼𝗺<Expected, Txt_IsNotAssignableFrom, Target>
 
-export type Assert_Subtype<Expected, Target> =
+export type Assert_AssignsTo<Expected, Target> =
     IsAny<Target> extends 1
         ? IsAny<Expected> extends 1
             ? 𝗔𝘀𝘀𝗶𝗴𝗻𝘀𝗧𝗼<Expected, Txt_AreBothAny, Target> | true
@@ -78,7 +78,6 @@ export type Assert_Subtype<Expected, Target> =
           : [Expected] extends [Target]
             ? 𝗔𝘀𝘀𝗶𝗴𝗻𝘀𝗧𝗼<Expected, Txt_IsAssignableTo, Target> | true
             : false | 𝗔𝘀𝘀𝗶𝗴𝗻𝘀𝗧𝗼<Expected, Txt_IsNotAssignableTo, Target>
-
 export type IsAny<T> = Any extends T ? ([T] extends [Any] ? 1 : 0) : 0
 export type TestExact<Left, Right> =
     (<U>() => U extends Left ? 1 : 0) extends <U>() => U extends Right ? 1 : 0

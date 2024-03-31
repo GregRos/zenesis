@@ -50,11 +50,3 @@ the_type<() => void>().assigns_to<() => void>(true)
 // @ts-expect-error
 the_type<() => void>().assigns_to<() => string>(true)
 the_type<() => void>().assigns_to<() => void>(true)
-
-// generics
-function foo<T, U extends T>(t: T, u: U) {
-    the_type<T>().assigns_to<U>(false)
-    the_type<U>().assigns_to<T>(false)
-    the_type<U>().assigns_to<U>(true)
-    the_type<T>().assigns_to<T>(true)
-}

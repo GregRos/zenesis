@@ -7283,6 +7283,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"the-type-is-right@workspace:packages/expectt":
+  version: 0.0.0-use.local
+  resolution: "the-type-is-right@workspace:packages/expectt"
+  dependencies:
+    "@zenesis/generate": "npm:^0.1.0"
+    "@zenesis/schema": "npm:^0.1.0"
+    lazies: "npm:^0.6.6"
+  languageName: unknown
+  linkType: soft
+
 "through2@npm:^2.0.0":
   version: 2.0.5
   resolution: "through2@npm:2.0.5"
