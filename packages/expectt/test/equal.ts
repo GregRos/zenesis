@@ -1,25 +1,25 @@
-import { expectt } from "@lib"
+import { expect_type } from "@lib"
 
-expectt<string>().toEqual<string>()
+expect_type<string>().toEqual<string>(true)
 // @ts-expect-error
-expectt<string>().toEqual<number>()
-expectt<any>().toEqual<any>()
+expect_type<string>().toEqual<number>(true)
+expect_type<any>().toEqual<any>(true)
 // @ts-expect-error
-expectt<any>().toEqual<string>()
-expectt<unknown>().toEqual<unknown>()
-expectt<unknown>().toEqual<string>()
+expect_type<any>().toEqual<string>()
+expect_type<unknown>().toEqual<unknown>(true)
+expect_type<unknown>().toEqual<string>(false)
 // @ts-expect-error
-expectt<any>().toEqual<unknown>()
-expectt<never>().toEqual<never>()
+expect_type<any>().toEqual<unknown>()
+expect_type<never>().toEqual<never>(true)
 // @ts-expect-error
-expectt<never>().toEqual<string>()
+expect_type<never>().toEqual<string>()
 
 // @ts-expect-error
-expectt<any>().toEqual<never>()
+expect_type<any>().toEqual<never>()
 // @ts-expect-error
-expectt<unknown>().toEqual<never>()
+expect_type<unknown>().toEqual<never>()
 
-expectt<() => void>().toEqual<() => void>()
-expectt<() => void>().not.toEqual<() => string>()
+expect_type<() => void>().toEqual<() => void>()
+expect_type<() => void>().not.toEqual<() => string>()
 // @ts-expect-error
-expectt<() => void>().toEqual<() => string>()
+expect_type<() => void>().toEqual<() => string>()

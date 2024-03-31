@@ -1,9 +1,8 @@
 export type Txt_Expected = "𝙚𝙭𝙥𝙚𝙘𝙩𝙚𝙙"
 
 export type Txt_Target = "𝙩𝙖𝙧𝙜𝙚𝙩"
-export type Txt_FormatError<Text extends string> = {
-    [X in Text]: never
-}
+export type Txt_FormatError<Text extends string> =
+    `                     🔴${Text}🔴`
 
 export type Txt_NotExact<
     Expected extends string,
@@ -12,17 +11,17 @@ export type Txt_NotExact<
 export type _NotAssignable<
     From extends string,
     To extends string
-> = Txt_FormatError<`${From}_i̲s̲_n̲o̲t̲_a̲s̲s̲i̲g̲n̲a̲b̲l̲e̲_t̲o̲ ${To}`>
-
+> = Txt_FormatError<`${From} 𝗜𝗦 𝗡𝗢𝗧 𝗔𝗦𝗦𝗜𝗚𝗡𝗔𝗕𝗟𝗘 𝗧𝗢 ${To}`>
 export type Txt_AreEqual<
     Expected extends string,
-    Target extends string
+    Target extends string,
+    B = any
 > = Txt_FormatError<`${Expected} 𝗶𝘀 𝗲𝗾𝘂𝗮𝗹 𝘁𝗼 ${Target}`>
 
 export type Txt_IsAssignable<
     From extends string,
     To extends string
-> = Txt_FormatError<`${From} 𝗶𝘀 𝗮𝘀𝘀𝗶𝗴𝗻𝗮𝗯𝗹𝗲 𝘁𝗼 ${To}`>
+> = Txt_FormatError<`𝗶𝘀 𝗮𝘀𝘀𝗶𝗴𝗻𝗮𝗯𝗹𝗲 𝘁𝗼`>
 
 export type Txt_AnyMismatch<
     IsAny extends string,

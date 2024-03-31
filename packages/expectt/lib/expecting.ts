@@ -1,15 +1,32 @@
-import { NotExpecting } from "./not-expecting"
-import { IsEqual } from "./type-relations"
+import { Txt_Expected, Txt_IsAssignable, Txt_Target } from "./texts"
+import { IsEqual, IsSubtype, IsSupertype } from "./type-relations"
 
 export interface Expectting<Expected> {
     toEqual<Target>(
-        this: IsEqual<Expected, Target, Expectting<Expected>>
+        truth: IsEqual<Expected, Target, true, false> | Was<Expected, Target>
     ): Expectting<Expected>
     toSubtype<Target>(
-        this: IsEqual<Expected, Target, Expectting<Expected>>
+        truth:
+            | IsSubtype<
+                  Expected,
+                  Target,
+                  true | Txt_IsAssignable<Txt_Expected, Txt_Target>,
+                  false
+              >
+            | Was<Expected, Target>
     ): Expectting<Expected>
     toSupertype<Target>(
-        this: IsEqual<Expected, Target, Expectting<Expected>>
+        truth: IsSupertype<
+            Expected,
+            Target,
+            true | Txt_IsAssignable<Txt_Expected, Txt_Target>,
+            false
+        >
     ): Expectting<Expected>
-    readonly not: NotExpecting<Expected>
+}
+
+export abstract class Was<Left, Message, Right> {
+    private _left!: Left
+    private _right!: Right
+    private _message!: Message
 }

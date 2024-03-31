@@ -1,17 +1,17 @@
-import { expectt } from "@lib"
+import { expect_type } from "@lib"
 
-expectt<string>().toSubtype<string>()
+expect_type<string>().toSubtype<string>(true)
 // @ts-expect-error
-expectt<string>().toSubtype<number>()
-expectt<any>().toSubtype<any>()
+expect_type<string>().toSubtype<number>(true)
+expect_type<any>().toSubtype<any>(true)
 // @ts-expect-error
-expectt<any>().toSubtype<string>()
-expectt<unknown>().toSubtype<unknown>()
+expect_type<any>().toSubtype<string>(true)
+expect_type<unknown>().toSubtype<unknown>(true)
 // @ts-expect-error
-expectt<unknown>().toSubtype<string>()
+expect_type<unknown>().toSubtype<string>(true)
 // @ts-expect-error
-expectt<any>().toSubtype<unknown>()
-expectt<never>().toSubtype<never>()
+expect_type<any>().toSubtype<unknown>(true)
+expect_type<never>().toSubtype<never>(true)
 // @ts-expect-error
-expectt<never>().toSubtype<string>()
-expectt<any>().toSubtype<never>()
+expect_type<never>().toSubtype<string>(true)
+expect_type<any>().toSubtype<never>(true)

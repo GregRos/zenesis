@@ -13,7 +13,7 @@ import {
 export function isReference<T extends ZsDeclarableTypeLike>(
     obj: any
 ): obj is ZsBaseReference<T> {
-    return !!obj?.[symVia] && (!isRefTarget || isRefTarget(obj))
+    return !!obj?.[symVia] && (!isRefTarget  || isRefTarget(obj))
 }
 
 export function isImport<Target extends ZsExportableTypeLike>(

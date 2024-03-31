@@ -1,6 +1,6 @@
 import { Expectting } from "./expecting"
 
-export function expectt<T>(x?: T): Expectting<T> {
+export function expect_type<T>(x?: T): Expectting<T> {
     return {
         get not() {
             return this as any

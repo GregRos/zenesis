@@ -1,20 +1,20 @@
-import { expectt } from "@lib"
+import { expect_type } from "@lib"
 
 // tests expectt<Type>().not.toEqual<Type>()
-expectt<string>().not.toEqual<number>()
+expect_type<string>().not.toEqual<number>()
 // @ts-expect-error
-expectt<string>().not.toEqual<string>()
-expectt<any>().not.toEqual<string>()
+expect_type<string>().not.toEqual<string>()
+expect_type<any>().not.toEqual<string>()
 // @ts-expect-error
-expectt<any>().not.toEqual<any>()
-expectt<unknown>().not.toEqual<string>()
-expectt<unknown>().not.toEqual<unknown>()
-expectt<unknown>().not.toEqual<any>()
-expectt<never>().not.toEqual<string>()
+expect_type<any>().not.toEqual<any>()
+expect_type<unknown>().toEqual<string>(1)
+expect_type<unknown>().not.toEqual<unknown>(true)
+expect_type<unknown>().not.toEqual<any>()
+expect_type<never>().not.toEqual<string>()
 // @ts-expect-error
-expectt<never>().not.toEqual<never>()
-expectt<never>().not.toEqual<any>()
-expectt<any>().not.toEqual<never>()
-expectt<() => void>().not.toEqual<() => string>()
+expect_type<never>().not.toEqual<never>()
+expect_type<never>().not.toEqual<any>()
+expect_type<any>().not.toEqual<never>()
+expect_type<() => void>().not.toEqual<() => string>()
 // @ts-expect-error
-expectt<() => void>().not.toEqual<() => void>()
+expect_type<() => void>().not.toEqual<() => void>()

@@ -2,4 +2,4 @@
 // See here: https://github.com/Microsoft/TypeScript/issues/27024#issuecomment-421529650
 // prettier-ignore
 
-export { expectt } from "./wrapper";
+export { expect_type } from "./wrapper";
