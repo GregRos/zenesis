@@ -1,17 +1,14 @@
-import { Expectting } from "./expecting"
+import { Type } from "./expecting"
 
-export function expect_type<T>(x?: T): Expectting<T> {
+export function the_type<T>(x?: T): Type<T> {
     return {
-        get not() {
-            return this as any
-        },
-        toEqual<Exact>(): Expectting<T> {
+        equals<Exact>(): Type<T> {
             return this
         },
-        toSubtype<Exact>(): Expectting<T> {
+        assigns_to<Exact>(): Type<T> {
             return this
         },
-        toSupertype<Target>(): Expectting<T> {
+        assigns_from<Target>(): Type<T> {
             return this
         }
     }
