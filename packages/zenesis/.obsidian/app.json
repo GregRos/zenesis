@@ -1,9 +1,0 @@
-{
-  "promptDelete": false,
-  "userIgnoreFilters": [
-    "node_modules/",
-    "\"/packages/.*\""
-  ],
-  "newFileLocation": "folder",
-  "newFileFolderPath": "Docs"
-}
