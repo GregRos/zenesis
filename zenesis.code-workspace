@@ -1,0 +1,67 @@
+{
+    "folders": [
+        {
+            "path": "./packages/zenesis",
+            "name": "zenesis"
+        },
+        {
+            "path": "./packages/zenesis-generate",
+            "name": "generate"
+        },
+        {
+            "path": "./packages/zenesis-schema",
+            "name": "schema"
+        },
+        {
+            "path": "./packages/demo",
+            "name": "demo"
+        },
+        {
+            "path": ".",
+            "name": "root"
+        }
+    ],
+    "settings": {
+        "python.analysis.ignore": ["**/node_modules/**", "**/.git/**"],
+        "jest.disabledWorkspaceFolders": ["root"],
+        "files.exclude": {
+            "packages/k8ts": true,
+            "packages/instruments": true,
+            "packages/metadata": true,
+            "**/imports-dist": true,
+            "**/dist-imports": true,
+            "**/.git": true,
+            "**/.svn": true,
+            "**/.hg": true,
+            "**/.nyc_output": true,
+            "**/coverage": true,
+            "**/dist-spec": true,
+            "**/CVS": true,
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true,
+            "**/*.aux": true,
+            "**/*.bbl": true,
+            "**/*.fdb_latexmk": true,
+            "**/*.fls": true,
+            "**/*.out": true,
+            "**/*.synctex.gz": true,
+            "**/.idea": true,
+            "**/.mypy_cache": true,
+            "**/__pycache__": true,
+            "**/dist": true,
+            "**/dist/**/*": true,
+            "**/dist_aux": true,
+            ".nyc_output": true,
+            "coverage": true,
+            "docs": true,
+            "**/node_modules": true
+        },
+        "search.exclude": {
+            "**/node_modules": true,
+            "**/bower_components": true,
+            "**/*.code-search": true,
+            "**/.ruby-lsp": true,
+            "**/imports": true
+        }
+    }
+}

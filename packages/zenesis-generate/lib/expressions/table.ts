@@ -67,7 +67,7 @@ export abstract class ZsTsTable {
     [AnyTypeKind.ZodFunction]!: FunctionTypeNode;
     [AnyTypeKind.ZsMapped]!: MappedTypeNode;
     [AnyTypeKind.ZsKeyof]!: TypeOperatorNode;
-    [AnyTypeKind.ZsConditional]!: ConditionalTypeNode;
+    [AnyTypeKind.ZsIf]!: ConditionalTypeNode;
     [AnyTypeKind.ZsLookup]!: IndexedAccessTypeNode;
     [AnyTypeKind.ZsOverloads]!: TypeLiteralNode;
     [AnyTypeKind.ZodObject]!: TypeLiteralNode;

@@ -1,4 +1,4 @@
-import { memoize, seq } from "lazies"
+import { memoize, seq } from "doddle"
 import { ZodTypeAny, z } from "zod"
 import { foreignShape } from "../../containers/foreign-import"
 import { ZsShape } from "../../core/types"

@@ -134,7 +134,7 @@ export abstract class ZsTypeNodeTable extends ZodTypeNodeTable {
     [ZsTypeKind.ZsFunction]!: ZsFunction;
     [ZsTypeKind.ZsMapped]!: ZsMapped;
     [ZsTypeKind.ZsKeyof]!: ZsKeyof;
-    [ZsTypeKind.ZsConditional]!: ZsIf;
+    [ZsTypeKind.ZsIf]!: ZsIf;
     [ZsTypeKind.ZsLookup]!: ZsLookup;
     [ZsTypeKind.ZsOverloads]!: ZsOverloads
 }

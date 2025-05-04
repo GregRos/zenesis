@@ -1,4 +1,4 @@
-import { seq, Seq } from "lazies"
+import { seq, Seq } from "doddle"
 import { ZsValue } from "../declarations/value"
 
 import { ZsExportable, ZsExportableTypeLike } from "../utils/unions"

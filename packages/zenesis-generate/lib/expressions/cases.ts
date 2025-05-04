@@ -281,7 +281,7 @@ export const cases: {
             undefined
         )
     },
-    [AnyTypeKind.ZsConditional](node) {
+    [AnyTypeKind.ZsIf](node) {
         return tf.createConditionalTypeNode(
             this.recurse(node._def.what),
             this.recurse(node._def.extends),

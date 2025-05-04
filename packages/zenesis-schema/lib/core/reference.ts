@@ -1,4 +1,4 @@
-import { lazy } from "lazies"
+import { lazy } from "doddle"
 import { zenesisError } from "../errors"
 import { ZsRefKind } from "./ref-kind"
 

@@ -1,4 +1,4 @@
-import { memoize } from "lazies"
+import { memoize } from "doddle"
 import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod"
 import { ZsModuleDeclKind } from "../core/declaration-kind"
 import { ZsMonoType } from "../core/mono-type"

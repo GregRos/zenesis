@@ -4,8 +4,8 @@ import {
     isDeclarableType,
     isImport
 } from "@zenesis/schema"
+import { Lazy, isLazyLike } from "doddle"
 import { Map } from "immutable"
-import { Lazy, isLazyLike } from "lazies"
 import { Declaration, TypeReferenceNode } from "typescript"
 
 export interface TypeDeclRef {

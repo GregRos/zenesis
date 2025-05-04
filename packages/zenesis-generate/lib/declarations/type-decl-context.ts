@@ -6,8 +6,7 @@ import {
     ZsProperty,
     isProperty
 } from "@zenesis/schema"
-import { ZsClassItem } from "@zenesis/schema/lib/declarations/classlike/class"
-import { seq } from "lazies"
+import { seq } from "doddle"
 import {
     Modifier,
     SyntaxKind,

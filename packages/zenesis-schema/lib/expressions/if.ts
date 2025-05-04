@@ -1,4 +1,4 @@
-import { TypeOf, ZodTypeAny, ZodTypeDef } from "zod"
+import { TypeOf, ZodTypeAny, ZodTypeDef, z } from "zod"
 import { ZsMonoType } from "../core/mono-type"
 import { ZsTypeKind } from "../core/type-kind"
 import { ZodKindedAny } from "../core/types"
@@ -13,28 +13,43 @@ export class ZsIf<
 > {
     readonly actsLike = this._def.then.or(this._def.else)
 
-    static create<ZWhat extends ZodTypeAny>(
-        what: ZWhat
-    ): ZsConditionalExtends<ZWhat> {
-        return {
-            extends(extends_: any) {
-                return {
-                    then(then) {
-                        return {
-                            else(else_) {
-                                return new ZsIf({
-                                    typeName: ZsTypeKind.ZsConditional,
-                                    what,
-                                    extends: extends_(),
-                                    then: then(),
-                                    else: else_
-                                })
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    extends<ZExtends extends ZodTypeAny>(
+        extends_: () => ZExtends
+    ): ZsIf<ZSubject, ZExtends, Then, Else> {
+        return new ZsIf({
+            ...this._def,
+            extends: extends_()
+        })
+    }
+
+    then<ZThen extends ZodTypeAny>(
+        then: () => ZThen
+    ): ZsIf<ZSubject, ZExtends, ZThen, Else> {
+        return new ZsIf({
+            ...this._def,
+            then: then()
+        })
+    }
+
+    else<ZElse extends ZodTypeAny>(
+        else_: ZElse
+    ): ZsIf<ZSubject, ZExtends, Then, ZElse> {
+        return new ZsIf({
+            ...this._def,
+            else: else_
+        })
+    }
+
+    static create<ZSubject extends ZodTypeAny>(
+        subject: ZSubject
+    ): ZsConditionalExtends<ZSubject> {
+        return new ZsIf({
+            typeName: ZsTypeKind.ZsIf,
+            subject: subject,
+            extends: z.unknown(),
+            then: z.never(),
+            else: z.never()
+        })
     }
 }
 
@@ -44,8 +59,8 @@ export interface ZsIfDef<
     ZThen extends ZodTypeAny,
     ZElse extends ZodTypeAny
 > extends ZodTypeDef {
-    typeName: ZsTypeKind.ZsConditional
-    what: ZSubject
+    typeName: ZsTypeKind.ZsIf
+    subject: ZSubject
     extends: ZExtends
     then: ZThen
     else: ZElse

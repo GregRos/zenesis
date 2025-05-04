@@ -15,8 +15,8 @@ import {
     zenesisError
 } from "@zenesis/schema"
 
+import { Lazy, lazy } from "doddle"
 import { Map, Set } from "immutable"
-import { Lazy, lazy } from "lazies"
 import {
     ClassDeclaration,
     EnumDeclaration,

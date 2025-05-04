@@ -1352,7 +1352,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@zenesis/schema@workspace:packages/zenesis-schema"
   dependencies:
-    lazies: "npm:^0.6.6"
     zod: "npm:^3.22.4"
   languageName: unknown
   linkType: soft
@@ -2359,6 +2358,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"declare-it@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "declare-it@npm:2.1.0"
+  dependencies:
+    what-the-test: "npm:^1.2.0"
+  checksum: 10c0/bea88fa8ee59e1895cc06114360e8eccce6c25633f67b410ce0b7369c51d17d2f4988523685f5ed2eab02fde7b7124026a962be97414253fa5d74caeb3d01743
+  languageName: node
+  linkType: hard
+
 "dedent@npm:0.7.0":
   version: 0.7.0
   resolution: "dedent@npm:0.7.0"
@@ -2470,6 +2478,13 @@ __metadata:
   dependencies:
     esutils: "npm:^2.0.2"
   checksum: 10c0/c96bdccabe9d62ab6fea9399fdff04a66e6563c1d6fb3a3a063e8d53c3bb136ba63e84250bbf63d00086a769ad53aef92d2bd483f03f837fc97b71cbee6b2520
+  languageName: node
+  linkType: hard
+
+"doddle@npm:^5.0.0-beta.16":
+  version: 5.0.0-beta.16
+  resolution: "doddle@npm:5.0.0-beta.16"
+  checksum: 10c0/db3c6abc9c367f4af96c4d5f9449550634d57cc9b0ebe38e9787844e4dc0e83c65f98fbe00c11d99d7964bf10743ed8ee0a75a7e8443bdd90a51b4d62722b1e2
   languageName: node
   linkType: hard
 
@@ -2936,6 +2951,13 @@ __metadata:
     signal-exit: "npm:^3.0.3"
     strip-final-newline: "npm:^2.0.0"
   checksum: 10c0/e110add7ca0de63aea415385ebad7236c8de281d5d9a916dbd69f59009dac3d5d631e6252c2ea5d0258220b0d22acf25649b2caf05fa162eaa1401339fc69ba4
+  languageName: node
+  linkType: hard
+
+"expect-type@npm:^0.19.0":
+  version: 0.19.0
+  resolution: "expect-type@npm:0.19.0"
+  checksum: 10c0/0a7305021c3e37bf024ce01f0a141de109435ac4225457c35fbd649a0d8cdc19b9078185fd9aaa9ebb136a88c5065d27a60883ab0f961ddc281c11851ed18097
   languageName: node
   linkType: hard
 
@@ -4585,11 +4607,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lazies@portal:/C:/codegr/lazies::locator=root-workspace-0b6124%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "lazies@portal:/C:/codegr/lazies::locator=root-workspace-0b6124%40workspace%3A."
+"lazies@npm:^0.6.6":
+  version: 0.6.6
+  resolution: "lazies@npm:0.6.6"
+  checksum: 10c0/38fbfd4867688cd6862605bee1301f529c8873fb7822573e544f731c9edf0f1ee40ca33e6e6660915ed3b2d2c3d392e35f2d8a12b294e52cd3851065590736a9
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "lerna@npm:^8.1.2":
   version: 8.1.2
@@ -6591,8 +6614,10 @@ __metadata:
     "@types/node": "npm:^20.11.28"
     "@typescript-eslint/eslint-plugin": "npm:^7.2.0"
     "@typescript-eslint/parser": "npm:^7.2.0"
+    declare-it: "npm:^2.1.0"
+    doddle: "npm:^5.0.0-beta.16"
     eslint: "npm:^8.57.0"
-    lazies: "npm:^0.6.6"
+    expect-type: "npm:^0.19.0"
     lerna: "npm:^8.1.2"
     lodash: "npm:^4.17.21"
     npm-run-all: "npm:^4.1.5"
@@ -6673,6 +6698,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"semver-try-require@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "semver-try-require@npm:7.0.0"
+  dependencies:
+    semver: "npm:^7.6.0"
+  checksum: 10c0/b379d02ab4b8e331cf603221908129e2963af0e31210e9d6fcb2d6f168d0ccfba86cffd67a2f9bfff586a69981b61d20c19adf9af83413cd78920259fcc0a5d2
+  languageName: node
+  linkType: hard
+
 "semver@npm:2 || 3 || 4 || 5, semver@npm:^5.5.0, semver@npm:^5.6.0":
   version: 5.7.2
   resolution: "semver@npm:5.7.2"
@@ -6699,6 +6733,15 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 10c0/fbfe717094ace0aa8d6332d7ef5ce727259815bd8d8815700853f4faf23aacbd7192522f0dc5af6df52ef4fa85a355ebd2f5d39f554bd028200d6cf481ab9b53
+  languageName: node
+  linkType: hard
+
+"semver@npm:^7.6.0":
+  version: 7.7.1
+  resolution: "semver@npm:7.7.1"
+  bin:
+    semver: bin/semver.js
+  checksum: 10c0/fd603a6fb9c399c6054015433051bdbe7b99a940a8fb44b85c2b524c4004b023d7928d47cb22154f8d054ea7ee8597f586605e05b52047f048278e4ac56ae958
   languageName: node
   linkType: hard
 
@@ -7283,16 +7326,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"the-type-is-right@workspace:packages/expectt":
-  version: 0.0.0-use.local
-  resolution: "the-type-is-right@workspace:packages/expectt"
-  dependencies:
-    "@zenesis/generate": "npm:^0.1.0"
-    "@zenesis/schema": "npm:^0.1.0"
-    lazies: "npm:^0.6.6"
-  languageName: unknown
-  linkType: soft
-
 "through2@npm:^2.0.0":
   version: 2.0.5
   resolution: "through2@npm:2.0.5"
@@ -7700,6 +7733,15 @@ __metadata:
   version: 3.0.1
   resolution: "webidl-conversions@npm:3.0.1"
   checksum: 10c0/5612d5f3e54760a797052eb4927f0ddc01383550f542ccd33d5238cfd65aeed392a45ad38364970d0a0f4fea32e1f4d231b3d8dac4a3bdd385e5cf802ae097db
+  languageName: node
+  linkType: hard
+
+"what-the-test@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "what-the-test@npm:1.2.0"
+  dependencies:
+    semver-try-require: "npm:^7.0.0"
+  checksum: 10c0/e39076ad81850a5abff40c8e5566b9592f8b7ba3877e3dd7cc31fa75d82e488d7879b3517ca256597a3a319d9166513bb88a3bc9913a8b65c734ae094f5738ae
   languageName: node
   linkType: hard
 

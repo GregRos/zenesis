@@ -1,52 +1,51 @@
 {
-  "workspaces": [
-    "packages/*"
-  ],
-  "main": "packages/dist/demo/index.js",
-  "private": true,
-  "scripts": {
-    "demo": "node packages/demo/dist/example.js",
-    "build:demo": "tsc -b packages/demo",
-    "build:generate": "tsc -b packages/zenesis-generate/lib",
-    "build:schema": "tsc -b packages/zenesis-schema/lib",
-    "build:main": "tsc -b packages/zenesis/lib",
-    "build:the-type-is-right": "tsc -b packages/the-type-is-right/lib packages/the-type-is-right/test",
-    "watch:demo": "tsc -b packages/demo --watch",
-    "watch:generate": "tsc -b packages/zenesis-generate/lib --watch",
-    "watch:schema": "tsc -b packages/zenesis-schema/lib --watch",
-    "watch:main": "tsc -b packages/zenesis/lib --watch",
-    "watch:all": "tsc -b . --watch",
-    "watch": "run-s watch:all",
-    "build": "run-s build:schema build:generate build:main build:demo",
-    "clean": "shx rm -rf packages/*/dist",
-    "rebuild": "run-s clean build",
-    "lint": "eslint --ext .ts packages && prettier --write packages",
-    "test:generate": "jest packages/zenesis-generate/jest.config.mjs",
-    "test:generate:watch": "jest --watch packages/zenesis-generate/jest.config.mjs",
-    "test:schema": "jest packages/zenesis-schema/jest.config.mjs",
-    "test:schema:watch": "jest --watch packages/zenesis-schema/jest.config.mjs"
-  },
-  "devDependencies": {
-    "@gregros/eslint-config": "^0.5.0",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^20.11.28",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "@typescript-eslint/parser": "^7.2.0",
-    "eslint": "^8.57.0",
-    "lerna": "^8.1.2",
-    "lodash": "^4.17.21",
-    "npm-run-all": "^4.1.5",
-    "nyc": "^15.1.0",
-    "prettier": "^3.2.5",
-    "prettier-plugin-organize-imports": "^3.2.4",
-    "shx": "^0.3.4",
-    "typescript": "^5.4.2"
-  },
-  "packageManager": "yarn@4.1.1",
-  "dependencies": {
-    "lazies": "^0.6.6"
-  },
-  "resolutions": {
-    "lazies": "portal:/C:/codegr/lazies"
-  }
+    "workspaces": [
+        "packages/*"
+    ],
+    "main": "packages/dist/demo/index.js",
+    "private": true,
+    "scripts": {
+        "demo": "node packages/demo/dist/example.js",
+        "build:demo": "tsc -b packages/demo",
+        "build:generate": "tsc -b packages/zenesis-generate/lib",
+        "build:schema": "tsc -b packages/zenesis-schema/lib",
+        "build:main": "tsc -b packages/zenesis/lib",
+        "build:the-type-is-right": "tsc -b packages/the-type-is-right/lib packages/the-type-is-right/test",
+        "watch:demo": "tsc -b packages/demo --watch",
+        "watch:generate": "tsc -b packages/zenesis-generate/lib --watch",
+        "watch:schema": "tsc -b packages/zenesis-schema/lib --watch",
+        "watch:main": "tsc -b packages/zenesis/lib --watch",
+        "watch:all": "tsc -b . --watch",
+        "watch": "run-s watch:all",
+        "build": "run-s build:schema build:generate build:main build:demo",
+        "clean": "shx rm -rf packages/*/dist",
+        "rebuild": "run-s clean build",
+        "lint": "eslint --ext .ts packages && prettier --write packages",
+        "test:generate": "jest packages/zenesis-generate/jest.config.mjs",
+        "test:generate:watch": "jest --watch packages/zenesis-generate/jest.config.mjs",
+        "test:schema": "jest packages/zenesis-schema/jest.config.mjs",
+        "test:schema:watch": "jest --watch packages/zenesis-schema/jest.config.mjs"
+    },
+    "devDependencies": {
+        "@gregros/eslint-config": "^0.5.0",
+        "@types/jest": "^29.5.12",
+        "@types/node": "^20.11.28",
+        "@typescript-eslint/eslint-plugin": "^7.2.0",
+        "@typescript-eslint/parser": "^7.2.0",
+        "eslint": "^8.57.0",
+        "expect-type": "^0.19.0",
+        "lerna": "^8.1.2",
+        "lodash": "^4.17.21",
+        "npm-run-all": "^4.1.5",
+        "nyc": "^15.1.0",
+        "prettier": "^3.2.5",
+        "prettier-plugin-organize-imports": "^3.2.4",
+        "shx": "^0.3.4",
+        "typescript": "^5.4.2"
+    },
+    "packageManager": "yarn@4.1.1",
+    "dependencies": {
+        "declare-it": "^2.1.0",
+        "doddle": "^5.0.0-beta.16"
+    }
 }
